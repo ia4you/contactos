@@ -28,6 +28,11 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# fotos subidas por usuarios (persisten en el volumen montado en producción,
+# no se versionan en git)
+/public/uploads/*
+!/public/uploads/.gitkeep
+
 # vercel
 .vercel
 

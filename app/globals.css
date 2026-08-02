@@ -3,25 +3,36 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #0b0e1a;
+  --foreground: #f2ede4;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-outfit), sans-serif;
+}
+
+@layer components {
+  .campo {
+    @apply w-full rounded-lg border border-champan/20 bg-white/[0.03] px-3 py-2 text-[#F2EDE4] outline-none transition focus:border-champan/60;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Efecto de discreción: las fotos de listados aparecen desenfocadas por
+     defecto y se revelan al pasar el ratón — firma visual del sitio. */
+  .foto-discreta {
+    filter: blur(14px);
+    transition: filter 0.3s ease;
+  }
+
+  .foto-discreta:hover,
+  .foto-discreta:focus-visible {
+    filter: blur(0);
   }
 }

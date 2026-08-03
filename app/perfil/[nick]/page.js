@@ -1,8 +1,11 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { getServerSession } from "next-auth";
 import { Heart } from "lucide-react";
+import { authOptions } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { ISLANDS, PROFILE_TYPES, AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { ReportButton } from "../../components/ReportButton";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
@@ -13,6 +16,8 @@ const MESES = [
 ];
 
 export default async function PerfilPublico({ params }) {
+  const session = await getServerSession(authOptions);
+
   const { rows: userRows } = await query(
     `SELECT id, nick, profile_type, island, bio, genero, orientacion, rol, verified, created_at
        FROM users WHERE lower(nick) = lower($1) AND deleted_at IS NULL`,
@@ -20,6 +25,8 @@ export default async function PerfilPublico({ params }) {
   );
   const usuario = userRows[0];
   if (!usuario) notFound();
+
+  const esPropio = session?.user?.id === String(usuario.id);
 
   const { rows: fotos } = await query(
     `SELECT id, filename FROM photos
@@ -135,27 +142,50 @@ export default async function PerfilPublico({ params }) {
             </div>
           </div>
 
-          <button
-            type="button"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              alignSelf: "flex-start",
-              border: "1px solid var(--gold)",
-              color: "var(--gold)",
-              background: "transparent",
-              padding: "11px 22px",
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              textTransform: "uppercase",
-              letterSpacing: 2,
-              cursor: "pointer",
-            }}
-          >
-            <Heart size={15} />
-            Dar like
-          </button>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, alignSelf: "flex-start" }}>
+            <button
+              type="button"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                border: "1px solid var(--gold)",
+                color: "var(--gold)",
+                background: "transparent",
+                padding: "11px 22px",
+                fontFamily: "var(--font-body)",
+                fontSize: 12,
+                textTransform: "uppercase",
+                letterSpacing: 2,
+                cursor: "pointer",
+              }}
+            >
+              <Heart size={15} />
+              Dar like
+            </button>
+
+            {!esPropio && (
+              <ReportButton
+                reportedUserId={usuario.id}
+                label="Denunciar perfil"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  border: "1px solid rgba(154,58,58,0.5)",
+                  color: "#e07a7a",
+                  background: "transparent",
+                  padding: "11px 22px",
+                  fontFamily: "var(--font-body)",
+                  fontSize: 12,
+                  textTransform: "uppercase",
+                  letterSpacing: 2,
+                  cursor: "pointer",
+                }}
+              />
+            )}
+          </div>
         </div>
       </div>
 
@@ -174,6 +204,7 @@ export default async function PerfilPublico({ params }) {
             {fotos.map((foto) => (
               <div
                 key={foto.id}
+                className="group"
                 style={{
                   position: "relative",
                   aspectRatio: "1 / 1",
@@ -189,6 +220,34 @@ export default async function PerfilPublico({ params }) {
                   className="foto-discreta"
                   style={{ objectFit: "cover" }}
                 />
+                {!esPropio && (
+                  <div
+                    className="fotos-grid__overlay"
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      display: "flex",
+                      alignItems: "flex-end",
+                      justifyContent: "center",
+                      padding: 8,
+                      pointerEvents: "none",
+                    }}
+                  >
+                    <ReportButton
+                      reportedUserId={usuario.id}
+                      label="Denunciar"
+                      className="foto-overlay-btn"
+                      style={{
+                        pointerEvents: "auto",
+                        width: "auto",
+                        borderColor: "rgba(154,58,58,0.5)",
+                        color: "#e07a7a",
+                        background: "rgba(14,10,11,0.75)",
+                        padding: "6px 12px",
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             ))}
           </div>

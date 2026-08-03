@@ -1,40 +1,83 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Upload, Star } from "lucide-react";
 import { EmptyState } from "../components/EmptyState";
 
 const ESTADO_BADGE = {
-  pending: { texto: "En revisión", color: "#c9a15a" },
   approved: { texto: "Aprobada", color: "#4a9a6a" },
   rejected: { texto: "Rechazada", color: "#9a3a3a" },
 };
 
 export function TabFotos({ usuarioId, fotos, setFotos }) {
-  const [subiendo, setSubiendo] = useState(false);
   const [errorFoto, setErrorFoto] = useState("");
   const inputFileRef = useRef(null);
 
-  async function subirFoto(e) {
+  const [archivoPendiente, setArchivoPendiente] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [caption, setCaption] = useState("");
+  const [certificado, setCertificado] = useState(false);
+  const [usarComoAvatar, setUsarComoAvatar] = useState(false);
+  const [subiendo, setSubiendo] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
+  function seleccionarArchivo(e) {
     const archivo = e.target.files?.[0];
     if (!archivo) return;
     setErrorFoto("");
+    setArchivoPendiente(archivo);
+    setPreviewUrl(URL.createObjectURL(archivo));
+    setCaption("");
+    setCertificado(false);
+    setUsarComoAvatar(false);
+  }
+
+  function cancelarSubida() {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setArchivoPendiente(null);
+    setPreviewUrl(null);
+    if (inputFileRef.current) inputFileRef.current.value = "";
+  }
+
+  async function confirmarSubida() {
+    if (!archivoPendiente || !certificado) return;
     setSubiendo(true);
+    setErrorFoto("");
 
     const formData = new FormData();
-    formData.append("file", archivo);
+    formData.append("file", archivoPendiente);
+    formData.append("caption", caption);
+    formData.append("certifico", "true");
 
     const res = await fetch("/api/perfil/fotos", { method: "POST", body: formData });
     const data = await res.json();
     setSubiendo(false);
-    if (inputFileRef.current) inputFileRef.current.value = "";
 
     if (!res.ok) {
       setErrorFoto(data.error || "No se pudo subir la foto.");
       return;
     }
-    setFotos((f) => [data.foto, ...f]);
+
+    let foto = data.foto;
+    if (usarComoAvatar) {
+      await fetch("/api/perfil/avatar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ photoId: foto.id }),
+      });
+      foto = { ...foto, is_avatar: true };
+      setFotos((f) => [foto, ...f.map((x) => ({ ...x, is_avatar: false }))]);
+    } else {
+      setFotos((f) => [foto, ...f]);
+    }
+
+    cancelarSubida();
   }
 
   async function borrarFoto(id) {
@@ -86,14 +129,13 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
       }}
     >
       <Upload size={15} />
-      {subiendo ? "Subiendo…" : "Subir foto"}
+      Subir foto
       <input
         ref={inputFileRef}
         type="file"
         accept="image/jpeg,image/png,image/webp"
         style={{ display: "none" }}
-        disabled={subiendo}
-        onChange={subirFoto}
+        onChange={seleccionarArchivo}
       />
     </label>
   );
@@ -205,6 +247,129 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {archivoPendiente && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 100,
+            background: "rgba(14,10,11,0.85)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 24,
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              maxWidth: 420,
+              background: "var(--surface)",
+              border: "1px solid var(--border-gold)",
+              padding: 28,
+            }}
+          >
+            <h3 className="heading" style={{ fontSize: 20, color: "var(--text)" }}>
+              Confirmar foto
+            </h3>
+
+            {previewUrl && (
+              <div
+                style={{
+                  marginTop: 16,
+                  position: "relative",
+                  width: "100%",
+                  aspectRatio: "1 / 1",
+                  border: "1px solid rgba(201,161,90,0.2)",
+                  overflow: "hidden",
+                }}
+              >
+                {/* Preview local del archivo aún no subido: no puede pasar
+                    por el optimizador de next/image (no es una URL propia
+                    del sitio), así que aquí sí toca <img> plano. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={previewUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              </div>
+            )}
+
+            <label style={{ display: "block", marginTop: 18 }}>
+              <span className="label-field">Pie de foto (opcional)</span>
+              <input
+                type="text"
+                maxLength={200}
+                value={caption}
+                onChange={(e) => setCaption(e.target.value)}
+                className="input-field"
+                placeholder="Escribe algo sobre esta foto…"
+              />
+            </label>
+
+            <label
+              style={{
+                display: "flex",
+                gap: 8,
+                marginTop: 18,
+                fontFamily: "var(--font-body)",
+                fontSize: 12.5,
+                color: "var(--text-secondary)",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={certificado}
+                onChange={(e) => setCertificado(e.target.checked)}
+                className="checkbox-gold"
+                style={{ marginTop: 2, flexShrink: 0 }}
+              />
+              Certifico que todas las personas que aparecen en esta foto son
+              mayores de 18 años y han dado su consentimiento para su
+              publicación.
+            </label>
+
+            <label
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                marginTop: 14,
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                color: "var(--text)",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={usarComoAvatar}
+                onChange={(e) => setUsarComoAvatar(e.target.checked)}
+                className="checkbox-gold"
+              />
+              Usar como avatar
+            </label>
+
+            <div style={{ marginTop: 24, display: "flex", gap: 12 }}>
+              <button
+                type="button"
+                onClick={cancelarSubida}
+                disabled={subiendo}
+                className="btn-outline-gold"
+                style={{ flex: 1 }}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={confirmarSubida}
+                disabled={!certificado || subiendo}
+                className="btn-gold"
+                style={{ flex: 1, opacity: !certificado || subiendo ? 0.5 : 1 }}
+              >
+                {subiendo ? "Subiendo…" : "Subir foto"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -41,8 +41,9 @@ export async function POST(req) {
   await fs.mkdir(uploadDir, { recursive: true });
 
   let files;
+  let fields;
   try {
-    ({ files } = await parseFormulario(req, uploadDir));
+    ({ files, fields } = await parseFormulario(req, uploadDir));
   } catch (err) {
     console.error("Error al procesar la subida:", err);
     return NextResponse.json(
@@ -59,15 +60,36 @@ export async function POST(req) {
     );
   }
 
+  const campo = (nombre) => {
+    const v = fields[nombre];
+    return Array.isArray(v) ? v[0] : v;
+  };
+
+  // La certificación de mayoría de edad y consentimiento es obligatoria y se
+  // valida en el servidor, no solo deshabilitando el botón en el cliente.
+  if (campo("certifico") !== "true") {
+    await fs.unlink(archivo.filepath).catch(() => {});
+    return NextResponse.json(
+      { error: "Debes certificar que todas las personas de la foto son mayores de edad y han consentido." },
+      { status: 400 }
+    );
+  }
+
+  const caption = typeof campo("caption") === "string" ? campo("caption").trim().slice(0, 200) : null;
+
   const extension = MIME_A_EXTENSION[archivo.mimetype];
   const nombreFinal = `${uuidv4()}.${extension}`;
   const rutaFinal = path.join(uploadDir, nombreFinal);
   await fs.rename(archivo.filepath, rutaFinal);
 
+  // Sin moderación previa: la foto queda aprobada y visible de inmediato.
+  // La certificación anterior traslada la responsabilidad legal a quien
+  // sube la foto; "rechazada" sigue existiendo para que un admin pueda
+  // retirarla a posteriori si hace falta.
   const { rows } = await query(
-    `INSERT INTO photos (user_id, filename, status) VALUES ($1, $2, 'pending')
-     RETURNING id, filename, is_private, is_avatar, status, created_at`,
-    [userId, nombreFinal]
+    `INSERT INTO photos (user_id, filename, caption, status) VALUES ($1, $2, $3, 'approved')
+     RETURNING id, filename, caption, is_private, is_avatar, status, created_at`,
+    [userId, nombreFinal, caption || null]
   );
 
   return NextResponse.json({ foto: rows[0] });

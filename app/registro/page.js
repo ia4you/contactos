@@ -9,6 +9,7 @@ import {
   FECHA_NACIMIENTO_MIN,
   FECHA_NACIMIENTO_MAX,
 } from "@/lib/constants";
+import { AuthLayout } from "../components/AuthLayout";
 
 const ESTADO_INICIAL = {
   profileType: "chica",
@@ -68,75 +69,54 @@ export default function Registro() {
 
   if (exito) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center bg-fondo px-6 text-center">
-        <h1 className="font-display text-2xl font-semibold text-champan">Revisa tu email</h1>
-        <p className="mt-4 text-sm text-texto-secundario">
+      <AuthLayout activo="registro">
+        <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+          Revisa tu email
+        </h1>
+        <p style={{ marginTop: 16, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
           Te hemos enviado un enlace de confirmación. Debes verificar tu email
           antes de poder iniciar sesión.
         </p>
-        <Link href="/login" className="mt-8 text-sm text-champan underline underline-offset-4">
+        <Link
+          href="/login"
+          style={{ display: "inline-block", marginTop: 24, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)" }}
+        >
           Ir a iniciar sesión
         </Link>
-      </main>
+      </AuthLayout>
     );
   }
 
   return (
-    <main className="flex min-h-screen justify-center bg-fondo px-4 py-14">
-      <div className="h-fit w-full max-w-[480px] rounded-xl border border-borde bg-surface p-8">
-        <h1 className="font-display text-[28px] font-semibold text-texto">Crear cuenta</h1>
-        <p className="mt-2 text-sm text-texto-secundario">
-          Todos los campos son necesarios. Tus datos están protegidos.
-        </p>
+    <AuthLayout activo="registro">
+      <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+        Crear cuenta
+      </h1>
+      <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+        Todos los campos son necesarios. Tus datos están protegidos.
+      </p>
 
-        <form onSubmit={onSubmit} className="mt-8 space-y-6">
-          <fieldset>
-            <legend className="mb-2 text-xs font-medium text-texto-secundario">Tipo de perfil</legend>
-            <div className="flex gap-2">
-              {PROFILE_TYPES.map((p) => (
-                <button
-                  type="button"
-                  key={p.value}
-                  onClick={() => actualizar("profileType", p.value)}
-                  className={`flex-1 rounded-full border px-3 py-2 text-sm transition ${
-                    form.profileType === p.value
-                      ? "border-burdeos bg-burdeos text-white"
-                      : "border-borde text-texto-secundario"
-                  }`}
-                >
-                  {p.label}
-                </button>
-              ))}
-            </div>
-          </fieldset>
+      <form onSubmit={onSubmit} style={{ marginTop: 28, display: "flex", flexDirection: "column", gap: 22 }}>
+        <div>
+          <span className="label-field">Tipo de perfil</span>
+          <div style={{ display: "flex", gap: 8 }}>
+            {PROFILE_TYPES.map((p) => (
+              <button
+                type="button"
+                key={p.value}
+                onClick={() => actualizar("profileType", p.value)}
+                className={`pill-select ${form.profileType === p.value ? "active" : ""}`}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
-          {form.profileType === "pareja" ? (
-            <div className="grid grid-cols-2 gap-3">
-              <Campo label="Fecha de nacimiento (ella)">
-                <input
-                  type="date"
-                  required
-                  min={FECHA_NACIMIENTO_MIN}
-                  max={FECHA_NACIMIENTO_MAX}
-                  value={form.herBirthdate}
-                  onChange={(e) => actualizar("herBirthdate", e.target.value)}
-                  className="campo"
-                />
-              </Campo>
-              <Campo label="Fecha de nacimiento (él)">
-                <input
-                  type="date"
-                  required
-                  min={FECHA_NACIMIENTO_MIN}
-                  max={FECHA_NACIMIENTO_MAX}
-                  value={form.hisBirthdate}
-                  onChange={(e) => actualizar("hisBirthdate", e.target.value)}
-                  className="campo"
-                />
-              </Campo>
-            </div>
-          ) : (
-            <Campo label="Fecha de nacimiento">
+        {form.profileType === "pareja" ? (
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+            <label>
+              <span className="label-field">Nacimiento (ella)</span>
               <input
                 type="date"
                 required
@@ -144,134 +124,171 @@ export default function Registro() {
                 max={FECHA_NACIMIENTO_MAX}
                 value={form.herBirthdate}
                 onChange={(e) => actualizar("herBirthdate", e.target.value)}
-                className="campo"
+                className="input-field"
               />
-            </Campo>
-          )}
-
-          <Campo label="Nick">
-            <input
-              type="text"
-              required
-              minLength={3}
-              maxLength={24}
-              value={form.nick}
-              onChange={(e) => actualizar("nick", e.target.value)}
-              className="campo"
-            />
-          </Campo>
-
-          <Campo label="Email">
-            <input
-              type="email"
-              required
-              value={form.email}
-              onChange={(e) => actualizar("email", e.target.value)}
-              className="campo"
-            />
-          </Campo>
-
-          <Campo label="Contraseña">
-            <input
-              type="password"
-              required
-              minLength={8}
-              value={form.password}
-              onChange={(e) => actualizar("password", e.target.value)}
-              className="campo"
-            />
-          </Campo>
-
-          <Campo label="Isla">
-            <select
-              value={form.island}
-              onChange={(e) => actualizar("island", e.target.value)}
-              className="campo"
-            >
-              {ISLANDS.map((i) => (
-                <option key={i.value} value={i.value}>
-                  {i.label}
-                </option>
-              ))}
-            </select>
-          </Campo>
-
-          <fieldset>
-            <legend className="mb-2 text-xs font-medium text-texto-secundario">¿Qué buscas?</legend>
-            <div className="grid grid-cols-2 gap-2">
-              {LOOKING_FOR_OPTIONS.map((o) => (
-                <label key={o.value} className="flex items-center gap-2 text-sm text-texto">
-                  <input
-                    type="checkbox"
-                    checked={form.lookingFor.includes(o.value)}
-                    onChange={() => toggleLookingFor(o.value)}
-                    className="h-4 w-4 accent-burdeos"
-                  />
-                  {o.label}
-                </label>
-              ))}
-            </div>
-          </fieldset>
-
-          <div className="space-y-3 border-t border-borde pt-5">
-            <label className="flex items-start gap-2 text-xs text-texto-secundario">
+            </label>
+            <label>
+              <span className="label-field">Nacimiento (él)</span>
               <input
-                type="checkbox"
+                type="date"
                 required
-                checked={form.acceptTerms}
-                onChange={(e) => actualizar("acceptTerms", e.target.checked)}
-                className="mt-0.5 h-4 w-4 accent-burdeos"
+                min={FECHA_NACIMIENTO_MIN}
+                max={FECHA_NACIMIENTO_MAX}
+                value={form.hisBirthdate}
+                onChange={(e) => actualizar("hisBirthdate", e.target.value)}
+                className="input-field"
               />
+            </label>
+          </div>
+        ) : (
+          <label>
+            <span className="label-field">Fecha de nacimiento</span>
+            <input
+              type="date"
+              required
+              min={FECHA_NACIMIENTO_MIN}
+              max={FECHA_NACIMIENTO_MAX}
+              value={form.herBirthdate}
+              onChange={(e) => actualizar("herBirthdate", e.target.value)}
+              className="input-field"
+            />
+          </label>
+        )}
+
+        <label>
+          <span className="label-field">Nick</span>
+          <input
+            type="text"
+            required
+            minLength={3}
+            maxLength={24}
+            value={form.nick}
+            onChange={(e) => actualizar("nick", e.target.value)}
+            className="input-field"
+          />
+        </label>
+
+        <label>
+          <span className="label-field">Email</span>
+          <input
+            type="email"
+            required
+            value={form.email}
+            onChange={(e) => actualizar("email", e.target.value)}
+            className="input-field"
+          />
+        </label>
+
+        <label>
+          <span className="label-field">Contraseña</span>
+          <input
+            type="password"
+            required
+            minLength={8}
+            value={form.password}
+            onChange={(e) => actualizar("password", e.target.value)}
+            className="input-field"
+          />
+        </label>
+
+        <label>
+          <span className="label-field">Isla</span>
+          <select
+            value={form.island}
+            onChange={(e) => actualizar("island", e.target.value)}
+            className="input-field"
+          >
+            {ISLANDS.map((i) => (
+              <option key={i.value} value={i.value}>
+                {i.label}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <div>
+          <span className="label-field">¿Qué buscas?</span>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            {LOOKING_FOR_OPTIONS.map((o) => (
+              <label
+                key={o.value}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  fontFamily: "var(--font-body)",
+                  fontSize: 13,
+                  color: "var(--text)",
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={form.lookingFor.includes(o.value)}
+                  onChange={() => toggleLookingFor(o.value)}
+                  className="checkbox-gold"
+                />
+                {o.label}
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+            paddingTop: 16,
+            borderTop: "1px solid rgba(201,161,90,0.12)",
+          }}
+        >
+          <label style={{ display: "flex", gap: 8, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
+            <input
+              type="checkbox"
+              required
+              checked={form.acceptTerms}
+              onChange={(e) => actualizar("acceptTerms", e.target.checked)}
+              className="checkbox-gold"
+              style={{ marginTop: 2 }}
+            />
+            <span>
               Acepto los{" "}
-              <Link href="/legal/aviso-legal" className="underline">
+              <Link href="/legal/aviso-legal" style={{ color: "var(--gold)" }}>
                 términos
               </Link>{" "}
               y la{" "}
-              <Link href="/legal/privacidad" className="underline">
+              <Link href="/legal/privacidad" style={{ color: "var(--gold)" }}>
                 política de privacidad
               </Link>
               .
-            </label>
-            <label className="flex items-start gap-2 text-xs text-texto-secundario">
-              <input
-                type="checkbox"
-                required
-                checked={form.acceptGdpr}
-                onChange={(e) => actualizar("acceptGdpr", e.target.checked)}
-                className="mt-0.5 h-4 w-4 accent-burdeos"
-              />
+            </span>
+          </label>
+          <label style={{ display: "flex", gap: 8, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
+            <input
+              type="checkbox"
+              required
+              checked={form.acceptGdpr}
+              onChange={(e) => actualizar("acceptGdpr", e.target.checked)}
+              className="checkbox-gold"
+              style={{ marginTop: 2 }}
+            />
+            <span>
               Consiento expresamente el tratamiento de mis datos relativos a la
               vida sexual conforme al art. 9.2.a del RGPD.
-            </label>
-          </div>
+            </span>
+          </label>
+        </div>
 
-          {error && <p className="text-sm text-red-400">{error}</p>}
+        {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
 
-          <button
-            type="submit"
-            disabled={enviando}
-            className="h-12 w-full rounded-full bg-burdeos font-body font-semibold text-white transition hover:bg-burdeos-hover disabled:opacity-60"
-          >
-            {enviando ? "Creando cuenta…" : "Crear mi perfil"}
-          </button>
+        <button type="submit" disabled={enviando} className="btn-gold" style={{ width: "100%" }}>
+          {enviando ? "Creando cuenta…" : "Crear mi perfil"}
+        </button>
 
-          <p className="text-center text-sm text-texto-secundario">
-            ¿Ya tienes cuenta?{" "}
-            <Link href="/login" className="text-champan hover:underline">
-              Iniciar sesión
-            </Link>
-          </p>
-        </form>
-      </div>
-    </main>
-  );
-}
-
-function Campo({ label, children }) {
-  return (
-    <label className="block text-sm">
-      <span className="mb-1 block text-xs font-medium text-texto-secundario">{label}</span>
-      {children}
-    </label>
+        <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: 12.5, color: "var(--text-muted)" }}>
+          Tus datos están protegidos y nunca se comparten con terceros.
+        </p>
+      </form>
+    </AuthLayout>
   );
 }

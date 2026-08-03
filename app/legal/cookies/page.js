@@ -4,7 +4,7 @@ export const metadata = { title: "Cookies — contactos.turel.es" };
 
 export default function Cookies() {
   return (
-    <LegalPage titulo="Política de cookies">
+    <LegalPage kicker="Uso de cookies" titulo="Política de cookies">
       {/* REVISAR LEGALMENTE */}
       <p>
         contactos.turel.es utiliza cookies técnicas y de sesión estrictamente

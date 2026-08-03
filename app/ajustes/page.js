@@ -7,11 +7,23 @@ export default async function Ajustes() {
   if (!session) redirect("/login");
 
   return (
-    <main className="flex min-h-screen justify-center bg-fondo px-4 py-16">
-      <div className="h-fit w-full max-w-[480px] rounded-xl border border-borde bg-surface p-8 text-center">
-        <h1 className="font-display text-2xl font-semibold text-texto">Ajustes</h1>
-        <p className="mt-3 text-sm text-texto-secundario">Próximamente.</p>
-      </div>
+    <main
+      style={{
+        minHeight: "60vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        padding: "80px 24px",
+      }}
+    >
+      <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+        Ajustes
+      </h1>
+      <p style={{ marginTop: 12, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
+        Próximamente.
+      </p>
     </main>
   );
 }

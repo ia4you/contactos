@@ -4,7 +4,7 @@ export const metadata = { title: "Privacidad — contactos.turel.es" };
 
 export default function Privacidad() {
   return (
-    <LegalPage titulo="Política de privacidad">
+    <LegalPage kicker="Tu privacidad importa" titulo="Política de privacidad">
       {/* REVISAR LEGALMENTE */}
       <p>
         En contactos.turel.es la discreción y la protección de tus datos son

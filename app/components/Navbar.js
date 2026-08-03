@@ -35,55 +35,95 @@ export function Navbar() {
     avatarUrl || AVATAR_PLACEHOLDER[session?.user?.profileType] || AVATAR_PLACEHOLDER.chica;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 h-14 border-b border-borde bg-fondo">
-      <div className="mx-auto flex h-full max-w-5xl items-center justify-between px-4">
-        <Link href="/" className="font-display text-xl text-champan">
-          Contactos
+    <header
+      style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 40,
+        background: "rgba(14,10,11,0.82)",
+        backdropFilter: "blur(14px)",
+        WebkitBackdropFilter: "blur(14px)",
+        borderBottom: "1px solid rgba(201,161,90,0.18)",
+        padding: "22px 40px",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <Link
+          href="/"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            textDecoration: "none",
+          }}
+        >
+          <span
+            className="heading"
+            style={{ fontSize: "24px", letterSpacing: "5px", color: "var(--text)" }}
+          >
+            CONTACTOS
+          </span>
+          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--gold)" }} />
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: "10px",
+              letterSpacing: "2px",
+              textTransform: "uppercase",
+              color: "var(--text-secondary)",
+            }}
+          >
+            Club Liberal
+          </span>
         </Link>
 
         {status === "authenticated" ? (
-          <div className="flex items-center gap-4">
-            <button type="button" aria-label="Buscar" className="text-texto-secundario hover:text-texto">
-              <Search size={22} />
+          <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
+            <button type="button" aria-label="Buscar" className="icon-btn">
+              <Search size={20} />
             </button>
-            <button type="button" aria-label="Mensajes" className="text-texto-secundario hover:text-texto">
-              <MessageCircle size={22} />
+            <button type="button" aria-label="Mensajes" className="icon-btn">
+              <MessageCircle size={20} />
             </button>
-            <button type="button" aria-label="Notificaciones" className="text-texto-secundario hover:text-texto">
-              <Bell size={22} />
+            <button type="button" aria-label="Notificaciones" className="icon-btn">
+              <Bell size={20} />
             </button>
 
-            <div className="relative" ref={menuRef}>
+            <div style={{ position: "relative" }} ref={menuRef}>
               <button
                 type="button"
                 onClick={() => setMenuAbierto((v) => !v)}
-                className="block h-8 w-8 overflow-hidden rounded-full border border-borde"
                 aria-label="Menú de usuario"
+                style={{
+                  display: "block",
+                  width: 36,
+                  height: 36,
+                  borderRadius: "50%",
+                  overflow: "hidden",
+                  border: "1px solid var(--border-gold)",
+                  padding: 0,
+                  cursor: "pointer",
+                  background: "transparent",
+                }}
               >
-                <Image src={imagenAvatar} alt="" width={32} height={32} className="h-full w-full object-cover" />
+                <Image
+                  src={imagenAvatar}
+                  alt=""
+                  width={36}
+                  height={36}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
               </button>
 
               {menuAbierto && (
-                <div className="absolute right-0 mt-2 w-44 overflow-hidden rounded-lg border border-borde bg-surface shadow-xl">
-                  <Link
-                    href="/mi-perfil"
-                    onClick={() => setMenuAbierto(false)}
-                    className="block px-4 py-2.5 text-sm text-texto hover:bg-elevada"
-                  >
+                <div className="dropdown-menu">
+                  <Link href="/mi-perfil" onClick={() => setMenuAbierto(false)} className="dropdown-item">
                     Mi perfil
                   </Link>
-                  <Link
-                    href="/ajustes"
-                    onClick={() => setMenuAbierto(false)}
-                    className="block px-4 py-2.5 text-sm text-texto hover:bg-elevada"
-                  >
+                  <Link href="/ajustes" onClick={() => setMenuAbierto(false)} className="dropdown-item">
                     Ajustes
                   </Link>
-                  <button
-                    type="button"
-                    onClick={() => signOut({ callbackUrl: "/" })}
-                    className="block w-full px-4 py-2.5 text-left text-sm text-texto hover:bg-elevada"
-                  >
+                  <button type="button" onClick={() => signOut({ callbackUrl: "/" })} className="dropdown-item">
                     Cerrar sesión
                   </button>
                 </div>
@@ -91,15 +131,15 @@ export function Navbar() {
             </div>
           </div>
         ) : (
-          <div className="flex items-center gap-3">
-            <Link href="/login" className="text-sm text-texto-secundario hover:text-texto">
-              Iniciar sesión
+          <div style={{ display: "flex", alignItems: "center", gap: "32px" }}>
+            <Link href="/" className="nav-top-link">
+              Inicio
             </Link>
-            <Link
-              href="/registro"
-              className="rounded-full bg-burdeos px-5 py-2 text-sm font-medium text-white transition hover:bg-burdeos-hover"
-            >
-              Crear perfil
+            <Link href="/perfiles" className="nav-top-link">
+              Perfiles
+            </Link>
+            <Link href="/login" className="btn-outline-gold">
+              Acceder
             </Link>
           </div>
         )}

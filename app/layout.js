@@ -1,31 +1,33 @@
 import { cookies } from "next/headers";
-import { Fraunces, Outfit } from "next/font/google";
+import { Cormorant_Garamond, Jost } from "next/font/google";
 import "./globals.css";
+import "./theme.css";
 import { Providers } from "./providers";
 import { Footer } from "./components/Footer";
 import { Navbar } from "./components/Navbar";
 
-const fraunces = Fraunces({
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  variable: "--font-fraunces",
-  weight: ["500", "600", "700"],
+  variable: "--font-cormorant",
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
 });
 
-const outfit = Outfit({
+const jost = Jost({
   subsets: ["latin"],
-  variable: "--font-outfit",
-  weight: ["400", "500", "600", "700"],
+  variable: "--font-jost",
+  weight: ["300", "400", "500", "600"],
 });
 
 export const metadata = {
-  title: "contactos.turel.es — Contactos liberales en Canarias",
+  title: "Contactos — Club Liberal Canarias",
   description:
-    "Portal de contactos para el ambiente liberal en Canarias. Discreción y privacidad ante todo.",
+    "Un espacio íntimo para el ambiente liberal en Canarias. Discreción y privacidad ante todo.",
   manifest: "/manifest.json",
 };
 
 export const viewport = {
-  themeColor: "#0a0a0a",
+  themeColor: "#0e0a0b",
 };
 
 export default function RootLayout({ children }) {
@@ -35,10 +37,13 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="es">
-      <body className={`${fraunces.variable} ${outfit.variable} font-body antialiased bg-fondo text-texto flex min-h-screen flex-col`}>
+      <body
+        className={`${cormorant.variable} ${jost.variable} antialiased flex min-h-screen flex-col`}
+        style={{ background: "var(--bg)", color: "var(--text)", fontFamily: "var(--font-body)" }}
+      >
         <Providers>
           {gateOk && <Navbar />}
-          <div className={`flex-1 ${gateOk ? "pt-14" : ""}`}>{children}</div>
+          <div style={{ flex: 1 }}>{children}</div>
           {gateOk && <Footer />}
         </Providers>
       </body>

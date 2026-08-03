@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
-import Link from "next/link";
+import { AuthLayout } from "../components/AuthLayout";
 
 export function LoginForm() {
   const router = useRouter();
@@ -38,63 +38,84 @@ export function LoginForm() {
   }
 
   return (
-    <main className="flex min-h-screen justify-center bg-fondo px-4 py-14">
-      <div className="h-fit w-full max-w-[480px] rounded-xl border border-borde bg-surface p-8">
-        <h1 className="font-display text-[28px] font-semibold text-texto">Bienvenido de nuevo</h1>
+    <AuthLayout activo="login">
+      <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+        Bienvenido de nuevo
+      </h1>
 
-        {verificado === "1" && (
-          <p className="mt-4 rounded-lg bg-champan/10 px-3 py-2 text-sm text-champan">
-            Email confirmado. Ya puedes iniciar sesión.
-          </p>
+      {verificado === "1" && (
+        <p
+          style={{
+            marginTop: 16,
+            padding: "10px 14px",
+            fontFamily: "var(--font-body)",
+            fontSize: 13,
+            color: "var(--gold)",
+            border: "1px solid var(--border-gold)",
+          }}
+        >
+          Email confirmado. Ya puedes iniciar sesión.
+        </p>
+      )}
+      {verificado === "0" && (
+        <p
+          style={{
+            marginTop: 16,
+            padding: "10px 14px",
+            fontFamily: "var(--font-body)",
+            fontSize: 13,
+            color: "#e07a7a",
+            border: "1px solid rgba(154,58,58,0.4)",
+          }}
+        >
+          El enlace de verificación no es válido o ha caducado.
+        </p>
+      )}
+
+      <form onSubmit={onSubmit} style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 22 }}>
+        <label>
+          <span className="label-field">Email</span>
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="input-field"
+          />
+        </label>
+        <label>
+          <span className="label-field">Contraseña</span>
+          <input
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="input-field"
+          />
+        </label>
+
+        {error && (
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>
         )}
-        {verificado === "0" && (
-          <p className="mt-4 rounded-lg bg-red-400/10 px-3 py-2 text-sm text-red-400">
-            El enlace de verificación no es válido o ha caducado.
-          </p>
-        )}
 
-        <form onSubmit={onSubmit} className="mt-8 space-y-5">
-          <label className="block text-sm">
-            <span className="mb-1 block text-xs font-medium text-texto-secundario">Email</span>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="campo"
-            />
-          </label>
-          <label className="block text-sm">
-            <span className="mb-1 block text-xs font-medium text-texto-secundario">Contraseña</span>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="campo"
-            />
-          </label>
+        <button type="submit" disabled={enviando} className="btn-gold" style={{ width: "100%" }}>
+          {enviando ? "Entrando…" : "Entrar"}
+        </button>
+      </form>
 
-          {error && <p className="text-sm text-red-400">{error}</p>}
-
-          <button
-            type="submit"
-            disabled={enviando}
-            className="h-12 w-full rounded-full bg-burdeos font-body font-semibold text-white transition hover:bg-burdeos-hover disabled:opacity-60"
-          >
-            {enviando ? "Entrando…" : "Entrar"}
-          </button>
-        </form>
-
-        <div className="mt-6 flex justify-between text-sm text-texto-secundario">
-          <Link href="/recuperar" className="hover:text-texto">
-            ¿Olvidaste tu contraseña?
-          </Link>
-          <Link href="/registro" className="text-champan hover:underline">
-            Crear cuenta
-          </Link>
-        </div>
+      <div
+        style={{
+          marginTop: 24,
+          display: "flex",
+          justifyContent: "space-between",
+          fontFamily: "var(--font-body)",
+          fontSize: 12.5,
+        }}
+      >
+        <a href="/recuperar" style={{ color: "var(--text-muted)", textDecoration: "none" }}>
+          ¿Olvidaste tu contraseña?
+        </a>
       </div>
-    </main>
+    </AuthLayout>
   );
 }

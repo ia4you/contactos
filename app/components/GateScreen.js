@@ -2,29 +2,67 @@ import { confirmarEdad } from "../actions/gate";
 
 export function GateScreen() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-fondo px-6 py-12 text-center">
-      <p className="font-display text-3xl text-champan">Contactos</p>
+    <main
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        background: "var(--bg)",
+        padding: "24px",
+      }}
+    >
+      <p
+        className="heading"
+        style={{ fontSize: "28px", letterSpacing: "5px", color: "var(--text)" }}
+      >
+        CONTACTOS
+      </p>
 
-      <h1 className="mt-8 font-display text-[28px] font-semibold text-texto">
+      <div
+        style={{
+          width: 60,
+          height: 1,
+          background: "var(--gold)",
+          margin: "24px auto",
+        }}
+      />
+
+      <h1 className="heading" style={{ fontSize: "32px", color: "var(--text)" }}>
         ¿Eres mayor de 18 años?
       </h1>
-      <p className="mt-3 max-w-xs text-sm text-texto-secundario">
+      <p
+        style={{
+          marginTop: 12,
+          maxWidth: 320,
+          fontFamily: "var(--font-body)",
+          fontSize: 14,
+          fontWeight: 300,
+          color: "var(--text-secondary)",
+        }}
+      >
         Este sitio contiene contenido dirigido exclusivamente a un público
         adulto. Confirma tu edad para continuar.
       </p>
 
-      <div className="mt-10 flex w-full max-w-xs flex-col gap-3">
+      <div style={{ marginTop: 40, width: "100%", maxWidth: 320 }}>
         <form action={confirmarEdad}>
-          <button
-            type="submit"
-            className="w-full rounded-full bg-burdeos px-6 py-3.5 font-body font-semibold text-white transition hover:bg-burdeos-hover"
-          >
-            Sí, soy mayor de 18
+          <button type="submit" className="btn-gold" style={{ width: "100%" }}>
+            Sí, tengo más de 18 años
           </button>
         </form>
         <a
           href="https://www.google.com"
-          className="w-full rounded-full border border-borde px-6 py-3.5 font-body text-texto-secundario transition hover:border-texto-secundario"
+          style={{
+            display: "block",
+            marginTop: 16,
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            color: "var(--text-muted)",
+            textDecoration: "none",
+          }}
         >
           No, salir
         </a>

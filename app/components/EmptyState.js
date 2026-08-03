@@ -2,11 +2,22 @@ import Image from "next/image";
 
 export function EmptyState({ texto = "Aún no hay nada aquí" }) {
   return (
-    <div className="flex flex-col items-center justify-center py-10 text-center">
-      <div className="relative h-[200px] w-[200px] opacity-60">
-        <Image src="/images/rosa-burdeos.png" alt="" fill className="object-contain" />
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "40px 0",
+        textAlign: "center",
+      }}
+    >
+      <div style={{ position: "relative", width: 180, height: 180, opacity: 0.5 }}>
+        <Image src="/images/rosa-burdeos.png" alt="" fill unoptimized={false} style={{ objectFit: "contain" }} />
       </div>
-      <p className="mt-4 text-sm text-texto-secundario">{texto}</p>
+      <p style={{ marginTop: 16, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
+        {texto}
+      </p>
     </div>
   );
 }

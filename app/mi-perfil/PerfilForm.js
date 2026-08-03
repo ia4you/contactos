@@ -4,17 +4,16 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Upload } from "lucide-react";
-import { ISLANDS, PROFILE_TYPES, LOOKING_FOR_OPTIONS, AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { ISLANDS, LOOKING_FOR_OPTIONS, AVATAR_PLACEHOLDER } from "@/lib/constants";
 import { EmptyState } from "../components/EmptyState";
 
 const ESTADO_BADGE = {
-  pending: { texto: "En revisión", clase: "bg-yellow-500/20 text-yellow-300" },
-  approved: { texto: "Aprobada", clase: "bg-emerald-500/20 text-emerald-300" },
-  rejected: { texto: "Rechazada", clase: "bg-red-500/20 text-red-300" },
+  pending: { texto: "En revisión", color: "#c9a15a" },
+  approved: { texto: "Aprobada", color: "#4a9a6a" },
+  rejected: { texto: "Rechazada", color: "#9a3a3a" },
 };
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
-const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
 
 export function PerfilForm({ usuario, fotosIniciales }) {
   const [seccion, setSeccion] = useState("datos");
@@ -97,70 +96,75 @@ export function PerfilForm({ usuario, fotosIniciales }) {
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-10">
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-[280px_1fr]">
-        <aside className="flex flex-col items-center rounded-xl border border-borde bg-surface p-6 text-center md:items-start md:text-left">
-          <div className="relative h-[120px] w-[120px] overflow-hidden rounded-full border border-borde">
-            <Image src={avatarSrc} alt="" fill className="object-cover" />
+    <main style={{ maxWidth: 1100, margin: "0 auto", padding: "0" }}>
+      <div className="perfil-layout" style={{ display: "grid", gridTemplateColumns: "280px 1fr", minHeight: "calc(100vh - 81px)" }}>
+        <aside
+          style={{
+            background: "var(--bg-secondary)",
+            borderRight: "1px solid rgba(201,161,90,0.18)",
+            padding: "40px 28px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
+          }}
+        >
+          <div style={{ position: "relative", width: 120, height: 120, borderRadius: "50%", overflow: "hidden", border: "1px solid var(--border-gold)" }}>
+            <Image src={avatarSrc} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
           </div>
-          <h1 className="mt-4 font-display text-xl font-semibold text-texto">{usuario.nick}</h1>
+          <h1 className="heading" style={{ marginTop: 20, fontSize: 22, color: "var(--text)" }}>
+            {usuario.nick}
+          </h1>
 
-          <div className="mt-3 flex flex-wrap gap-2 md:justify-start">
-            <span className="rounded-full bg-champan/15 px-3 py-1 text-xs text-champan">
-              {ISLAND_LABEL[usuario.island]}
-            </span>
-            <span className="rounded-full bg-burdeos/20 px-3 py-1 text-xs text-burdeos">
-              {PROFILE_TYPE_LABEL[usuario.profile_type]}
-            </span>
-          </div>
+          <span className="badge-gold" style={{ marginTop: 12 }}>
+            {ISLAND_LABEL[usuario.island]}
+          </span>
 
-          <nav className="mt-8 flex w-full flex-col gap-1">
+          <nav style={{ marginTop: 40, width: "100%", display: "flex", flexDirection: "column", gap: 2 }}>
             <button
               type="button"
               onClick={() => setSeccion("datos")}
-              className={`rounded-lg px-3 py-2 text-left text-sm transition ${
-                seccion === "datos" ? "bg-elevada text-texto" : "text-texto-secundario hover:text-texto"
-              }`}
+              className={`nav-link-vertical ${seccion === "datos" ? "active" : ""}`}
+              style={{ textAlign: "left" }}
             >
               Mis datos
             </button>
             <button
               type="button"
               onClick={() => setSeccion("fotos")}
-              className={`rounded-lg px-3 py-2 text-left text-sm transition ${
-                seccion === "fotos" ? "bg-elevada text-texto" : "text-texto-secundario hover:text-texto"
-              }`}
+              className={`nav-link-vertical ${seccion === "fotos" ? "active" : ""}`}
+              style={{ textAlign: "left" }}
             >
               Mis fotos
             </button>
-            <Link
-              href="/mi-perfil/eliminar"
-              className="rounded-lg px-3 py-2 text-left text-sm text-red-400 hover:bg-elevada"
-            >
+            <Link href="/mi-perfil/eliminar" className="nav-link-vertical" style={{ color: "#9a3a3a" }}>
               Eliminar cuenta
             </Link>
           </nav>
         </aside>
 
-        <section className="rounded-xl border border-borde bg-surface p-6">
+        <section style={{ padding: "48px 40px" }}>
           {seccion === "datos" ? (
-            <form onSubmit={guardarPerfil} className="space-y-6">
-              <h2 className="font-display text-xl font-semibold text-texto">Mis datos</h2>
+            <form onSubmit={guardarPerfil} style={{ maxWidth: 480, display: "flex", flexDirection: "column", gap: 24 }}>
+              <h2 className="heading" style={{ fontSize: 24, color: "var(--text)" }}>
+                Mis datos
+              </h2>
 
-              <label className="block text-sm">
-                <span className="mb-1 block text-xs font-medium text-texto-secundario">Biografía</span>
+              <label>
+                <span className="label-field">Biografía</span>
                 <textarea
                   rows={4}
                   maxLength={2000}
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
-                  className="campo h-auto resize-none py-3"
+                  className="input-field"
+                  style={{ resize: "none" }}
                 />
               </label>
 
-              <label className="block text-sm">
-                <span className="mb-1 block text-xs font-medium text-texto-secundario">Isla</span>
-                <select value={island} onChange={(e) => setIsland(e.target.value)} className="campo">
+              <label>
+                <span className="label-field">Isla</span>
+                <select value={island} onChange={(e) => setIsland(e.target.value)} className="input-field">
                   {ISLANDS.map((i) => (
                     <option key={i.value} value={i.value}>
                       {i.label}
@@ -169,102 +173,222 @@ export function PerfilForm({ usuario, fotosIniciales }) {
                 </select>
               </label>
 
-              <fieldset>
-                <legend className="mb-2 text-xs font-medium text-texto-secundario">¿Qué buscas?</legend>
-                <div className="grid grid-cols-2 gap-2">
+              <div>
+                <span className="label-field">¿Qué buscas?</span>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                   {LOOKING_FOR_OPTIONS.map((o) => (
-                    <label key={o.value} className="flex items-center gap-2 text-sm text-texto">
+                    <label
+                      key={o.value}
+                      style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text)" }}
+                    >
                       <input
                         type="checkbox"
                         checked={lookingFor.includes(o.value)}
                         onChange={() => toggleLookingFor(o.value)}
-                        className="h-4 w-4 accent-burdeos"
+                        className="checkbox-gold"
                       />
                       {o.label}
                     </label>
                   ))}
                 </div>
-              </fieldset>
+              </div>
 
-              <button
-                type="submit"
-                disabled={guardando}
-                className="rounded-full bg-burdeos px-6 py-2.5 font-body font-semibold text-white transition hover:bg-burdeos-hover disabled:opacity-60"
-              >
-                {guardando ? "Guardando…" : "Guardar cambios"}
-              </button>
-              {guardado && <span className="ml-3 text-sm text-champan">Guardado.</span>}
+              <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                <button type="submit" disabled={guardando} className="btn-outline-gold">
+                  {guardando ? "Guardando…" : "Guardar cambios"}
+                </button>
+                {guardado && (
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)" }}>Guardado.</span>
+                )}
+              </div>
             </form>
           ) : (
             <div>
-              <div className="flex items-center justify-between">
-                <h2 className="font-display text-xl font-semibold text-texto">Mis fotos</h2>
-                <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-burdeos px-4 py-2 text-sm text-texto transition hover:bg-burdeos/10">
-                  <Upload size={16} />
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+                <h2 className="heading" style={{ fontSize: 24, color: "var(--text)" }}>
+                  Mis fotos
+                </h2>
+                <label
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    border: "1px dashed rgba(201,161,90,0.5)",
+                    color: "var(--text-secondary)",
+                    padding: "10px 18px",
+                    fontFamily: "var(--font-body)",
+                    fontSize: 12,
+                    textTransform: "uppercase",
+                    letterSpacing: 1,
+                    cursor: "pointer",
+                    transition: "border-color 0.2s ease, color 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "var(--gold)";
+                    e.currentTarget.style.color = "var(--gold)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(201,161,90,0.5)";
+                    e.currentTarget.style.color = "var(--text-secondary)";
+                  }}
+                >
+                  <Upload size={15} />
                   {subiendo ? "Subiendo…" : "Subir foto"}
                   <input
                     ref={inputFileRef}
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
                     className="hidden"
+                    style={{ display: "none" }}
                     disabled={subiendo}
                     onChange={subirFoto}
                   />
                 </label>
               </div>
-              {errorFoto && <p className="mt-2 text-sm text-red-400">{errorFoto}</p>}
+              {errorFoto && (
+                <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{errorFoto}</p>
+              )}
 
               {fotos.length === 0 ? (
                 <EmptyState texto="Aún no has subido ninguna foto" />
               ) : (
-                <div className="mt-6 grid grid-cols-3 gap-3 md:grid-cols-4">
+                <div
+                  style={{
+                    marginTop: 32,
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3, 1fr)",
+                    gap: 14,
+                  }}
+                  className="fotos-grid"
+                >
                   {fotos.map((foto) => {
                     const badge = ESTADO_BADGE[foto.status];
                     const atenuada = foto.status !== "approved";
                     return (
                       <div
                         key={foto.id}
-                        className="group relative aspect-square overflow-hidden rounded-lg border border-borde"
+                        className="group"
+                        style={{
+                          position: "relative",
+                          aspectRatio: "1 / 1",
+                          overflow: "hidden",
+                          border: "1px solid var(--border-gold)",
+                        }}
                       >
                         <Image
                           src={`/uploads/${usuario.id}/${foto.filename}`}
                           alt=""
                           fill
-                          className={`object-cover transition ${atenuada ? "opacity-60" : ""}`}
+                          unoptimized={false}
+                          style={{ objectFit: "cover", opacity: atenuada ? 0.6 : 1 }}
                         />
                         {badge && (
                           <span
-                            className={`absolute left-1.5 top-1.5 rounded-full px-2 py-0.5 text-[10px] ${badge.clase}`}
+                            style={{
+                              position: "absolute",
+                              left: 6,
+                              top: 6,
+                              fontFamily: "var(--font-body)",
+                              fontSize: 9,
+                              textTransform: "uppercase",
+                              letterSpacing: 1,
+                              padding: "3px 7px",
+                              border: `1px solid ${badge.color}`,
+                              color: badge.color,
+                              background: "rgba(14,10,11,0.7)",
+                            }}
                           >
                             {badge.texto}
                           </span>
                         )}
                         {foto.is_avatar && (
-                          <span className="absolute right-1.5 top-1.5 rounded-full bg-burdeos px-2 py-0.5 text-[10px] text-white">
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: 6,
+                              top: 6,
+                              fontFamily: "var(--font-body)",
+                              fontSize: 9,
+                              textTransform: "uppercase",
+                              letterSpacing: 1,
+                              padding: "3px 7px",
+                              background: "var(--gold)",
+                              color: "var(--bg)",
+                            }}
+                          >
                             Avatar
                           </span>
                         )}
 
-                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/70 p-2 opacity-0 transition group-hover:opacity-100">
+                        <div
+                          className="fotos-grid__overlay"
+                          style={{
+                            position: "absolute",
+                            inset: 0,
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: 6,
+                            background: "rgba(14,10,11,0.75)",
+                            padding: 8,
+                            opacity: 0,
+                            transition: "opacity 0.2s ease",
+                          }}
+                        >
                           <button
                             type="button"
                             onClick={() => marcarAvatar(foto.id)}
                             disabled={foto.is_avatar}
-                            className="w-full rounded-md border border-borde bg-surface/80 py-1 text-[11px] text-texto disabled:opacity-40"
+                            style={{
+                              width: "100%",
+                              border: "1px solid var(--border-gold)",
+                              background: "transparent",
+                              color: "var(--text)",
+                              padding: "6px",
+                              fontFamily: "var(--font-body)",
+                              fontSize: 11,
+                              textTransform: "uppercase",
+                              letterSpacing: 1,
+                              cursor: "pointer",
+                              opacity: foto.is_avatar ? 0.4 : 1,
+                            }}
                           >
                             Avatar
                           </button>
                           <button
                             type="button"
                             onClick={() => togglePrivada(foto.id, foto.is_private)}
-                            className="w-full rounded-md border border-borde bg-surface/80 py-1 text-[11px] text-texto"
+                            style={{
+                              width: "100%",
+                              border: "1px solid var(--border-gold)",
+                              background: "transparent",
+                              color: "var(--text)",
+                              padding: "6px",
+                              fontFamily: "var(--font-body)",
+                              fontSize: 11,
+                              textTransform: "uppercase",
+                              letterSpacing: 1,
+                              cursor: "pointer",
+                            }}
                           >
                             {foto.is_private ? "Privada ✓" : "Privada"}
                           </button>
                           <button
                             type="button"
                             onClick={() => borrarFoto(foto.id)}
-                            className="w-full rounded-md border border-red-400/40 bg-surface/80 py-1 text-[11px] text-red-400"
+                            style={{
+                              width: "100%",
+                              border: "1px solid rgba(154,58,58,0.5)",
+                              background: "transparent",
+                              color: "#e07a7a",
+                              padding: "6px",
+                              fontFamily: "var(--font-body)",
+                              fontSize: 11,
+                              textTransform: "uppercase",
+                              letterSpacing: 1,
+                              cursor: "pointer",
+                            }}
                           >
                             Borrar
                           </button>

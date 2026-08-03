@@ -4,7 +4,7 @@ export const metadata = { title: "Aviso legal — contactos.turel.es" };
 
 export default function AvisoLegal() {
   return (
-    <LegalPage titulo="Aviso legal">
+    <LegalPage kicker="Información legal" titulo="Aviso legal">
       {/* REVISAR LEGALMENTE */}
       <p>
         En cumplimiento de la Ley 34/2002, de 11 de julio, de Servicios de la

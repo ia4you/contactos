@@ -35,38 +35,50 @@ export default function EliminarCuenta() {
   }
 
   return (
-    <main className="flex min-h-screen justify-center bg-fondo px-4 py-14">
-      <div className="h-fit w-full max-w-[480px] rounded-xl border border-borde bg-surface p-8">
-        <h1 className="font-display text-2xl font-semibold text-red-400">Eliminar mi cuenta</h1>
-        <p className="mt-3 text-sm text-texto-secundario">
+    <main style={{ minHeight: "60vh", display: "flex", justifyContent: "center", padding: "80px 24px" }}>
+      <div style={{ width: "100%", maxWidth: 400 }}>
+        <h1 className="heading" style={{ fontSize: 26, color: "#9a3a3a" }}>
+          Eliminar mi cuenta
+        </h1>
+        <p style={{ marginTop: 12, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
           Esta acción es irreversible. Tu perfil, fotos y datos asociados se
           eliminarán de forma definitiva conforme a nuestra{" "}
-          <a href="/legal/privacidad" className="underline">
+          <a href="/legal/privacidad" style={{ color: "var(--gold)" }}>
             política de privacidad
           </a>
           .
         </p>
 
-        <form onSubmit={onSubmit} className="mt-8 space-y-5">
-          <label className="block text-sm">
-            <span className="mb-1 block text-xs font-medium text-texto-secundario">
-              Confirma tu contraseña
-            </span>
+        <form onSubmit={onSubmit} style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 22 }}>
+          <label>
+            <span className="label-field">Confirma tu contraseña</span>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="campo"
+              className="input-field"
             />
           </label>
 
-          {error && <p className="text-sm text-red-400">{error}</p>}
+          {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
 
           <button
             type="submit"
             disabled={enviando}
-            className="h-12 w-full rounded-full bg-red-500/90 font-body font-semibold text-white transition hover:bg-red-500 disabled:opacity-60"
+            style={{
+              width: "100%",
+              padding: "16px",
+              background: "#6b1524",
+              color: "#f4ead9",
+              border: "none",
+              fontFamily: "var(--font-body)",
+              textTransform: "uppercase",
+              letterSpacing: "2px",
+              fontSize: 12,
+              cursor: "pointer",
+              opacity: enviando ? 0.6 : 1,
+            }}
           >
             {enviando ? "Eliminando…" : "Eliminar mi cuenta definitivamente"}
           </button>

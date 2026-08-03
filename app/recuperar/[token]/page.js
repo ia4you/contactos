@@ -36,38 +36,50 @@ export default function RestablecerContrasena() {
 
   if (exito) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center bg-fondo px-6 text-center">
-        <h1 className="font-display text-2xl font-semibold text-champan">Contraseña actualizada</h1>
-        <p className="mt-4 text-sm text-texto-secundario">Redirigiendo a iniciar sesión…</p>
+      <main
+        style={{
+          minHeight: "60vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+          padding: "24px",
+        }}
+      >
+        <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+          Contraseña actualizada
+        </h1>
+        <p style={{ marginTop: 16, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
+          Redirigiendo a iniciar sesión…
+        </p>
       </main>
     );
   }
 
   return (
-    <main className="flex min-h-screen justify-center bg-fondo px-4 py-14">
-      <div className="h-fit w-full max-w-[480px] rounded-xl border border-borde bg-surface p-8">
-        <h1 className="font-display text-[28px] font-semibold text-texto">Nueva contraseña</h1>
+    <main style={{ minHeight: "60vh", display: "flex", justifyContent: "center", padding: "80px 24px" }}>
+      <div style={{ width: "100%", maxWidth: 400 }}>
+        <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+          Nueva contraseña
+        </h1>
 
-        <form onSubmit={onSubmit} className="mt-8 space-y-5">
-          <label className="block text-sm">
-            <span className="mb-1 block text-xs font-medium text-texto-secundario">Contraseña nueva</span>
+        <form onSubmit={onSubmit} style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 22 }}>
+          <label>
+            <span className="label-field">Contraseña nueva</span>
             <input
               type="password"
               required
               minLength={8}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="campo"
+              className="input-field"
             />
           </label>
 
-          {error && <p className="text-sm text-red-400">{error}</p>}
+          {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
 
-          <button
-            type="submit"
-            disabled={enviando}
-            className="h-12 w-full rounded-full bg-burdeos font-body font-semibold text-white transition hover:bg-burdeos-hover disabled:opacity-60"
-          >
+          <button type="submit" disabled={enviando} className="btn-gold" style={{ width: "100%" }}>
             {enviando ? "Guardando…" : "Guardar contraseña"}
           </button>
         </form>

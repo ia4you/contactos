@@ -3,85 +3,276 @@ import Link from "next/link";
 
 export function Landing() {
   return (
-    <main className="flex flex-col">
-      <section className="relative flex min-h-[85vh] flex-col items-center justify-center overflow-hidden px-6 py-24 text-center sm:py-32">
+    <main>
+      {/* Sección 1 — Hero */}
+      <section
+        style={{
+          position: "relative",
+          minHeight: "88vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden",
+          padding: "24px",
+        }}
+      >
         <Image
-          src="/images/banner-hero.png"
+          src="/images/siluetas-pareja.png"
           alt=""
           fill
           priority
-          className="object-cover"
+          unoptimized={false}
+          style={{ objectFit: "cover", width: "100%", height: "100%" }}
         />
-        <div className="absolute inset-0 bg-fondo/40" />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(ellipse at 30% 20%, rgba(107,21,36,0.35), transparent 60%), " +
+              "linear-gradient(180deg, rgba(14,10,11,0.55) 0%, rgba(14,10,11,0.88) 78%, #0e0a0b 100%)",
+          }}
+        />
 
-        <div className="relative z-10 flex flex-col items-center">
-          <p className="font-display text-[11px] uppercase tracking-widest text-champan">
-            Canarias · Ambiente liberal
-          </p>
-          <h1 className="mt-5 max-w-2xl font-display text-[48px] font-semibold leading-tight text-white sm:text-[64px]">
-            Conexiones exclusivas y discretas
-          </h1>
-          <p className="mt-6 max-w-md text-base text-texto-secundario">
-            Un espacio pensado para parejas y personas del ambiente liberal en
-            Canarias. Tu privacidad es la prioridad: perfiles verificados,
-            fotos protegidas y control total sobre quién te ve.
-          </p>
-
-          <Link
-            href="/registro"
-            className="mt-9 rounded-full bg-burdeos px-8 py-3.5 font-body font-semibold text-white transition hover:bg-burdeos-hover"
+        <div
+          className="rise-in"
+          style={{
+            position: "relative",
+            zIndex: 1,
+            maxWidth: 760,
+            textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <p className="kicker">Solo para mayores de 18 · Canarias</p>
+          <h1
+            className="heading"
+            style={{
+              marginTop: 20,
+              fontSize: "clamp(38px, 8vw, 70px)",
+              fontWeight: 500,
+              lineHeight: 1.15,
+              color: "var(--text)",
+            }}
           >
-            Crear mi perfil
-          </Link>
-          <Link href="/login" className="mt-4 text-sm text-champan hover:underline">
-            Ya tengo cuenta →
-          </Link>
+            Un espacio <em>íntimo</em>,<br />
+            para quienes valoran la discreción.
+          </h1>
+          <p
+            style={{
+              marginTop: 24,
+              maxWidth: 560,
+              fontFamily: "var(--font-body)",
+              fontSize: 17,
+              fontWeight: 300,
+              color: "#cdbdae",
+            }}
+          >
+            Un lugar reservado para parejas y personas del ambiente liberal en
+            Canarias, donde la privacidad y el buen gusto son la norma, no la
+            excepción.
+          </p>
+
+          <div style={{ marginTop: 36, display: "flex", flexWrap: "wrap", gap: 16, justifyContent: "center" }}>
+            <Link href="/registro" className="btn-gold">
+              Crear mi perfil
+            </Link>
+            <Link href="/login" className="btn-outline-light">
+              Ya soy miembro
+            </Link>
+          </div>
         </div>
       </section>
 
-      <section className="grid gap-px bg-borde sm:grid-cols-3">
-        <Tarjeta
-          imagen="/images/siluetas-pareja.png"
-          titulo="Conexiones reales"
-          texto="Perfiles verificados de parejas y personas afines a tu mismo ambiente, sin sorpresas."
-        />
-        <Tarjeta
-          imagen="/images/salon-lujo.png"
-          titulo="Ambiente exclusivo y privado"
-          texto="Tus fotos y datos permanecen protegidos hasta que decides compartirlos."
-        />
-        <Tarjeta
-          imagen="/images/canarias-aerea.png"
-          titulo="Las 8 islas de Canarias"
-          texto="Filtra por isla y encuentra gente de tu entorno más cercano."
-        />
+      {/* Sección 2 — Filosofía */}
+      <section style={{ padding: "120px 56px", textAlign: "center" }}>
+        <p className="kicker" style={{ textAlign: "center" }}>
+          Nuestra filosofía
+        </p>
+        <h2 className="heading" style={{ marginTop: 16, fontSize: 42 }}>
+          La discreción es nuestra moneda
+        </h2>
+
+        <div
+          style={{
+            marginTop: 64,
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: 48,
+            maxWidth: 1000,
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}
+        >
+          <Pilar numeral="I" titulo="Privacidad total">
+            Tus fotos y datos permanecen ocultos hasta que decides
+            compartirlos con quien tú elijas.
+          </Pilar>
+          <Pilar numeral="II" titulo="Perfiles verificados">
+            Revisamos cada perfil y cada fotografía antes de que sean
+            visibles para el resto de la comunidad.
+          </Pilar>
+          <Pilar numeral="III" titulo="Control absoluto">
+            Tú decides quién te ve, a quién respondes y cuándo cerrar tu
+            cuenta de forma definitiva.
+          </Pilar>
+        </div>
       </section>
 
-      <section className="bg-burdeos px-6 py-16 text-center">
-        <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl">
-          Únete a un espacio pensado para ti
+      {/* Sección 3 — Cómo funciona */}
+      <section
+        style={{
+          padding: "100px 56px",
+          textAlign: "center",
+          background: "var(--bg-secondary)",
+          borderTop: "1px solid rgba(201,161,90,0.18)",
+          borderBottom: "1px solid rgba(201,161,90,0.18)",
+        }}
+      >
+        <p className="kicker" style={{ textAlign: "center" }}>
+          El proceso
+        </p>
+        <h2 className="heading" style={{ marginTop: 16, fontSize: 42 }}>
+          Cómo funciona
         </h2>
-        <Link
-          href="/registro"
-          className="mt-7 inline-block rounded-full border border-white px-8 py-3 font-body font-semibold text-white transition hover:bg-white hover:text-burdeos"
+
+        <div
+          style={{
+            marginTop: 64,
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: 0,
+            maxWidth: 1000,
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}
         >
-          Unirme ahora
-        </Link>
+          <Paso numero="1" titulo="Crea tu perfil">
+            Regístrate en un paso, elige tu tipo de perfil y qué buscas.
+          </Paso>
+          <Paso numero="2" titulo="Explora y conecta">
+            Filtra por isla, revisa perfiles verificados y contacta con
+            quien te interese.
+          </Paso>
+          <Paso numero="3" titulo="Encuentra tu afinidad" ultimo>
+            Gestiona tus solicitudes y decide con quién compartir tus
+            fotos privadas.
+          </Paso>
+        </div>
+      </section>
+
+      {/* Sección 4 — CTA banner */}
+      <section
+        style={{
+          position: "relative",
+          padding: "130px 56px",
+          textAlign: "center",
+          overflow: "hidden",
+        }}
+      >
+        <Image
+          src="/images/canarias-aerea.png"
+          alt=""
+          fill
+          unoptimized={false}
+          style={{ objectFit: "cover", width: "100%", height: "100%" }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(180deg, #0e0a0b 0%, rgba(14,10,11,0.55) 30%, rgba(14,10,11,0.75) 100%)",
+          }}
+        />
+
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <h2 className="heading" style={{ fontSize: 44, color: "var(--text)" }}>
+            Tu próxima conexión empieza aquí.
+          </h2>
+          <div style={{ marginTop: 32 }}>
+            <Link href="/registro" className="btn-gold">
+              Crear mi perfil
+            </Link>
+          </div>
+        </div>
       </section>
     </main>
   );
 }
 
-function Tarjeta({ imagen, titulo, texto }) {
+function Pilar({ numeral, titulo, children }) {
   return (
-    <div className="flex flex-col bg-fondo">
-      <div className="relative h-[200px] w-full">
-        <Image src={imagen} alt="" fill className="object-cover" />
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div
+        style={{
+          width: 56,
+          height: 56,
+          borderRadius: "50%",
+          border: "1px solid var(--gold)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <span className="heading" style={{ fontSize: 20, color: "var(--gold)" }}>
+          {numeral}
+        </span>
       </div>
-      <div className="flex-1 bg-surface p-6">
-        <h3 className="font-display text-lg font-semibold text-champan">{titulo}</h3>
-        <p className="mt-2 text-sm text-texto-secundario">{texto}</p>
-      </div>
+      <h3 className="heading" style={{ marginTop: 20, fontSize: 22, color: "var(--text)" }}>
+        {titulo}
+      </h3>
+      <p
+        style={{
+          marginTop: 10,
+          fontFamily: "var(--font-body)",
+          fontSize: 14,
+          fontWeight: 300,
+          color: "var(--text-secondary)",
+          maxWidth: 260,
+        }}
+      >
+        {children}
+      </p>
+    </div>
+  );
+}
+
+function Paso({ numero, titulo, children, ultimo }) {
+  return (
+    <div
+      style={{
+        padding: "0 32px",
+        borderLeft: "1px solid rgba(201,161,90,0.18)",
+        borderRight: ultimo ? "1px solid rgba(201,161,90,0.18)" : "none",
+      }}
+    >
+      <span
+        className="heading"
+        style={{
+          fontSize: 56,
+          fontStyle: "italic",
+          color: "rgba(201,161,90,0.35)",
+        }}
+      >
+        {numero}
+      </span>
+      <h3 className="heading" style={{ marginTop: 12, fontSize: 22, color: "var(--text)" }}>
+        {titulo}
+      </h3>
+      <p
+        style={{
+          marginTop: 10,
+          fontFamily: "var(--font-body)",
+          fontSize: 14,
+          fontWeight: 300,
+          color: "var(--text-secondary)",
+        }}
+      >
+        {children}
+      </p>
     </div>
   );
 }

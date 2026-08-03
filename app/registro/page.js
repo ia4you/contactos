@@ -6,19 +6,29 @@ import {
   ISLANDS,
   PROFILE_TYPES,
   LOOKING_FOR_OPTIONS,
+  GENERO_OPTIONS,
+  GENERO_MAX,
+  ORIENTACION_OPTIONS,
+  ORIENTACION_MAX,
+  ROL_OPTIONS,
+  ROL_MAX,
   FECHA_NACIMIENTO_MIN,
   FECHA_NACIMIENTO_MAX,
 } from "@/lib/constants";
 import { AuthLayout } from "../components/AuthLayout";
+import { MultiSelectChips } from "../components/MultiSelectChips";
 
 const ESTADO_INICIAL = {
   profileType: "chica",
+  nick: "",
+  genero: [],
+  orientacion: [],
+  rol: [],
   herBirthdate: "",
   hisBirthdate: "",
-  nick: "",
+  island: ISLANDS[0].value,
   email: "",
   password: "",
-  island: ISLANDS[0].value,
   lookingFor: [],
   acceptTerms: false,
   acceptGdpr: false,
@@ -97,6 +107,7 @@ export default function Registro() {
       </p>
 
       <form onSubmit={onSubmit} style={{ marginTop: 28, display: "flex", flexDirection: "column", gap: 22 }}>
+        {/* 1. Tipo de perfil */}
         <div>
           <span className="label-field">Tipo de perfil</span>
           <div style={{ display: "flex", gap: 8 }}>
@@ -113,6 +124,48 @@ export default function Registro() {
           </div>
         </div>
 
+        {/* 2. Apodo */}
+        <label>
+          <span className="label-field">Apodo (nick)</span>
+          <input
+            type="text"
+            required
+            minLength={3}
+            maxLength={24}
+            value={form.nick}
+            onChange={(e) => actualizar("nick", e.target.value)}
+            className="input-field"
+          />
+        </label>
+
+        {/* 3. Género */}
+        <MultiSelectChips
+          label="Género"
+          options={GENERO_OPTIONS}
+          selected={form.genero}
+          onChange={(v) => actualizar("genero", v)}
+          max={GENERO_MAX}
+        />
+
+        {/* 4. Orientación */}
+        <MultiSelectChips
+          label="Orientación"
+          options={ORIENTACION_OPTIONS}
+          selected={form.orientacion}
+          onChange={(v) => actualizar("orientacion", v)}
+          max={ORIENTACION_MAX}
+        />
+
+        {/* 5. Rol */}
+        <MultiSelectChips
+          label="Rol"
+          options={ROL_OPTIONS}
+          selected={form.rol}
+          onChange={(v) => actualizar("rol", v)}
+          max={ROL_MAX}
+        />
+
+        {/* 6. Fecha de nacimiento */}
         {form.profileType === "pareja" ? (
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
             <label>
@@ -155,19 +208,23 @@ export default function Registro() {
           </label>
         )}
 
+        {/* 7. Isla */}
         <label>
-          <span className="label-field">Nick</span>
-          <input
-            type="text"
-            required
-            minLength={3}
-            maxLength={24}
-            value={form.nick}
-            onChange={(e) => actualizar("nick", e.target.value)}
+          <span className="label-field">Isla</span>
+          <select
+            value={form.island}
+            onChange={(e) => actualizar("island", e.target.value)}
             className="input-field"
-          />
+          >
+            {ISLANDS.map((i) => (
+              <option key={i.value} value={i.value}>
+                {i.label}
+              </option>
+            ))}
+          </select>
         </label>
 
+        {/* 8. Email y contraseña */}
         <label>
           <span className="label-field">Email</span>
           <input
@@ -191,21 +248,7 @@ export default function Registro() {
           />
         </label>
 
-        <label>
-          <span className="label-field">Isla</span>
-          <select
-            value={form.island}
-            onChange={(e) => actualizar("island", e.target.value)}
-            className="input-field"
-          >
-            {ISLANDS.map((i) => (
-              <option key={i.value} value={i.value}>
-                {i.label}
-              </option>
-            ))}
-          </select>
-        </label>
-
+        {/* 9. Qué buscas */}
         <div>
           <span className="label-field">¿Qué buscas?</span>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
@@ -233,6 +276,7 @@ export default function Registro() {
           </div>
         </div>
 
+        {/* 10. Checkboxes RGPD */}
         <div
           style={{
             display: "flex",

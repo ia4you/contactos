@@ -3,12 +3,31 @@ import bcrypt from "bcryptjs";
 import { query } from "@/lib/db";
 import { mailer } from "@/lib/mailer";
 import { crearTokenVerificacionEmail } from "@/lib/tokens";
-import { ISLANDS, PROFILE_TYPES, LOOKING_FOR_OPTIONS, esMayorDeEdad } from "@/lib/constants";
+import {
+  ISLANDS,
+  PROFILE_TYPES,
+  LOOKING_FOR_OPTIONS,
+  GENERO_OPTIONS,
+  GENERO_MAX,
+  ORIENTACION_OPTIONS,
+  ORIENTACION_MAX,
+  ROL_OPTIONS,
+  ROL_MAX,
+  esMayorDeEdad,
+} from "@/lib/constants";
 
 const ISLAND_VALUES = ISLANDS.map((i) => i.value);
 const PROFILE_TYPE_VALUES = PROFILE_TYPES.map((p) => p.value);
 const LOOKING_FOR_VALUES = LOOKING_FOR_OPTIONS.map((l) => l.value);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validarMultiSelect(valores, opciones, max) {
+  return (
+    Array.isArray(valores) &&
+    valores.length <= max &&
+    valores.every((v) => opciones.includes(v))
+  );
+}
 
 export async function POST(req) {
   const body = await req.json().catch(() => null);
@@ -21,6 +40,9 @@ export async function POST(req) {
     herBirthdate,
     hisBirthdate,
     nick,
+    genero,
+    orientacion,
+    rol,
     email,
     password,
     island,
@@ -41,6 +63,15 @@ export async function POST(req) {
     !lookingFor.every((v) => LOOKING_FOR_VALUES.includes(v))
   ) {
     return NextResponse.json({ error: "Selecciona al menos una opción en \"qué buscas\"." }, { status: 400 });
+  }
+  if (!validarMultiSelect(genero, GENERO_OPTIONS, GENERO_MAX)) {
+    return NextResponse.json({ error: `Selecciona como máximo ${GENERO_MAX} opciones de género.` }, { status: 400 });
+  }
+  if (!validarMultiSelect(orientacion, ORIENTACION_OPTIONS, ORIENTACION_MAX)) {
+    return NextResponse.json({ error: `Selecciona como máximo ${ORIENTACION_MAX} opciones de orientación.` }, { status: 400 });
+  }
+  if (!validarMultiSelect(rol, ROL_OPTIONS, ROL_MAX)) {
+    return NextResponse.json({ error: `Selecciona como máximo ${ROL_MAX} opciones de rol.` }, { status: 400 });
   }
   if (acceptTerms !== true || acceptGdpr !== true) {
     return NextResponse.json(
@@ -89,10 +120,22 @@ export async function POST(req) {
     const { rows } = await query(
       `INSERT INTO users
          (email, password_hash, nick, profile_type, island, her_birthdate, his_birthdate,
-          looking_for, gdpr_consent_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, now())
+          looking_for, genero, orientacion, rol, gdpr_consent_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, now())
        RETURNING id`,
-      [emailLimpio, passwordHash, nickLimpio, profileType, island, her, his, lookingFor]
+      [
+        emailLimpio,
+        passwordHash,
+        nickLimpio,
+        profileType,
+        island,
+        her,
+        his,
+        lookingFor,
+        genero || [],
+        orientacion || [],
+        rol || [],
+      ]
     );
     userId = rows[0].id;
   } catch (err) {

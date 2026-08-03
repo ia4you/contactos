@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #0b0e1a;
-  --foreground: #f2ede4;
+  --background: #0a0a0a;
+  --foreground: #f0f0f0;
 }
 
 body {
@@ -15,7 +15,7 @@ body {
 
 @layer components {
   .campo {
-    @apply w-full rounded-lg border border-champan/20 bg-white/[0.03] px-3 py-2 text-[#F2EDE4] outline-none transition focus:border-champan/60;
+    @apply h-12 w-full rounded-lg border border-borde bg-elevada px-3 text-texto outline-none transition focus:border-burdeos;
   }
 }
 

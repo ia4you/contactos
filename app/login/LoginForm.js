@@ -38,60 +38,62 @@ export function LoginForm() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6 py-14">
-      <h1 className="font-display text-3xl font-semibold text-champan">Iniciar sesión</h1>
+    <main className="flex min-h-screen justify-center bg-fondo px-4 py-14">
+      <div className="h-fit w-full max-w-[480px] rounded-xl border border-borde bg-surface p-8">
+        <h1 className="font-display text-[28px] font-semibold text-texto">Bienvenido de nuevo</h1>
 
-      {verificado === "1" && (
-        <p className="mt-4 rounded-lg bg-champan/10 px-3 py-2 text-sm text-champan">
-          Email confirmado. Ya puedes iniciar sesión.
-        </p>
-      )}
-      {verificado === "0" && (
-        <p className="mt-4 rounded-lg bg-red-400/10 px-3 py-2 text-sm text-red-400">
-          El enlace de verificación no es válido o ha caducado.
-        </p>
-      )}
+        {verificado === "1" && (
+          <p className="mt-4 rounded-lg bg-champan/10 px-3 py-2 text-sm text-champan">
+            Email confirmado. Ya puedes iniciar sesión.
+          </p>
+        )}
+        {verificado === "0" && (
+          <p className="mt-4 rounded-lg bg-red-400/10 px-3 py-2 text-sm text-red-400">
+            El enlace de verificación no es válido o ha caducado.
+          </p>
+        )}
 
-      <form onSubmit={onSubmit} className="mt-8 space-y-5">
-        <label className="block text-sm">
-          <span className="mb-1 block font-medium text-[#F2EDE4]/80">Email</span>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="campo"
-          />
-        </label>
-        <label className="block text-sm">
-          <span className="mb-1 block font-medium text-[#F2EDE4]/80">Contraseña</span>
-          <input
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="campo"
-          />
-        </label>
+        <form onSubmit={onSubmit} className="mt-8 space-y-5">
+          <label className="block text-sm">
+            <span className="mb-1 block text-xs font-medium text-texto-secundario">Email</span>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="campo"
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="mb-1 block text-xs font-medium text-texto-secundario">Contraseña</span>
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="campo"
+            />
+          </label>
 
-        {error && <p className="text-sm text-red-400">{error}</p>}
+          {error && <p className="text-sm text-red-400">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={enviando}
-          className="w-full rounded-full bg-burdeos px-6 py-3 font-body font-semibold text-[#F2EDE4] transition hover:bg-burdeos-light disabled:opacity-60"
-        >
-          {enviando ? "Entrando…" : "Entrar"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={enviando}
+            className="h-12 w-full rounded-full bg-burdeos font-body font-semibold text-white transition hover:bg-burdeos-hover disabled:opacity-60"
+          >
+            {enviando ? "Entrando…" : "Entrar"}
+          </button>
+        </form>
 
-      <div className="mt-6 flex justify-between text-sm text-[#F2EDE4]/60">
-        <Link href="/recuperar" className="underline underline-offset-4">
-          ¿Olvidaste tu contraseña?
-        </Link>
-        <Link href="/registro" className="underline underline-offset-4">
-          Crear cuenta
-        </Link>
+        <div className="mt-6 flex justify-between text-sm text-texto-secundario">
+          <Link href="/recuperar" className="hover:text-texto">
+            ¿Olvidaste tu contraseña?
+          </Link>
+          <Link href="/registro" className="text-champan hover:underline">
+            Crear cuenta
+          </Link>
+        </div>
       </div>
     </main>
   );

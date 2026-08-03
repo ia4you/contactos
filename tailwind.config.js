@@ -8,17 +8,19 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        noche: "#0B0E1A",
+        fondo: "#0a0a0a",
+        surface: "#141414",
+        elevada: "#1e1e1e",
         burdeos: {
           DEFAULT: "#7A2E3F",
-          light: "#9A4457",
-          dark: "#5C2230",
+          hover: "#9a3a4f",
         },
-        champan: {
-          DEFAULT: "#D8B47E",
-          light: "#E6CBA0",
-          dark: "#B8935E",
+        champan: "#D8B47E",
+        texto: {
+          DEFAULT: "#f0f0f0",
+          secundario: "#888888",
         },
+        borde: "#2a2a2a",
       },
       fontFamily: {
         display: ["var(--font-fraunces)", "serif"],

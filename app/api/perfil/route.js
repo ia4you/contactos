@@ -7,6 +7,25 @@ import { ISLANDS, LOOKING_FOR_OPTIONS } from "@/lib/constants";
 const ISLAND_VALUES = ISLANDS.map((i) => i.value);
 const LOOKING_FOR_VALUES = LOOKING_FOR_OPTIONS.map((l) => l.value);
 
+// Usado por el Navbar para mostrar el avatar real (foto aprobada y marcada
+// como avatar) sin tener que meter la ruta de la foto en el JWT, que
+// quedaría obsoleta en cuanto el usuario suba o cambie de avatar sin volver
+// a iniciar sesión.
+export async function GET() {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: "No autorizado." }, { status: 401 });
+  }
+
+  const { rows } = await query(
+    `SELECT filename FROM photos WHERE user_id = $1 AND is_avatar = true AND status = 'approved' LIMIT 1`,
+    [session.user.id]
+  );
+
+  const avatarUrl = rows[0] ? `/uploads/${session.user.id}/${rows[0].filename}` : null;
+  return NextResponse.json({ avatarUrl });
+}
+
 export async function PATCH(req) {
   const session = await getServerSession(authOptions);
   if (!session) {

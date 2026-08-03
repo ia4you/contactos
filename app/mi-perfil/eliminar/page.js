@@ -35,41 +35,43 @@ export default function EliminarCuenta() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6 py-14">
-      <h1 className="font-display text-3xl font-semibold text-red-400">Eliminar mi cuenta</h1>
-      <p className="mt-3 text-sm text-[#F2EDE4]/70">
-        Esta acción es irreversible. Tu perfil, fotos y datos asociados se
-        eliminarán de forma definitiva conforme a nuestra{" "}
-        <a href="/legal/privacidad" className="underline">
-          política de privacidad
-        </a>
-        .
-      </p>
+    <main className="flex min-h-screen justify-center bg-fondo px-4 py-14">
+      <div className="h-fit w-full max-w-[480px] rounded-xl border border-borde bg-surface p-8">
+        <h1 className="font-display text-2xl font-semibold text-red-400">Eliminar mi cuenta</h1>
+        <p className="mt-3 text-sm text-texto-secundario">
+          Esta acción es irreversible. Tu perfil, fotos y datos asociados se
+          eliminarán de forma definitiva conforme a nuestra{" "}
+          <a href="/legal/privacidad" className="underline">
+            política de privacidad
+          </a>
+          .
+        </p>
 
-      <form onSubmit={onSubmit} className="mt-8 space-y-5">
-        <label className="block text-sm">
-          <span className="mb-1 block font-medium text-[#F2EDE4]/80">
-            Confirma tu contraseña
-          </span>
-          <input
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="campo"
-          />
-        </label>
+        <form onSubmit={onSubmit} className="mt-8 space-y-5">
+          <label className="block text-sm">
+            <span className="mb-1 block text-xs font-medium text-texto-secundario">
+              Confirma tu contraseña
+            </span>
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="campo"
+            />
+          </label>
 
-        {error && <p className="text-sm text-red-400">{error}</p>}
+          {error && <p className="text-sm text-red-400">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={enviando}
-          className="w-full rounded-full bg-red-500/90 px-6 py-3 font-body font-semibold text-white transition hover:bg-red-500 disabled:opacity-60"
-        >
-          {enviando ? "Eliminando…" : "Eliminar mi cuenta definitivamente"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={enviando}
+            className="h-12 w-full rounded-full bg-red-500/90 font-body font-semibold text-white transition hover:bg-red-500 disabled:opacity-60"
+          >
+            {enviando ? "Eliminando…" : "Eliminar mi cuenta definitivamente"}
+          </button>
+        </form>
+      </div>
     </main>
   );
 }

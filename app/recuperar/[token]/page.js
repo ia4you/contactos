@@ -36,40 +36,42 @@ export default function RestablecerContrasena() {
 
   if (exito) {
     return (
-      <main className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-6 text-center">
+      <main className="flex min-h-screen flex-col items-center justify-center bg-fondo px-6 text-center">
         <h1 className="font-display text-2xl font-semibold text-champan">Contraseña actualizada</h1>
-        <p className="mt-4 text-sm text-[#F2EDE4]/70">Redirigiendo a iniciar sesión…</p>
+        <p className="mt-4 text-sm text-texto-secundario">Redirigiendo a iniciar sesión…</p>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6 py-14">
-      <h1 className="font-display text-3xl font-semibold text-champan">Nueva contraseña</h1>
+    <main className="flex min-h-screen justify-center bg-fondo px-4 py-14">
+      <div className="h-fit w-full max-w-[480px] rounded-xl border border-borde bg-surface p-8">
+        <h1 className="font-display text-[28px] font-semibold text-texto">Nueva contraseña</h1>
 
-      <form onSubmit={onSubmit} className="mt-8 space-y-5">
-        <label className="block text-sm">
-          <span className="mb-1 block font-medium text-[#F2EDE4]/80">Contraseña nueva</span>
-          <input
-            type="password"
-            required
-            minLength={8}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="campo"
-          />
-        </label>
+        <form onSubmit={onSubmit} className="mt-8 space-y-5">
+          <label className="block text-sm">
+            <span className="mb-1 block text-xs font-medium text-texto-secundario">Contraseña nueva</span>
+            <input
+              type="password"
+              required
+              minLength={8}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="campo"
+            />
+          </label>
 
-        {error && <p className="text-sm text-red-400">{error}</p>}
+          {error && <p className="text-sm text-red-400">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={enviando}
-          className="w-full rounded-full bg-burdeos px-6 py-3 font-body font-semibold text-[#F2EDE4] transition hover:bg-burdeos-light disabled:opacity-60"
-        >
-          {enviando ? "Guardando…" : "Guardar contraseña"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={enviando}
+            className="h-12 w-full rounded-full bg-burdeos font-body font-semibold text-white transition hover:bg-burdeos-hover disabled:opacity-60"
+          >
+            {enviando ? "Guardando…" : "Guardar contraseña"}
+          </button>
+        </form>
+      </div>
     </main>
   );
 }

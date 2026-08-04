@@ -79,9 +79,9 @@ export function Navbar() {
 
         {status === "authenticated" ? (
           <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
-            <button type="button" aria-label="Buscar" className="icon-btn">
+            <Link href="/buscar" aria-label="Buscar" className="icon-btn">
               <Search size={20} />
-            </button>
+            </Link>
             <button type="button" aria-label="Mensajes" className="icon-btn">
               <MessageCircle size={20} />
             </button>
@@ -135,7 +135,7 @@ export function Navbar() {
             <Link href="/" className="nav-top-link">
               Inicio
             </Link>
-            <Link href="/perfiles" className="nav-top-link">
+            <Link href="/buscar" className="nav-top-link">
               Perfiles
             </Link>
             <Link href="/login" className="btn-outline-gold">

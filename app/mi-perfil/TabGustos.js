@@ -1,47 +1,44 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { GustosModal } from "../components/GustosModal";
 
 export function TabGustos({ setFetichesCount }) {
   const [categorias, setCategorias] = useState(null);
-  const [seleccionados, setSeleccionados] = useState(new Set());
+  const [guardados, setGuardados] = useState(new Set());
   const [cargando, setCargando] = useState(true);
-  const [guardando, setGuardando] = useState(false);
-  const [guardado, setGuardado] = useState(false);
+  const [modalAbierto, setModalAbierto] = useState(false);
 
   useEffect(() => {
     fetch("/api/perfil/fetiches")
       .then((r) => r.json())
       .then((d) => {
         setCategorias(d.categorias);
-        setSeleccionados(new Set(d.seleccionados));
+        setGuardados(new Set(d.seleccionados));
         setCargando(false);
       })
       .catch(() => setCargando(false));
   }, []);
 
-  function toggle(id) {
-    setGuardado(false);
-    setSeleccionados((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
+  const nombrePorId = useMemo(() => {
+    const mapa = {};
+    Object.values(categorias || {}).forEach((items) => {
+      items.forEach((f) => {
+        mapa[f.id] = f.nombre;
+      });
     });
-  }
+    return mapa;
+  }, [categorias]);
 
-  async function guardar() {
-    setGuardando(true);
-    setGuardado(false);
+  async function guardarEnServidor(seleccion) {
     const res = await fetch("/api/perfil/fetiches", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fetiche_ids: [...seleccionados] }),
+      body: JSON.stringify({ fetiche_ids: [...seleccion] }),
     });
-    setGuardando(false);
     if (res.ok) {
-      setGuardado(true);
-      setFetichesCount(seleccionados.size);
+      setGuardados(seleccion);
+      setFetichesCount(seleccion.size);
     }
   }
 
@@ -53,39 +50,43 @@ export function TabGustos({ setFetichesCount }) {
 
   return (
     <div style={{ maxWidth: 640 }}>
-      <h2 className="heading" style={{ fontSize: 24, color: "var(--text)" }}>
-        Mis gustos
-      </h2>
-      <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
-        Selecciona tus gustos e intereses. Aparecerán en tu perfil público.
-      </p>
-
-      {Object.entries(categorias || {}).map(([categoria, fetiches], i) => (
-        <div key={categoria} style={{ marginTop: i === 0 ? 32 : 32 }}>
-          <p className="kicker" style={{ letterSpacing: 3 }}>
-            {categoria}
-          </p>
-          <div style={{ marginTop: 14, display: "flex", flexWrap: "wrap", gap: 10 }}>
-            {fetiches.map((f) => (
-              <button
-                key={f.id}
-                type="button"
-                onClick={() => toggle(f.id)}
-                className={`fetiche-chip ${seleccionados.has(f.id) ? "active" : ""}`}
-              >
-                {f.nombre}
-              </button>
-            ))}
-          </div>
-        </div>
-      ))}
-
-      <div style={{ marginTop: 40, display: "flex", alignItems: "center", gap: 16 }}>
-        <button type="button" onClick={guardar} disabled={guardando} className="btn-gold">
-          {guardando ? "Guardando…" : "Guardar mis gustos"}
-        </button>
-        {guardado && <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)" }}>Guardado.</span>}
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+        <h2 className="heading" style={{ fontSize: 24, color: "var(--text)" }}>
+          Mis gustos
+        </h2>
+        {guardados.size > 0 && (
+          <button type="button" onClick={() => setModalAbierto(true)} className="btn-outline-gold">
+            Editar mis gustos
+          </button>
+        )}
       </div>
+
+      {guardados.size === 0 ? (
+        <div style={{ marginTop: 20 }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
+            Aún no has añadido tus gustos
+          </p>
+          <button type="button" onClick={() => setModalAbierto(true)} className="btn-gold" style={{ marginTop: 16 }}>
+            Añadir gustos
+          </button>
+        </div>
+      ) : (
+        <div style={{ marginTop: 20, display: "flex", flexWrap: "wrap", gap: 10 }}>
+          {[...guardados].map((id) => (
+            <span key={id} className="fetiche-chip active" style={{ cursor: "default" }}>
+              {nombrePorId[id]}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {modalAbierto && (
+        <GustosModal
+          seleccionInicial={guardados}
+          onCerrar={() => setModalAbierto(false)}
+          onGuardar={guardarEnServidor}
+        />
+      )}
     </div>
   );
 }

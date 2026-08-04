@@ -35,13 +35,18 @@ export default async function PerfilPublico({ params }) {
     [usuario.id]
   );
 
-  const { rows: gustos } = await query(
-    `SELECT f.nombre FROM user_fetiches uf
+  const { rows: gustosRows } = await query(
+    `SELECT f.nombre, f.categoria FROM user_fetiches uf
        JOIN fetiches f ON f.id = uf.fetiche_id
       WHERE uf.user_id = $1
       ORDER BY f.categoria, f.id`,
     [usuario.id]
   );
+  const gustosPorCategoria = {};
+  for (const g of gustosRows) {
+    if (!gustosPorCategoria[g.categoria]) gustosPorCategoria[g.categoria] = [];
+    gustosPorCategoria[g.categoria].push(g.nombre);
+  }
 
   const avatarFoto = fotos[0];
   const avatarSrc = avatarFoto
@@ -253,18 +258,25 @@ export default async function PerfilPublico({ params }) {
           </div>
         )}
 
-        {gustos.length > 0 && (
+        {gustosRows.length > 0 && (
           <div style={{ marginTop: 56 }}>
-            <p className="kicker" style={{ letterSpacing: 3 }}>
+            <h2 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
               Sus gustos
-            </p>
-            <div style={{ marginTop: 14, display: "flex", flexWrap: "wrap", gap: 10 }}>
-              {gustos.map((g) => (
-                <span key={g.nombre} className="fetiche-chip active" style={{ cursor: "default" }}>
-                  {g.nombre}
-                </span>
-              ))}
-            </div>
+            </h2>
+            {Object.entries(gustosPorCategoria).map(([categoria, nombres]) => (
+              <div key={categoria} style={{ marginTop: 24 }}>
+                <p className="kicker" style={{ letterSpacing: 3 }}>
+                  {categoria}
+                </p>
+                <div style={{ marginTop: 14, display: "flex", flexWrap: "wrap", gap: 10 }}>
+                  {nombres.map((nombre) => (
+                    <span key={nombre} className="fetiche-chip active" style={{ cursor: "default" }}>
+                      {nombre}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>

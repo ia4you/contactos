@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Send } from "lucide-react";
+import { Send, ArrowLeft } from "lucide-react";
 import { ISLANDS, AVATAR_PLACEHOLDER } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
 import { EmptyState } from "../components/EmptyState";
@@ -110,9 +110,15 @@ export function MensajesShell({ usuarioId }) {
     }
   }
 
+  function volverALaLista() {
+    setActivaId(null);
+    setOtro(null);
+    window.history.replaceState(null, "", "/mensajes");
+  }
+
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", height: "calc(100vh - 89px)" }}>
-      <aside style={{ background: "#150f10", borderRight: "1px solid rgba(201,161,90,0.18)", overflowY: "auto" }}>
+    <div className={`mensajes-layout ${otro ? "chat-abierto" : ""}`}>
+      <aside className="mensajes-sidebar" style={{ background: "#150f10", borderRight: "1px solid rgba(201,161,90,0.18)", overflowY: "auto" }}>
         <div style={{ padding: "20px 20px 12px" }}>
           <p className="kicker">Mensajes</p>
         </div>
@@ -131,10 +137,12 @@ export function MensajesShell({ usuarioId }) {
               ? `/uploads/${c.otro_id}/${c.avatar_filename}`
               : AVATAR_PLACEHOLDER[c.profile_type];
             return (
-              <button
+              <div
                 key={c.id}
-                type="button"
+                role="button"
+                tabIndex={0}
                 onClick={() => abrirConversacion(c.id)}
+                onKeyDown={(e) => e.key === "Enter" && abrirConversacion(c.id)}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -148,9 +156,13 @@ export function MensajesShell({ usuarioId }) {
                   textAlign: "left",
                 }}
               >
-                <div style={{ position: "relative", width: 40, height: 40, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
+                <Link
+                  href={`/perfil/${c.nick}`}
+                  onClick={(e) => e.stopPropagation()}
+                  style={{ position: "relative", width: 40, height: 40, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}
+                >
                   <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
-                </div>
+                </Link>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
                     <span style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text)", fontWeight: 500 }}>
@@ -197,13 +209,13 @@ export function MensajesShell({ usuarioId }) {
                     )}
                   </div>
                 </div>
-              </button>
+              </div>
             );
           })
         )}
       </aside>
 
-      <section style={{ display: "flex", flexDirection: "column", background: "var(--bg)" }}>
+      <section className="mensajes-chat" style={{ display: "flex", flexDirection: "column", background: "var(--bg)" }}>
         {!otro ? (
           <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
@@ -221,6 +233,15 @@ export function MensajesShell({ usuarioId }) {
                 borderBottom: "1px solid rgba(201,161,90,0.18)",
               }}
             >
+              <button
+                type="button"
+                onClick={volverALaLista}
+                aria-label="Volver a la lista"
+                className="icon-btn mensajes-volver"
+                style={{ flexShrink: 0 }}
+              >
+                <ArrowLeft size={20} />
+              </button>
               <div style={{ position: "relative", width: 40, height: 40, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
                 <Image
                   src={otro.avatar_filename ? `/uploads/${otro.id}/${otro.avatar_filename}` : AVATAR_PLACEHOLDER[otro.profile_type]}

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, MessageCircle, Bookmark, X } from "lucide-react";
+import { Heart, MessageCircle, X } from "lucide-react";
 import { ISLANDS, PROFILE_TYPES, AVATAR_PLACEHOLDER } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
 
@@ -238,7 +238,6 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
             gap: 8,
             background: "transparent",
             border: "none",
-            borderRight: "1px solid #2a2a2a",
             padding: "8px 0",
             cursor: "pointer",
             fontFamily: "var(--font-body)",
@@ -248,26 +247,6 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
         >
           <MessageCircle size={16} />
           Comentar {comentariosCount > 0 && `(${comentariosCount})`}
-        </button>
-        <button
-          type="button"
-          style={{
-            flex: 1,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 8,
-            background: "transparent",
-            border: "none",
-            padding: "8px 0",
-            cursor: "pointer",
-            fontFamily: "var(--font-body)",
-            fontSize: 13,
-            color: "var(--text-secondary)",
-          }}
-        >
-          <Bookmark size={16} />
-          Guardar
         </button>
       </div>
 

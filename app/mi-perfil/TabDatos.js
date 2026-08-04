@@ -118,7 +118,7 @@ export function TabDatos({ usuario }) {
 
       <div>
         <span className="label-field">¿Qué buscas?</span>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+        <div className="grid-2-responsive" style={{ gridTemplateColumns: "1fr 1fr", gap: 10 }}>
           {LOOKING_FOR_OPTIONS.map((o) => (
             <label
               key={o.value}

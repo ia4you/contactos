@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { query } from "@/lib/db";
+import { crearNotificacion } from "@/lib/notificaciones";
 
 export async function POST(req) {
   const session = await getServerSession(authOptions);
@@ -18,10 +19,11 @@ export async function POST(req) {
   }
 
   const { rows: existe } = await query(
-    `SELECT 1 FROM publicaciones WHERE id = $1 AND deleted_at IS NULL`,
+    `SELECT user_id FROM publicaciones WHERE id = $1 AND deleted_at IS NULL`,
     [publicacionId]
   );
-  if (!existe[0]) {
+  const publicacion = existe[0];
+  if (!publicacion) {
     return NextResponse.json({ error: "Publicación no encontrada." }, { status: 404 });
   }
 
@@ -30,6 +32,10 @@ export async function POST(req) {
      RETURNING id, texto, created_at`,
     [session.user.id, publicacionId, texto]
   );
+
+  if (Number(publicacion.user_id) !== Number(session.user.id)) {
+    await crearNotificacion(publicacion.user_id, "comentario", session.user.id, publicacionId);
+  }
 
   return NextResponse.json({
     comentario: {

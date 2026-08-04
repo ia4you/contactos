@@ -39,6 +39,7 @@ export function Navbar() {
 
   return (
     <header
+      className="site-header"
       style={{
         position: "sticky",
         top: 0,
@@ -47,7 +48,6 @@ export function Navbar() {
         backdropFilter: "blur(14px)",
         WebkitBackdropFilter: "blur(14px)",
         borderBottom: "1px solid rgba(201,161,90,0.18)",
-        padding: "22px 40px",
       }}
     >
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -61,13 +61,14 @@ export function Navbar() {
           }}
         >
           <span
-            className="heading"
+            className="heading logo-title"
             style={{ fontSize: "24px", letterSpacing: "5px", color: "var(--text)" }}
           >
             CONTACTOS
           </span>
-          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--gold)" }} />
+          <span className="logo-subtitle-dot" style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--gold)" }} />
           <span
+            className="logo-subtitle"
             style={{
               fontFamily: "var(--font-body)",
               fontSize: "10px",
@@ -94,7 +95,7 @@ export function Navbar() {
               </Link>
             </nav>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
+            <div className="navbar-acciones" style={{ display: "flex", alignItems: "center", gap: "24px" }}>
               <button
                 type="button"
                 onClick={() => setMenuMovilAbierto(true)}

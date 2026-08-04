@@ -43,10 +43,12 @@ export function NotificacionesBell() {
     const data = await res.json().catch(() => null);
     setNotificaciones(data?.notificaciones || []);
 
-    if (contador > 0) {
-      setContador(0);
-      fetch("/api/notificaciones/leidas", { method: "PATCH" }).catch(() => {});
-    }
+    // Se marca como leído sin condicionar al contador local: el polling cada
+    // 30s puede ir por detrás de una notificación recién creada, y si el
+    // PATCH solo se disparara cuando contador > 0 esa notificación nunca
+    // llegaría a marcarse como leída.
+    setContador(0);
+    fetch("/api/notificaciones/leidas", { method: "PATCH" }).catch(() => {});
   }
 
   return (

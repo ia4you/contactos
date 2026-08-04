@@ -66,7 +66,7 @@ export function SubInfoGeneral({ usuario }) {
       <MultiSelectChips label="Rol" options={ROL_OPTIONS} selected={rol} onChange={setRol} max={ROL_MAX} />
 
       {usuario.profile_type === "pareja" ? (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        <div className="grid-2-responsive" style={{ gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           <label>
             <span className="label-field">Fecha de nacimiento (ella)</span>
             <input
@@ -117,7 +117,7 @@ export function SubInfoGeneral({ usuario }) {
 
       <div>
         <span className="label-field">¿Qué buscas?</span>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+        <div className="grid-2-responsive" style={{ gridTemplateColumns: "1fr 1fr", gap: 10 }}>
           {LOOKING_FOR_OPTIONS.map((o) => (
             <label
               key={o.value}

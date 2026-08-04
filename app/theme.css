@@ -242,8 +242,17 @@
   }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 768px) {
   .perfil-layout {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.grid-2-responsive {
+  display: grid;
+}
+@media (max-width: 768px) {
+  .grid-2-responsive {
     grid-template-columns: 1fr !important;
   }
 }
@@ -348,7 +357,7 @@
   display: grid;
   grid-template-columns: 320px 1fr;
 }
-@media (max-width: 860px) {
+@media (max-width: 768px) {
   .buscar-layout {
     grid-template-columns: 1fr;
   }
@@ -357,13 +366,13 @@
 .buscar-filtros-toggle {
   display: none;
 }
-@media (max-width: 860px) {
+@media (max-width: 768px) {
   .buscar-filtros-toggle {
     display: flex;
   }
 }
 
-@media (max-width: 860px) {
+@media (max-width: 768px) {
   .buscar-sidebar--cerrado {
     display: none;
   }
@@ -390,7 +399,7 @@
   grid-template-columns: 260px 1fr;
   gap: 32px;
 }
-@media (max-width: 860px) {
+@media (max-width: 768px) {
   .anuncios-layout {
     grid-template-columns: 1fr;
   }
@@ -399,13 +408,13 @@
 .anuncios-filtros-toggle {
   display: none;
 }
-@media (max-width: 860px) {
+@media (max-width: 768px) {
   .anuncios-filtros-toggle {
     display: flex;
   }
 }
 
-@media (max-width: 860px) {
+@media (max-width: 768px) {
   .anuncios-sidebar--cerrado {
     display: none;
   }
@@ -442,11 +451,67 @@
 .hamburger-menu {
   display: none;
 }
-@media (max-width: 720px) {
+@media (max-width: 768px) {
   .hamburger-menu {
     display: flex;
   }
   .desktop-nav-links {
     display: none;
+  }
+}
+
+.site-header {
+  padding: 22px 40px;
+}
+@media (max-width: 768px) {
+  .site-header {
+    padding: 16px 20px;
+  }
+  .navbar-acciones {
+    gap: 16px !important;
+  }
+}
+@media (max-width: 400px) {
+  .logo-subtitle,
+  .logo-subtitle-dot {
+    display: none;
+  }
+  .logo-title {
+    font-size: 19px !important;
+    letter-spacing: 3px !important;
+  }
+  .navbar-acciones {
+    gap: 12px !important;
+  }
+}
+
+.mensajes-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  height: calc(100vh - 89px);
+}
+@media (max-width: 768px) {
+  .mensajes-layout {
+    grid-template-columns: 1fr;
+    height: calc(100vh - 73px);
+  }
+  .mensajes-layout .mensajes-sidebar {
+    display: flex;
+    flex-direction: column;
+  }
+  .mensajes-layout.chat-abierto .mensajes-sidebar {
+    display: none;
+  }
+  .mensajes-layout:not(.chat-abierto) .mensajes-chat {
+    display: none;
+  }
+}
+
+.mensajes-volver {
+  display: none;
+}
+@media (max-width: 768px) {
+  .mensajes-volver {
+    display: flex;
   }
 }

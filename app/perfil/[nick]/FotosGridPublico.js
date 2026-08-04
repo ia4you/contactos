@@ -43,7 +43,6 @@ function FotoItem({ usuarioId, foto, esPropio }) {
           alt=""
           fill
           unoptimized={false}
-          className="foto-discreta"
           style={{ objectFit: "cover" }}
         />
 

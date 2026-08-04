@@ -1,14 +1,12 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { Heart } from "lucide-react";
 import { authOptions } from "@/lib/auth";
 import { query } from "@/lib/db";
-import { ISLANDS, PROFILE_TYPES, AVATAR_PLACEHOLDER } from "@/lib/constants";
-import { ReportButton } from "../../components/ReportButton";
-
-const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
-const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
+import { AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { crearNotificacion } from "@/lib/notificaciones";
+import { PerfilCabecera } from "./PerfilCabecera";
+import { FotosGridPublico } from "./FotosGridPublico";
 
 const MESES = [
   "enero", "febrero", "marzo", "abril", "mayo", "junio",
@@ -28,12 +26,78 @@ export default async function PerfilPublico({ params }) {
 
   const esPropio = session?.user?.id === String(usuario.id);
 
-  const { rows: fotos } = await query(
-    `SELECT id, filename FROM photos
-      WHERE user_id = $1 AND status = 'approved' AND is_private = false
-      ORDER BY created_at DESC`,
-    [usuario.id]
+  if (session && !esPropio) {
+    const { rows: bloqueoRows } = await query(
+      `SELECT 1 FROM blocks
+        WHERE (blocker_id = $1 AND blocked_id = $2) OR (blocker_id = $2 AND blocked_id = $1)`,
+      [session.user.id, usuario.id]
+    );
+    if (bloqueoRows[0]) {
+      return (
+        <main style={{ display: "flex", minHeight: "60vh", alignItems: "center", justifyContent: "center", padding: "40px 24px" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
+            Este perfil no está disponible.
+          </p>
+        </main>
+      );
+    }
+  }
+
+  // Estado de interacción inicial (like/match/amistad), solo si hay sesión y
+  // no es el propio perfil — se pasa como valor inicial al componente
+  // cliente, que luego gestiona sus propias actualizaciones optimistas.
+  let estadoInicial = { meGusta: false, match: false, amistad: null };
+  if (session && !esPropio) {
+    const meId = Number(session.user.id);
+    const { rows: likeRows } = await query(
+      `SELECT 1 FROM likes WHERE from_id = $1 AND to_id = $2`,
+      [meId, usuario.id]
+    );
+    const user1 = Math.min(meId, usuario.id);
+    const user2 = Math.max(meId, usuario.id);
+    const { rows: matchRows } = await query(
+      `SELECT 1 FROM matches WHERE user1_id = $1 AND user2_id = $2`,
+      [user1, user2]
+    );
+    const { rows: amistadRows } = await query(
+      `SELECT from_id, status FROM amistades
+        WHERE (from_id = $1 AND to_id = $2) OR (from_id = $2 AND to_id = $1)`,
+      [meId, usuario.id]
+    );
+    const amistadRow = amistadRows[0];
+    let amistad = null;
+    if (amistadRow?.status === "accepted") amistad = "amigos";
+    else if (amistadRow?.status === "pending") amistad = amistadRow.from_id === meId ? "enviada" : "recibida";
+
+    estadoInicial = { meGusta: Boolean(likeRows[0]), match: Boolean(matchRows[0]), amistad };
+
+    // Registrar visita (upsert) + notificación, máximo una cada 24h por
+    // visitante para no saturar al dueño del perfil.
+    await query(
+      `INSERT INTO visits (visitor_id, visited_id, visited_at) VALUES ($1, $2, now())
+       ON CONFLICT (visitor_id, visited_id) DO UPDATE SET visited_at = now()`,
+      [meId, usuario.id]
+    );
+    const { rows: notifRecientes } = await query(
+      `SELECT 1 FROM notificaciones
+        WHERE user_id = $1 AND from_user_id = $2 AND tipo = 'visita' AND created_at > now() - interval '24 hours'`,
+      [usuario.id, meId]
+    );
+    if (!notifRecientes[0]) {
+      await crearNotificacion(usuario.id, "visita", meId);
+    }
+  }
+
+  const { rows: fotosRows } = await query(
+    `SELECT p.id, p.filename,
+            (SELECT count(*)::int FROM foto_likes fl WHERE fl.photo_id = p.id) AS likes_count,
+            ${session ? "EXISTS (SELECT 1 FROM foto_likes fl2 WHERE fl2.photo_id = p.id AND fl2.user_id = $2)" : "false"} AS me_gusta
+       FROM photos p
+      WHERE p.user_id = $1 AND p.status = 'approved' AND p.is_private = false
+      ORDER BY p.created_at DESC`,
+    session ? [usuario.id, session.user.id] : [usuario.id]
   );
+  const fotos = fotosRows.map((f) => ({ id: f.id, filename: f.filename, likesCount: f.likes_count, meGusta: f.me_gusta }));
 
   const { rows: gustosRows } = await query(
     `SELECT f.nombre, f.categoria FROM user_fetiches uf
@@ -58,141 +122,13 @@ export default async function PerfilPublico({ params }) {
 
   return (
     <main>
-      {/* Cabecera */}
-      <div
-        style={{
-          background: "var(--bg-secondary)",
-          borderBottom: "1px solid rgba(201,161,90,0.18)",
-          padding: "40px 24px",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: 1100,
-            margin: "0 auto",
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 28,
-            justifyContent: "space-between",
-          }}
-        >
-          <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
-            <div
-              style={{
-                position: "relative",
-                width: 100,
-                height: 100,
-                borderRadius: "50%",
-                overflow: "hidden",
-                border: "2px solid var(--gold)",
-                flexShrink: 0,
-              }}
-            >
-              <Image src={avatarSrc} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
-            </div>
-
-            <div style={{ maxWidth: 480 }}>
-              <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
-                {usuario.nick}
-              </h1>
-
-              <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 8 }}>
-                <span className="badge-gold">{ISLAND_LABEL[usuario.island]}</span>
-                <span
-                  style={{
-                    display: "inline-block",
-                    fontFamily: "var(--font-body)",
-                    background: "var(--surface)",
-                    border: "1px solid var(--border-gold)",
-                    color: "var(--text)",
-                    fontSize: 10,
-                    textTransform: "uppercase",
-                    letterSpacing: 1.5,
-                    padding: "4px 10px",
-                  }}
-                >
-                  {PROFILE_TYPE_LABEL[usuario.profile_type]}
-                </span>
-                {usuario.verified && (
-                  <span
-                    style={{
-                      display: "inline-block",
-                      fontFamily: "var(--font-body)",
-                      background: "var(--gold)",
-                      color: "var(--bg)",
-                      fontSize: 10,
-                      textTransform: "uppercase",
-                      letterSpacing: 1.5,
-                      padding: "4px 10px",
-                    }}
-                  >
-                    Verificado
-                  </span>
-                )}
-              </div>
-
-              <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
-                Miembro desde {miembroDesde}
-              </p>
-
-              {usuario.bio && (
-                <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
-                  {usuario.bio}
-                </p>
-              )}
-
-              <GrupoChips titulo="Género" valores={usuario.genero} />
-              <GrupoChips titulo="Orientación" valores={usuario.orientacion} />
-              <GrupoChips titulo="Rol" valores={usuario.rol} />
-            </div>
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: 10, alignSelf: "flex-start" }}>
-            <button
-              type="button"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                border: "1px solid var(--gold)",
-                color: "var(--gold)",
-                background: "transparent",
-                padding: "11px 22px",
-                fontFamily: "var(--font-body)",
-                fontSize: 12,
-                textTransform: "uppercase",
-                letterSpacing: 2,
-                cursor: "pointer",
-              }}
-            >
-              <Heart size={15} />
-              Dar like
-            </button>
-
-            {!esPropio && (
-              <ReportButton
-                reportedUserId={usuario.id}
-                label="Denunciar perfil"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 8,
-                  border: "1px solid rgba(154,58,58,0.5)",
-                  color: "#e07a7a",
-                  background: "transparent",
-                  padding: "11px 22px",
-                  fontFamily: "var(--font-body)",
-                  fontSize: 12,
-                  textTransform: "uppercase",
-                  letterSpacing: 2,
-                  cursor: "pointer",
-                }}
-              />
-            )}
-          </div>
-        </div>
-      </div>
+      <PerfilCabecera
+        usuario={usuario}
+        avatarSrc={avatarSrc}
+        miembroDesde={miembroDesde}
+        esPropio={esPropio}
+        estadoInicial={estadoInicial}
+      />
 
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 24px" }}>
         {fotos.length === 0 ? (
@@ -205,57 +141,7 @@ export default async function PerfilPublico({ params }) {
             </p>
           </div>
         ) : (
-          <div className="fotos-grid-2a">
-            {fotos.map((foto) => (
-              <div
-                key={foto.id}
-                className="group"
-                style={{
-                  position: "relative",
-                  aspectRatio: "1 / 1",
-                  overflow: "hidden",
-                  border: "1px solid rgba(201,161,90,0.2)",
-                }}
-              >
-                <Image
-                  src={`/uploads/${usuario.id}/${foto.filename}`}
-                  alt=""
-                  fill
-                  unoptimized={false}
-                  className="foto-discreta"
-                  style={{ objectFit: "cover" }}
-                />
-                {!esPropio && (
-                  <div
-                    className="fotos-grid__overlay"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      display: "flex",
-                      alignItems: "flex-end",
-                      justifyContent: "center",
-                      padding: 8,
-                      pointerEvents: "none",
-                    }}
-                  >
-                    <ReportButton
-                      reportedUserId={usuario.id}
-                      label="Denunciar"
-                      className="foto-overlay-btn"
-                      style={{
-                        pointerEvents: "auto",
-                        width: "auto",
-                        borderColor: "rgba(154,58,58,0.5)",
-                        color: "#e07a7a",
-                        background: "rgba(14,10,11,0.75)",
-                        padding: "6px 12px",
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+          <FotosGridPublico usuarioId={usuario.id} fotos={fotos} esPropio={esPropio} />
         )}
 
         {gustosRows.length > 0 && (
@@ -281,32 +167,5 @@ export default async function PerfilPublico({ params }) {
         )}
       </div>
     </main>
-  );
-}
-
-function GrupoChips({ titulo, valores }) {
-  if (!valores || valores.length === 0) return null;
-  return (
-    <div style={{ marginTop: 10 }}>
-      <span
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: 11,
-          textTransform: "uppercase",
-          letterSpacing: 1.5,
-          color: "var(--text-muted)",
-          marginRight: 8,
-        }}
-      >
-        {titulo}:
-      </span>
-      <span style={{ display: "inline-flex", flexWrap: "wrap", gap: 6 }}>
-        {valores.map((v) => (
-          <span key={v} className="badge-gold">
-            {v}
-          </span>
-        ))}
-      </span>
-    </div>
   );
 }

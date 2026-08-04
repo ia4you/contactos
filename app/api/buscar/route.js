@@ -44,8 +44,12 @@ export async function GET(req) {
   const condiciones = [
     "u.deleted_at IS NULL",
     "u.email_verified_at IS NOT NULL",
+    "u.show_in_search = true",
     "u.id != $1",
     "EXISTS (SELECT 1 FROM photos p WHERE p.user_id = u.id AND p.status = 'approved' AND p.is_private = false)",
+    // Bloqueo en cualquier dirección: si yo he bloqueado a alguien, o me ha
+    // bloqueado a mí, no debe aparecer en mis resultados.
+    "NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))",
   ];
   const valores = [session.user.id];
 

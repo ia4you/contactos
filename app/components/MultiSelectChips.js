@@ -3,9 +3,32 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, X } from "lucide-react";
 
-export function MultiSelectChips({ label, options, selected, onChange, max }) {
+function normalizar(opcion) {
+  return typeof opcion === "object" && opcion !== null
+    ? { value: opcion.value, label: opcion.label }
+    : { value: opcion, label: opcion };
+}
+
+// modo "chips" (por defecto): control cerrado muestra cada seleccionado como
+// chip individual con X, y respeta un máximo de selecciones (usado en
+// género/orientación/rol, con opciones como strings planos).
+// modo "resumen": control cerrado muestra un texto resumen ("Todas las
+// islas" / "N islas seleccionadas") en vez de chips, sin límite salvo que
+// se pase `max` explícitamente. Acepta opciones como strings o como
+// {value, label}.
+export function MultiSelectChips({
+  label,
+  options,
+  selected,
+  onChange,
+  max,
+  modo = "chips",
+  textoVacio = "Selecciona…",
+  textoResumen,
+}) {
   const [abierto, setAbierto] = useState(false);
   const ref = useRef(null);
+  const opcionesNormalizadas = options.map(normalizar);
 
   useEffect(() => {
     function onClickFuera(e) {
@@ -15,22 +38,24 @@ export function MultiSelectChips({ label, options, selected, onChange, max }) {
     return () => document.removeEventListener("mousedown", onClickFuera);
   }, []);
 
-  function toggle(opcion) {
-    if (selected.includes(opcion)) {
-      onChange(selected.filter((o) => o !== opcion));
-    } else if (selected.length < max) {
-      onChange([...selected, opcion]);
+  function toggle(valor) {
+    if (selected.includes(valor)) {
+      onChange(selected.filter((v) => v !== valor));
+    } else if (!max || selected.length < max) {
+      onChange([...selected, valor]);
     }
   }
 
-  function quitar(opcion) {
-    onChange(selected.filter((o) => o !== opcion));
+  function quitar(valor) {
+    onChange(selected.filter((v) => v !== valor));
   }
+
+  const etiquetaPorValor = Object.fromEntries(opcionesNormalizadas.map((o) => [o.value, o.label]));
 
   return (
     <div ref={ref} style={{ position: "relative" }}>
       <span className="label-field">
-        {label} <span style={{ opacity: 0.6 }}>(máx. {max})</span>
+        {label} {modo === "chips" && max && <span style={{ opacity: 0.6 }}>(máx. {max})</span>}
       </span>
 
       <button
@@ -48,39 +73,49 @@ export function MultiSelectChips({ label, options, selected, onChange, max }) {
           textAlign: "left",
         }}
       >
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, flex: 1 }}>
-          {selected.length === 0 ? (
-            <span style={{ color: "var(--text-muted)" }}>Selecciona…</span>
-          ) : (
-            selected.map((opcion) => (
-              <span
-                key={opcion}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  background: "var(--gold)",
-                  color: "var(--bg)",
-                  fontSize: 12,
-                  padding: "4px 8px",
-                }}
-              >
-                {opcion}
+        {modo === "resumen" ? (
+          <span style={{ color: selected.length === 0 ? "var(--text-muted)" : "var(--text)" }}>
+            {selected.length === 0
+              ? textoVacio
+              : textoResumen
+                ? textoResumen(selected.length)
+                : `${selected.length} seleccionados`}
+          </span>
+        ) : (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, flex: 1 }}>
+            {selected.length === 0 ? (
+              <span style={{ color: "var(--text-muted)" }}>{textoVacio}</span>
+            ) : (
+              selected.map((valor) => (
                 <span
-                  role="button"
-                  tabIndex={0}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    quitar(opcion);
+                  key={valor}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    background: "var(--gold)",
+                    color: "var(--bg)",
+                    fontSize: 12,
+                    padding: "4px 8px",
                   }}
-                  style={{ display: "flex", cursor: "pointer" }}
                 >
-                  <X size={12} />
+                  {etiquetaPorValor[valor] ?? valor}
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      quitar(valor);
+                    }}
+                    style={{ display: "flex", cursor: "pointer" }}
+                  >
+                    <X size={12} />
+                  </span>
                 </span>
-              </span>
-            ))
-          )}
-        </div>
+              ))
+            )}
+          </div>
+        )}
         <ChevronDown size={16} color="var(--text-secondary)" style={{ flexShrink: 0 }} />
       </button>
 
@@ -98,14 +133,14 @@ export function MultiSelectChips({ label, options, selected, onChange, max }) {
             overflowY: "auto",
           }}
         >
-          {options.map((opcion) => {
-            const marcado = selected.includes(opcion);
-            const deshabilitado = !marcado && selected.length >= max;
+          {opcionesNormalizadas.map(({ value, label: etiqueta }) => {
+            const marcado = selected.includes(value);
+            const deshabilitado = !marcado && !!max && selected.length >= max;
             return (
               <button
-                key={opcion}
+                key={value}
                 type="button"
-                onClick={() => !deshabilitado && toggle(opcion)}
+                onClick={() => !deshabilitado && toggle(value)}
                 disabled={deshabilitado}
                 style={{
                   display: "block",
@@ -122,7 +157,7 @@ export function MultiSelectChips({ label, options, selected, onChange, max }) {
                 }}
               >
                 {marcado ? "✓ " : ""}
-                {opcion}
+                {etiqueta}
               </button>
             );
           })}

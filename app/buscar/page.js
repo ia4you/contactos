@@ -12,6 +12,7 @@ import {
   AVATAR_PLACEHOLDER,
 } from "@/lib/constants";
 import { GustosModal } from "../components/GustosModal";
+import { MultiSelectChips } from "../components/MultiSelectChips";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
@@ -141,24 +142,17 @@ export default function Buscar() {
             </div>
           </Bloque>
 
-          <Bloque titulo="Isla">
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {ISLANDS.map((i) => (
-                <label
-                  key={i.value}
-                  style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text)" }}
-                >
-                  <input
-                    type="checkbox"
-                    checked={filtros.islas.includes(i.value)}
-                    onChange={() => actualizar("islas", toggleEnArray(filtros.islas, i.value))}
-                    className="checkbox-gold"
-                  />
-                  {i.label}
-                </label>
-              ))}
-            </div>
-          </Bloque>
+          <div style={{ marginTop: 28 }}>
+            <MultiSelectChips
+              label="Isla"
+              options={ISLANDS}
+              selected={filtros.islas}
+              onChange={(v) => actualizar("islas", v)}
+              modo="resumen"
+              textoVacio="Todas las islas"
+              textoResumen={(n) => `${n} isla${n === 1 ? "" : "s"} seleccionada${n === 1 ? "" : "s"}`}
+            />
+          </div>
 
           <Bloque titulo="Edad">
             <div style={{ display: "flex", gap: 10 }}>

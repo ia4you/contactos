@@ -4,13 +4,16 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { Search, MessageCircle, Bell } from "lucide-react";
+import { Search, Menu, X } from "lucide-react";
 import { AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { MensajesIcono } from "./MensajesIcono";
+import { NotificacionesBell } from "./NotificacionesBell";
 
 export function Navbar() {
   const { data: session, status } = useSession();
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const [menuMovilAbierto, setMenuMovilAbierto] = useState(false);
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -78,72 +81,196 @@ export function Navbar() {
         </Link>
 
         {status === "authenticated" ? (
-          <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
-            <Link href="/buscar" aria-label="Buscar" className="icon-btn">
-              <Search size={20} />
-            </Link>
-            <button type="button" aria-label="Mensajes" className="icon-btn">
-              <MessageCircle size={20} />
-            </button>
-            <button type="button" aria-label="Notificaciones" className="icon-btn">
-              <Bell size={20} />
-            </button>
+          <div style={{ display: "flex", alignItems: "center", gap: "36px" }}>
+            <nav className="desktop-nav-links" style={{ display: "flex", alignItems: "center", gap: "28px" }}>
+              <Link href="/feed" className="nav-top-link">
+                Feed
+              </Link>
+              <Link href="/anuncios" className="nav-top-link">
+                Anuncios
+              </Link>
+              <Link href="/amistades" className="nav-top-link">
+                Amistades
+              </Link>
+            </nav>
 
-            <div style={{ position: "relative" }} ref={menuRef}>
+            <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
               <button
                 type="button"
-                onClick={() => setMenuAbierto((v) => !v)}
-                aria-label="Menú de usuario"
-                style={{
-                  display: "block",
-                  width: 36,
-                  height: 36,
-                  borderRadius: "50%",
-                  overflow: "hidden",
-                  border: "1px solid var(--border-gold)",
-                  padding: 0,
-                  cursor: "pointer",
-                  background: "transparent",
-                }}
+                onClick={() => setMenuMovilAbierto(true)}
+                aria-label="Abrir menú"
+                className="icon-btn hamburger-menu"
               >
-                <Image
-                  src={imagenAvatar}
-                  alt=""
-                  width={36}
-                  height={36}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
+                <Menu size={22} />
               </button>
 
-              {menuAbierto && (
-                <div className="dropdown-menu">
-                  <Link href="/mi-perfil" onClick={() => setMenuAbierto(false)} className="dropdown-item">
-                    Mi perfil
-                  </Link>
-                  <Link href="/ajustes" onClick={() => setMenuAbierto(false)} className="dropdown-item">
-                    Ajustes
-                  </Link>
-                  <button type="button" onClick={() => signOut({ callbackUrl: "/" })} className="dropdown-item">
-                    Cerrar sesión
-                  </button>
-                </div>
-              )}
+              <Link href="/buscar" aria-label="Buscar" className="icon-btn">
+                <Search size={20} />
+              </Link>
+              <MensajesIcono />
+              <NotificacionesBell />
+
+              <div style={{ position: "relative" }} ref={menuRef}>
+                <button
+                  type="button"
+                  onClick={() => setMenuAbierto((v) => !v)}
+                  aria-label="Menú de usuario"
+                  style={{
+                    display: "block",
+                    width: 36,
+                    height: 36,
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                    border: "1px solid var(--border-gold)",
+                    padding: 0,
+                    cursor: "pointer",
+                    background: "transparent",
+                  }}
+                >
+                  <Image
+                    src={imagenAvatar}
+                    alt=""
+                    width={36}
+                    height={36}
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                </button>
+
+                {menuAbierto && (
+                  <div className="dropdown-menu">
+                    <Link href="/mi-perfil" onClick={() => setMenuAbierto(false)} className="dropdown-item">
+                      Mi perfil
+                    </Link>
+                    <Link href="/ajustes" onClick={() => setMenuAbierto(false)} className="dropdown-item">
+                      Ajustes
+                    </Link>
+                    <button type="button" onClick={() => signOut({ callbackUrl: "/" })} className="dropdown-item">
+                      Cerrar sesión
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ) : (
           <div style={{ display: "flex", alignItems: "center", gap: "32px" }}>
-            <Link href="/" className="nav-top-link">
-              Inicio
-            </Link>
-            <Link href="/buscar" className="nav-top-link">
-              Perfiles
-            </Link>
+            <nav className="desktop-nav-links" style={{ display: "flex", alignItems: "center", gap: "32px" }}>
+              <Link href="/" className="nav-top-link">
+                Inicio
+              </Link>
+              <Link href="/buscar" className="nav-top-link">
+                Perfiles
+              </Link>
+            </nav>
+            <button
+              type="button"
+              onClick={() => setMenuMovilAbierto(true)}
+              aria-label="Abrir menú"
+              className="icon-btn hamburger-menu"
+            >
+              <Menu size={22} />
+            </button>
             <Link href="/login" className="btn-outline-gold">
               Acceder
             </Link>
           </div>
         )}
       </div>
+
+      {menuMovilAbierto && (
+        <div
+          style={{ position: "fixed", inset: 0, zIndex: 60, background: "rgba(0,0,0,0.55)" }}
+          onClick={() => setMenuMovilAbierto(false)}
+        >
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: "min(280px, 80vw)",
+              background: "#0e0a0b",
+              borderRight: "1px solid rgba(201,161,90,0.18)",
+              display: "flex",
+              flexDirection: "column",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "22px 24px",
+                borderBottom: "1px solid rgba(201,161,90,0.18)",
+              }}
+            >
+              <span className="heading" style={{ fontSize: 18, letterSpacing: 3, color: "var(--text)" }}>
+                MENÚ
+              </span>
+              <button
+                type="button"
+                onClick={() => setMenuMovilAbierto(false)}
+                aria-label="Cerrar menú"
+                className="icon-btn"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <nav style={{ display: "flex", flexDirection: "column" }}>
+              {status === "authenticated" ? (
+                <>
+                  <Link href="/feed" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
+                    Feed
+                  </Link>
+                  <Link href="/anuncios" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
+                    Anuncios
+                  </Link>
+                  <Link href="/amistades" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
+                    Amistades
+                  </Link>
+                  <Link href="/mensajes" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
+                    Mensajes
+                  </Link>
+                  <Link href="/notificaciones" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
+                    Notificaciones
+                  </Link>
+                  <Link href="/buscar" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
+                    Buscar
+                  </Link>
+                  <Link href="/mi-perfil" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
+                    Mi perfil
+                  </Link>
+                  <Link href="/ajustes" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
+                    Ajustes
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="mobile-menu-link"
+                    style={{ textAlign: "left", background: "none", border: "none", borderBottom: "1px solid rgba(201,161,90,0.12)", cursor: "pointer" }}
+                  >
+                    Cerrar sesión
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
+                    Inicio
+                  </Link>
+                  <Link href="/buscar" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
+                    Perfiles
+                  </Link>
+                  <Link href="/login" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
+                    Acceder
+                  </Link>
+                </>
+              )}
+            </nav>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

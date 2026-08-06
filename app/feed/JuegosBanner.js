@@ -2,7 +2,7 @@ const JUEGOS = [
   {
     titulo: "¿Nos conocemos?",
     texto: "El juego de parejas más divertido de Canarias",
-    href: "https://parejas.turel.rel.es",
+    href: "https://parejas.turel.es",
   },
   {
     titulo: "Desátate",
@@ -11,10 +11,13 @@ const JUEGOS = [
   },
 ];
 
-export function JuegosBanner() {
+export function JuegosBanner({ vertical = false }) {
   return (
     <div style={{ marginBottom: 24 }}>
-      <div className="grid-2-responsive" style={{ gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+      <div
+        className={vertical ? undefined : "grid-2-responsive"}
+        style={vertical ? { display: "flex", flexDirection: "column", gap: 12 } : { gridTemplateColumns: "1fr 1fr", gap: 12 }}
+      >
         {JUEGOS.map((j) => (
           <div
             key={j.titulo}

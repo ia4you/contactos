@@ -75,7 +75,37 @@ function TarjetaRecomendacion({ r }) {
   );
 }
 
-export function RecomendadosWidget() {
+function FilaRecomendacionCompacta({ r }) {
+  const src = r.avatar_filename ? `/uploads/${r.user_id}/${r.avatar_filename}` : AVATAR_PLACEHOLDER[r.profile_type];
+  const score = estiloScore(r.score ?? 0);
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid rgba(201,161,90,0.1)" }}>
+      <div style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}>
+        <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
+          <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+        </div>
+        {mostrarPuntoOnline(r) && <PuntoOnline />}
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <span className="heading" style={{ fontSize: 13, color: "var(--text)", display: "block" }}>{r.nick}</span>
+        {r.score != null ? (
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontFamily: "var(--font-body)", fontSize: 10, color: score.color }}>
+            {score.icono && <Flame size={10} fill={score.color} />}
+            {r.score}% compatible
+          </span>
+        ) : (
+          <span style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "var(--text-muted)" }}>{ISLAND_LABEL[r.island]}</span>
+        )}
+      </div>
+      <Link href={`/perfil/${r.nick}`} className="btn-outline-gold" style={{ flexShrink: 0, fontSize: 9, padding: "5px 10px" }}>
+        Ver
+      </Link>
+    </div>
+  );
+}
+
+export function RecomendadosWidget({ compacto = false }) {
   const [estado, setEstado] = useState({ cargando: true, recomendaciones: [], sinGustos: false });
   const scrollRef = useRef(null);
 
@@ -103,7 +133,7 @@ export function RecomendadosWidget() {
             Seleccionados por IA según tus gustos
           </p>
         </div>
-        {!estado.cargando && estado.recomendaciones.length > 0 && (
+        {!compacto && !estado.cargando && estado.recomendaciones.length > 0 && (
           <div className="recomendados-flechas" style={{ display: "flex", gap: 6 }}>
             <button type="button" onClick={() => desplazar(-1)} aria-label="Anterior" className="icon-btn">
               <ChevronLeft size={18} />
@@ -116,11 +146,22 @@ export function RecomendadosWidget() {
       </div>
 
       {estado.cargando ? (
-        <div style={{ marginTop: 14, display: "flex", gap: 12, overflowX: "hidden" }}>
-          {[1, 2, 3, 4].map((i) => (
-            <TarjetaSkeleton key={i} />
-          ))}
-        </div>
+        compacto ? (
+          <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 10 }}>
+            {[1, 2, 3].map((i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#2a2a2a" }} />
+                <div style={{ flex: 1, height: 12, background: "#2a2a2a" }} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div style={{ marginTop: 14, display: "flex", gap: 12, overflowX: "hidden" }}>
+            {[1, 2, 3, 4].map((i) => (
+              <TarjetaSkeleton key={i} />
+            ))}
+          </div>
+        )
       ) : estado.sinGustos ? (
         <div style={{ marginTop: 14, background: "#1c1416", border: "1px solid rgba(201,161,90,0.18)", padding: 20, textAlign: "center" }}>
           <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
@@ -129,6 +170,12 @@ export function RecomendadosWidget() {
           <Link href="/mi-perfil#gustos" className="btn-outline-gold" style={{ marginTop: 12, display: "inline-block", fontSize: 11 }}>
             Añadir gustos
           </Link>
+        </div>
+      ) : compacto ? (
+        <div style={{ marginTop: 10 }}>
+          {estado.recomendaciones.map((r) => (
+            <FilaRecomendacionCompacta key={r.user_id} r={r} />
+          ))}
         </div>
       ) : (
         <div ref={scrollRef} style={{ marginTop: 14, display: "flex", gap: 12, overflowX: "auto", paddingBottom: 4 }}>

@@ -609,3 +609,23 @@
   background: #4ade80;
   animation: pulsoOnline 1.6s ease-in-out infinite;
 }
+
+.feed-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr 240px;
+  gap: 28px;
+  align-items: start;
+}
+.feed-sidebar-izq,
+.feed-sidebar-der {
+  width: 100%;
+}
+@media (max-width: 1024px) {
+  .feed-layout {
+    grid-template-columns: 1fr;
+  }
+  .feed-sidebar-izq,
+  .feed-sidebar-der {
+    display: none;
+  }
+}

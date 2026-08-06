@@ -8,6 +8,7 @@ import { ActivosIslaWidget } from "./ActivosIslaWidget";
 import { HistoriasFranja } from "./HistoriasFranja";
 import { RecomendadosWidget } from "./RecomendadosWidget";
 import { AhoraOnlineCarrusel } from "./AhoraOnlineCarrusel";
+import { MisGruposSidebar } from "./MisGruposSidebar";
 import { EmptyState } from "../components/EmptyState";
 
 const LIMITE = 20;
@@ -52,77 +53,81 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
   }
 
   return (
-    <div style={{ maxWidth: 680, margin: "0 auto", padding: "32px 20px 80px", background: "var(--bg)" }}>
-      <AhoraOnlineCarrusel />
+    <div className="feed-layout" style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 20px 80px" }}>
+      <aside className="feed-sidebar-izq">
+        <MisGruposSidebar />
+      </aside>
 
-      <HistoriasFranja usuario={usuario} avatarUrl={avatarUrl} />
+      <div style={{ maxWidth: 680, width: "100%", margin: "0 auto", background: "var(--bg)" }}>
+        <AhoraOnlineCarrusel />
 
-      {tab === "parati" && (
-        <div style={{ marginBottom: 24 }}>
-          <Composer usuario={usuario} avatarUrl={avatarUrl} onPublicado={onPublicado} />
+        <HistoriasFranja usuario={usuario} avatarUrl={avatarUrl} />
+
+        {tab === "parati" && (
+          <div style={{ marginBottom: 24 }}>
+            <Composer usuario={usuario} avatarUrl={avatarUrl} onPublicado={onPublicado} />
+          </div>
+        )}
+
+        <ActivosIslaWidget usuarios={activosIsla} isla={usuario.island} />
+
+        <div className="tab-nav" style={{ marginBottom: 24 }}>
+          <button
+            type="button"
+            onClick={() => cambiarTab("parati")}
+            className={`tab-nav-item ${tab === "parati" ? "active" : ""}`}
+          >
+            Para ti
+          </button>
+          <button
+            type="button"
+            onClick={() => cambiarTab("siguiendo")}
+            className={`tab-nav-item ${tab === "siguiendo" ? "active" : ""}`}
+          >
+            Siguiendo
+          </button>
         </div>
-      )}
 
-      <JuegosBanner />
+        {cargando && publicaciones.length === 0 ? (
+          <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)", padding: "40px 0" }}>
+            Cargando…
+          </p>
+        ) : publicaciones.length === 0 ? (
+          tab === "siguiendo" ? (
+            <EmptyState texto="Cuando conectes con alguien verás su actividad aquí" />
+          ) : (
+            <EmptyState texto="Aún no hay publicaciones. ¡Sé el primero en compartir algo!" />
+          )
+        ) : (
+          <>
+            {publicaciones.map((p) =>
+              p.esAnuncio ? (
+                <AnuncioCardFeed key={`anuncio-${p.id}`} anuncio={p} />
+              ) : (
+                <PublicacionCard key={p.id} publicacion={p} usuarioActualId={usuario.id} onEliminar={onEliminar} />
+              )
+            )}
 
-      <RecomendadosWidget />
-
-      <ActivosIslaWidget usuarios={activosIsla} isla={usuario.island} />
-
-      <div className="tab-nav" style={{ marginBottom: 24 }}>
-        <button
-          type="button"
-          onClick={() => cambiarTab("parati")}
-          className={`tab-nav-item ${tab === "parati" ? "active" : ""}`}
-        >
-          Para ti
-        </button>
-        <button
-          type="button"
-          onClick={() => cambiarTab("siguiendo")}
-          className={`tab-nav-item ${tab === "siguiendo" ? "active" : ""}`}
-        >
-          Siguiendo
-        </button>
+            {hasMore && (
+              <div style={{ textAlign: "center", marginTop: 8 }}>
+                <button
+                  type="button"
+                  onClick={() => cargar(tab, offset, true)}
+                  disabled={cargando}
+                  className="btn-outline-gold"
+                >
+                  {cargando ? "Cargando…" : "Ver más"}
+                </button>
+              </div>
+            )}
+          </>
+        )}
       </div>
 
-      {cargando && publicaciones.length === 0 ? (
-        <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)", padding: "40px 0" }}>
-          Cargando…
-        </p>
-      ) : publicaciones.length === 0 ? (
-        tab === "siguiendo" ? (
-          <EmptyState texto="Cuando conectes con alguien verás su actividad aquí" />
-        ) : (
-          <EmptyState texto="Aún no hay publicaciones. ¡Sé el primero en compartir algo!" />
-        )
-      ) : (
-        <>
-          {publicaciones.map((p) =>
-            p.esAnuncio ? (
-              <AnuncioCardFeed key={`anuncio-${p.id}`} anuncio={p} />
-            ) : (
-              <PublicacionCard key={p.id} publicacion={p} usuarioActualId={usuario.id} onEliminar={onEliminar} />
-            )
-          )}
-
-          {hasMore && (
-            <div style={{ textAlign: "center", marginTop: 8 }}>
-              <button
-                type="button"
-                onClick={() => cargar(tab, offset, true)}
-                disabled={cargando}
-                className="btn-outline-gold"
-              >
-                {cargando ? "Cargando…" : "Ver más"}
-              </button>
-            </div>
-          )}
-        </>
-      )}
-
-      {/* eslint-disable-next-line no-unused-expressions */}
-      {false && publicacionesNormales}
+      <aside className="feed-sidebar-der">
+        <JuegosBanner vertical />
+        <RecomendadosWidget compacto />
+      </aside>
     </div>
   );
 }

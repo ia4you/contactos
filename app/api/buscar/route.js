@@ -8,6 +8,7 @@ import {
   LOOKING_FOR_OPTIONS,
   ORIENTACION_OPTIONS,
 } from "@/lib/constants";
+import { COMPLETITUD_SQL } from "@/lib/completitud";
 
 const PROFILE_TYPE_VALUES = PROFILE_TYPES.map((p) => p.value);
 const ISLAND_VALUES = ISLANDS.map((i) => i.value);
@@ -50,6 +51,9 @@ export async function GET(req) {
     // Bloqueo en cualquier dirección: si yo he bloqueado a alguien, o me ha
     // bloqueado a mí, no debe aparecer en mis resultados.
     "NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))",
+    // Barra de completitud (Sprint 5): perfiles con menos del 50% no
+    // aparecen en búsquedas.
+    `${COMPLETITUD_SQL} >= 50`,
   ];
   const valores = [session.user.id];
 
@@ -82,7 +86,7 @@ export async function GET(req) {
 
   const sql = `
     SELECT
-      u.id, u.nick, u.profile_type, u.island, u.verified,
+      u.id, u.nick, u.profile_type, u.island, u.verified, u.last_active, u.show_last_seen,
       (SELECT p.filename FROM photos p
          WHERE p.user_id = u.id AND p.status = 'approved' AND p.is_private = false
          ORDER BY p.is_avatar DESC, p.created_at DESC

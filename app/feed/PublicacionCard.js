@@ -6,16 +6,22 @@ import Link from "next/link";
 import { Heart, MessageCircle, X } from "lucide-react";
 import { ISLANDS, PROFILE_TYPES, AVATAR_PLACEHOLDER } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
+import { mostrarPuntoOnline } from "@/lib/online";
+import { PuntoOnline } from "../components/PuntoOnline";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
 
-function CabeceraUsuario({ userId, nick, profileType, island, avatarFilename, tiempo }) {
+function CabeceraUsuario({ userId, nick, profileType, island, avatarFilename, tiempo, lastActive, showLastSeen }) {
   const src = avatarFilename ? `/uploads/${userId}/${avatarFilename}` : AVATAR_PLACEHOLDER[profileType];
+  const online = mostrarPuntoOnline({ last_active: lastActive, show_last_seen: showLastSeen });
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-      <div style={{ position: "relative", width: 40, height: 40, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
-        <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+      <div style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}>
+        <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
+          <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+        </div>
+        {online && <PuntoOnline />}
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -165,6 +171,8 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
           island={p.island}
           avatarFilename={p.avatar_filename}
           tiempo={tiempoRelativo(p.created_at)}
+          lastActive={p.last_active}
+          showLastSeen={p.show_last_seen}
         />
         {esPropia && (
           <button

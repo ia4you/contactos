@@ -39,7 +39,7 @@ export async function GET(req) {
   const sql = `
     SELECT
       p.id, p.tipo, p.contenido, p.created_at,
-      u.id AS user_id, u.nick, u.profile_type, u.island,
+      u.id AS user_id, u.nick, u.profile_type, u.island, u.last_active, u.show_last_seen,
       (SELECT filename FROM photos WHERE user_id = u.id AND is_avatar = true AND status = 'approved' LIMIT 1) AS avatar_filename,
       ph.filename AS photo_filename,
       (SELECT count(*)::int FROM publicacion_likes pl WHERE pl.publicacion_id = p.id) AS likes_count,

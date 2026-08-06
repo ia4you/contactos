@@ -13,6 +13,7 @@ import {
 } from "@/lib/constants";
 import { GustosModal } from "../components/GustosModal";
 import { MultiSelectChips } from "../components/MultiSelectChips";
+import { mostrarPuntoOnline } from "@/lib/online";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
@@ -334,6 +335,21 @@ function TarjetaPerfil({ perfil }) {
           pointerEvents: "none",
         }}
       />
+
+      {mostrarPuntoOnline(perfil) && (
+        <span
+          style={{
+            position: "absolute",
+            left: 10,
+            top: 10,
+            width: 10,
+            height: 10,
+            borderRadius: "50%",
+            background: "#4ade80",
+            border: "2px solid var(--bg)",
+          }}
+        />
+      )}
 
       {perfil.verified && (
         <span

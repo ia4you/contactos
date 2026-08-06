@@ -8,6 +8,7 @@ import { Search, Menu, X } from "lucide-react";
 import { AVATAR_PLACEHOLDER } from "@/lib/constants";
 import { MensajesIcono } from "./MensajesIcono";
 import { NotificacionesBell } from "./NotificacionesBell";
+import { VisitasIcono } from "./VisitasIcono";
 
 export function Navbar() {
   const { data: session, status } = useSession();
@@ -93,6 +94,12 @@ export function Navbar() {
               <Link href="/amistades" className="nav-top-link">
                 Amistades
               </Link>
+              <Link href="/eventos" className="nav-top-link">
+                Eventos
+              </Link>
+              <Link href="/grupos" className="nav-top-link">
+                Grupos
+              </Link>
             </nav>
 
             <div className="navbar-acciones" style={{ display: "flex", alignItems: "center", gap: "24px" }}>
@@ -105,51 +112,59 @@ export function Navbar() {
                 <Menu size={22} />
               </button>
 
-              <Link href="/buscar" aria-label="Buscar" className="icon-btn">
-                <Search size={20} />
-              </Link>
-              <MensajesIcono />
-              <NotificacionesBell />
+              <div className="navbar-iconos-desktop" style={{ display: "flex", alignItems: "center", gap: "24px" }}>
+                <Link href="/buscar" aria-label="Buscar" className="icon-btn">
+                  <Search size={20} />
+                </Link>
+                <VisitasIcono />
+                <MensajesIcono />
+                <NotificacionesBell />
 
-              <div style={{ position: "relative" }} ref={menuRef}>
-                <button
-                  type="button"
-                  onClick={() => setMenuAbierto((v) => !v)}
-                  aria-label="Menú de usuario"
-                  style={{
-                    display: "block",
-                    width: 36,
-                    height: 36,
-                    borderRadius: "50%",
-                    overflow: "hidden",
-                    border: "1px solid var(--border-gold)",
-                    padding: 0,
-                    cursor: "pointer",
-                    background: "transparent",
-                  }}
-                >
-                  <Image
-                    src={imagenAvatar}
-                    alt=""
-                    width={36}
-                    height={36}
-                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  />
-                </button>
+                <div style={{ position: "relative" }} ref={menuRef}>
+                  <button
+                    type="button"
+                    onClick={() => setMenuAbierto((v) => !v)}
+                    aria-label="Menú de usuario"
+                    style={{
+                      display: "block",
+                      width: 36,
+                      height: 36,
+                      borderRadius: "50%",
+                      overflow: "hidden",
+                      border: "1px solid var(--border-gold)",
+                      padding: 0,
+                      cursor: "pointer",
+                      background: "transparent",
+                    }}
+                  >
+                    <Image
+                      src={imagenAvatar}
+                      alt=""
+                      width={36}
+                      height={36}
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  </button>
 
-                {menuAbierto && (
-                  <div className="dropdown-menu">
-                    <Link href="/mi-perfil" onClick={() => setMenuAbierto(false)} className="dropdown-item">
-                      Mi perfil
-                    </Link>
-                    <Link href="/ajustes" onClick={() => setMenuAbierto(false)} className="dropdown-item">
-                      Ajustes
-                    </Link>
-                    <button type="button" onClick={() => signOut({ callbackUrl: "/" })} className="dropdown-item">
-                      Cerrar sesión
-                    </button>
-                  </div>
-                )}
+                  {menuAbierto && (
+                    <div className="dropdown-menu">
+                      <Link href="/mi-perfil" onClick={() => setMenuAbierto(false)} className="dropdown-item">
+                        Mi perfil
+                      </Link>
+                      <Link href="/ajustes" onClick={() => setMenuAbierto(false)} className="dropdown-item">
+                        Ajustes
+                      </Link>
+                      {session?.user?.role === "admin" && (
+                        <Link href="/admin" onClick={() => setMenuAbierto(false)} className="dropdown-item">
+                          Administración
+                        </Link>
+                      )}
+                      <button type="button" onClick={() => signOut({ callbackUrl: "/" })} className="dropdown-item">
+                        Cerrar sesión
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -230,6 +245,15 @@ export function Navbar() {
                   </Link>
                   <Link href="/amistades" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
                     Amistades
+                  </Link>
+                  <Link href="/eventos" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
+                    Eventos
+                  </Link>
+                  <Link href="/grupos" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
+                    Grupos
+                  </Link>
+                  <Link href="/visitas" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
+                    Visitas
                   </Link>
                   <Link href="/mensajes" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
                     Mensajes

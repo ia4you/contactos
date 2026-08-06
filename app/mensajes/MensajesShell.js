@@ -3,10 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Send, ArrowLeft } from "lucide-react";
+import { Send, ArrowLeft, Trash2 } from "lucide-react";
 import { ISLANDS, AVATAR_PLACEHOLDER } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
+import { mostrarPuntoOnline } from "@/lib/online";
 import { EmptyState } from "../components/EmptyState";
+import { PuntoOnline } from "../components/PuntoOnline";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 
@@ -110,6 +112,12 @@ export function MensajesShell({ usuarioId }) {
     }
   }
 
+  async function eliminarMensaje(mensajeId) {
+    if (!window.confirm("¿Eliminar este mensaje?")) return;
+    setMensajes((prev) => prev.map((m) => (m.id === mensajeId ? { ...m, eliminado: true, texto: null } : m)));
+    await fetch(`/api/mensajes/${activaId}/${mensajeId}`, { method: "DELETE" });
+  }
+
   function volverALaLista() {
     setActivaId(null);
     setOtro(null);
@@ -159,9 +167,12 @@ export function MensajesShell({ usuarioId }) {
                 <Link
                   href={`/perfil/${c.nick}`}
                   onClick={(e) => e.stopPropagation()}
-                  style={{ position: "relative", width: 40, height: 40, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}
+                  style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}
                 >
-                  <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+                  <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
+                    <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+                  </div>
+                  {mostrarPuntoOnline(c) && <PuntoOnline />}
                 </Link>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
@@ -242,14 +253,17 @@ export function MensajesShell({ usuarioId }) {
               >
                 <ArrowLeft size={20} />
               </button>
-              <div style={{ position: "relative", width: 40, height: 40, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
-                <Image
-                  src={otro.avatar_filename ? `/uploads/${otro.id}/${otro.avatar_filename}` : AVATAR_PLACEHOLDER[otro.profile_type]}
-                  alt=""
-                  fill
-                  unoptimized={false}
-                  style={{ objectFit: "cover" }}
-                />
+              <div style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}>
+                <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
+                  <Image
+                    src={otro.avatar_filename ? `/uploads/${otro.id}/${otro.avatar_filename}` : AVATAR_PLACEHOLDER[otro.profile_type]}
+                    alt=""
+                    fill
+                    unoptimized={false}
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
+                {mostrarPuntoOnline(otro) && <PuntoOnline />}
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -271,7 +285,22 @@ export function MensajesShell({ usuarioId }) {
                 mensajes.map((m) => {
                   const esMio = String(m.sender_id) === String(usuarioId);
                   return (
-                    <div key={m.id} style={{ display: "flex", justifyContent: esMio ? "flex-end" : "flex-start" }}>
+                    <div
+                      key={m.id}
+                      className="mensaje-fila"
+                      style={{ display: "flex", alignItems: "center", gap: 6, justifyContent: esMio ? "flex-end" : "flex-start" }}
+                    >
+                      {esMio && !m.eliminado && (
+                        <button
+                          type="button"
+                          onClick={() => eliminarMensaje(m.id)}
+                          aria-label="Eliminar mensaje"
+                          className="icon-btn mensaje-borrar"
+                          style={{ padding: 4 }}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
                       <div style={{ maxWidth: "70%" }}>
                         <div
                           style={{
@@ -284,7 +313,13 @@ export function MensajesShell({ usuarioId }) {
                             wordBreak: "break-word",
                           }}
                         >
-                          {m.texto}
+                          {m.eliminado ? (
+                            <span style={{ fontStyle: "italic", color: esMio ? "rgba(14,10,11,0.6)" : "var(--text-muted)" }}>
+                              Mensaje eliminado
+                            </span>
+                          ) : (
+                            m.texto
+                          )}
                         </div>
                         <div
                           style={{

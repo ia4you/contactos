@@ -7,6 +7,7 @@ import { AVATAR_PLACEHOLDER } from "@/lib/constants";
 import { crearNotificacion } from "@/lib/notificaciones";
 import { PerfilCabecera } from "./PerfilCabecera";
 import { FotosGridPublico } from "./FotosGridPublico";
+import { PorQueConectais } from "./PorQueConectais";
 
 const MESES = [
   "enero", "febrero", "marzo", "abril", "mayo", "junio",
@@ -17,7 +18,8 @@ export default async function PerfilPublico({ params }) {
   const session = await getServerSession(authOptions);
 
   const { rows: userRows } = await query(
-    `SELECT id, nick, profile_type, island, bio, genero, orientacion, rol, verified, created_at
+    `SELECT id, nick, profile_type, island, bio, genero, orientacion, rol, verified, created_at,
+            last_active, show_last_seen
        FROM users WHERE lower(nick) = lower($1) AND deleted_at IS NULL`,
     [params.nick]
   );
@@ -88,6 +90,30 @@ export default async function PerfilPublico({ params }) {
     }
   }
 
+  // Compatibilidad de gustos (Sprint 5): % = gustos en común / total de
+  // gustos del VISITANTE (no del dueño del perfil), redondeado. Si el
+  // visitante no tiene gustos guardados, no se muestra nada.
+  let compatibilidad = null;
+  if (session && !esPropio) {
+    const meId = Number(session.user.id);
+    const { rows: totalRows } = await query(
+      `SELECT count(*)::int AS total FROM user_fetiches WHERE user_id = $1`,
+      [meId]
+    );
+    if (totalRows[0].total > 0) {
+      const { rows: comunRows } = await query(
+        `SELECT count(*)::int AS comun
+           FROM user_fetiches uf1
+           JOIN user_fetiches uf2 ON uf1.fetiche_id = uf2.fetiche_id
+          WHERE uf1.user_id = $1 AND uf2.user_id = $2`,
+        [meId, usuario.id]
+      );
+      compatibilidad = {
+        pct: Math.round((comunRows[0].comun / totalRows[0].total) * 100),
+      };
+    }
+  }
+
   const { rows: fotosRows } = await query(
     `SELECT p.id, p.filename,
             (SELECT count(*)::int FROM foto_likes fl WHERE fl.photo_id = p.id) AS likes_count,
@@ -128,6 +154,7 @@ export default async function PerfilPublico({ params }) {
         miembroDesde={miembroDesde}
         esPropio={esPropio}
         estadoInicial={estadoInicial}
+        compatibilidad={compatibilidad}
       />
 
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 24px" }}>
@@ -165,6 +192,8 @@ export default async function PerfilPublico({ params }) {
             ))}
           </div>
         )}
+
+        {!esPropio && <PorQueConectais nick={usuario.nick} />}
       </div>
     </main>
   );

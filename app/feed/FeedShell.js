@@ -3,11 +3,16 @@
 import { useCallback, useEffect, useState } from "react";
 import { Composer } from "./Composer";
 import { PublicacionCard, AnuncioCardFeed } from "./PublicacionCard";
+import { JuegosBanner } from "./JuegosBanner";
+import { ActivosIslaWidget } from "./ActivosIslaWidget";
+import { HistoriasFranja } from "./HistoriasFranja";
+import { RecomendadosWidget } from "./RecomendadosWidget";
+import { AhoraOnlineCarrusel } from "./AhoraOnlineCarrusel";
 import { EmptyState } from "../components/EmptyState";
 
 const LIMITE = 20;
 
-export function FeedShell({ usuario, avatarFilename }) {
+export function FeedShell({ usuario, avatarFilename, activosIsla }) {
   const [tab, setTab] = useState("parati");
   const [publicaciones, setPublicaciones] = useState([]);
   const [offset, setOffset] = useState(0);
@@ -48,11 +53,21 @@ export function FeedShell({ usuario, avatarFilename }) {
 
   return (
     <div style={{ maxWidth: 680, margin: "0 auto", padding: "32px 20px 80px", background: "var(--bg)" }}>
+      <AhoraOnlineCarrusel />
+
+      <HistoriasFranja usuario={usuario} avatarUrl={avatarUrl} />
+
       {tab === "parati" && (
         <div style={{ marginBottom: 24 }}>
           <Composer usuario={usuario} avatarUrl={avatarUrl} onPublicado={onPublicado} />
         </div>
       )}
+
+      <JuegosBanner />
+
+      <RecomendadosWidget />
+
+      <ActivosIslaWidget usuarios={activosIsla} isla={usuario.island} />
 
       <div className="tab-nav" style={{ marginBottom: 24 }}>
         <button

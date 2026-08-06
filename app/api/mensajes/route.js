@@ -13,7 +13,7 @@ export async function GET() {
 
   const { rows } = await query(
     `SELECT c.id, c.last_message_at,
-            u.id AS otro_id, u.nick, u.profile_type, u.island,
+            u.id AS otro_id, u.nick, u.profile_type, u.island, u.last_active, u.show_last_seen,
             (SELECT filename FROM photos WHERE user_id = u.id AND is_avatar = true AND status = 'approved' LIMIT 1) AS avatar_filename,
             (SELECT texto FROM mensajes m WHERE m.conversacion_id = c.id AND m.deleted_at IS NULL ORDER BY m.created_at DESC LIMIT 1) AS ultimo_texto,
             (SELECT count(*)::int FROM mensajes m WHERE m.conversacion_id = c.id AND m.sender_id != $1 AND m.leido = false AND m.deleted_at IS NULL) AS no_leidos

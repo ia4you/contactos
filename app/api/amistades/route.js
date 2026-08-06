@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { crearNotificacion } from "@/lib/notificaciones";
 
-const CAMPOS_USUARIO = `u.id, u.nick, u.profile_type, u.island,
+const CAMPOS_USUARIO = `u.id, u.nick, u.profile_type, u.island, u.last_active, u.show_last_seen,
   (SELECT filename FROM photos WHERE user_id = u.id AND is_avatar = true AND status = 'approved' LIMIT 1) AS avatar_filename`;
 
 export async function GET() {

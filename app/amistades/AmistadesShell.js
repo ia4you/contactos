@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ISLANDS, PROFILE_TYPES, AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { mostrarPuntoOnline } from "@/lib/online";
 import { EmptyState } from "../components/EmptyState";
+import { PuntoOnline } from "../components/PuntoOnline";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
@@ -15,19 +17,29 @@ const TABS = [
   { id: "matches", label: "Matches" },
 ];
 
-function TarjetaUsuario({ u, children }) {
+function FilaUsuario({ u, children }) {
   const src = u.avatar_filename ? `/uploads/${u.id}/${u.avatar_filename}` : AVATAR_PLACEHOLDER[u.profile_type];
   return (
-    <div style={{ background: "#141414", border: "1px solid #2a2a2a", padding: 18, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 4 }}>
-      <div style={{ position: "relative", width: 64, height: 64, borderRadius: "50%", overflow: "hidden" }}>
-        <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+    <div className="fila-amistad">
+      <Link href={`/perfil/${u.nick}`} style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}>
+        <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
+          <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+        </div>
+        {mostrarPuntoOnline(u) && <PuntoOnline />}
+      </Link>
+      <div className="fila-amistad__info">
+        <Link href={`/perfil/${u.nick}`} className="heading" style={{ fontSize: 16, color: "var(--text)", textDecoration: "none" }}>
+          {u.nick}
+        </Link>
+        <span className="badge-gold" style={{ fontSize: 9 }}>{ISLAND_LABEL[u.island]}</span>
+        <span className="badge-gold" style={{ fontSize: 9 }}>{PROFILE_TYPE_LABEL[u.profile_type]}</span>
       </div>
-      <span className="heading" style={{ marginTop: 8, fontSize: 16, color: "var(--text)" }}>{u.nick}</span>
-      <span className="badge-gold" style={{ fontSize: 9 }}>{ISLAND_LABEL[u.island]}</span>
-      <div style={{ marginTop: 10, width: "100%", display: "flex", flexDirection: "column", gap: 8 }}>{children}</div>
+      <div className="fila-amistad__acciones">{children}</div>
     </div>
   );
 }
+
+const botonPequeno = { fontSize: 11, padding: "6px 12px" };
 
 export function AmistadesShell() {
   const [tab, setTab] = useState("amigos");
@@ -95,28 +107,28 @@ export function AmistadesShell() {
         ))}
       </div>
 
-      <div style={{ marginTop: 28 }}>
+      <div style={{ marginTop: 12 }}>
         {tab === "amigos" && (
           amigos === null ? (
             <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>Cargando…</p>
           ) : amigos.length === 0 ? (
             <EmptyState texto="Aún no tienes amigos" />
           ) : (
-            <div className="anuncios-grid">
+            <div>
               {amigos.map((u) => (
-                <TarjetaUsuario key={u.id} u={u}>
-                  <Link href={`/perfil/${u.nick}`} className="btn-outline-gold" style={{ fontSize: 11 }}>
+                <FilaUsuario key={u.id} u={u}>
+                  <Link href={`/perfil/${u.nick}`} className="btn-outline-gold" style={botonPequeno}>
                     Ver perfil
                   </Link>
                   <button
                     type="button"
                     onClick={() => eliminarAmigo(u.id)}
                     className="btn-outline-gold"
-                    style={{ fontSize: 11, borderColor: "rgba(154,58,58,0.5)", color: "#e07a7a" }}
+                    style={{ ...botonPequeno, borderColor: "rgba(154,58,58,0.5)", color: "#e07a7a" }}
                   >
                     Eliminar amistad
                   </button>
-                </TarjetaUsuario>
+                </FilaUsuario>
               ))}
             </div>
           )
@@ -127,27 +139,27 @@ export function AmistadesShell() {
             <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>Cargando…</p>
           ) : (
             <>
-              <p className="kicker" style={{ letterSpacing: 3 }}>Recibidas</p>
+              <p className="kicker" style={{ letterSpacing: 3, marginTop: 16 }}>Recibidas</p>
               {recibidas.length === 0 ? (
                 <p style={{ marginTop: 10, marginBottom: 32, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>
                   No tienes solicitudes pendientes.
                 </p>
               ) : (
-                <div className="anuncios-grid" style={{ marginTop: 14, marginBottom: 32 }}>
+                <div style={{ marginTop: 6, marginBottom: 32 }}>
                   {recibidas.map((u) => (
-                    <TarjetaUsuario key={u.id} u={u}>
-                      <button type="button" onClick={() => responder(u.id, "aceptar")} className="btn-gold" style={{ fontSize: 11 }}>
+                    <FilaUsuario key={u.id} u={u}>
+                      <button type="button" onClick={() => responder(u.id, "aceptar")} className="btn-gold" style={botonPequeno}>
                         Aceptar
                       </button>
                       <button
                         type="button"
                         onClick={() => responder(u.id, "rechazar")}
                         className="btn-outline-gold"
-                        style={{ fontSize: 11 }}
+                        style={botonPequeno}
                       >
                         Rechazar
                       </button>
-                    </TarjetaUsuario>
+                    </FilaUsuario>
                   ))}
                 </div>
               )}
@@ -158,13 +170,13 @@ export function AmistadesShell() {
                   No has enviado solicitudes.
                 </p>
               ) : (
-                <div className="anuncios-grid" style={{ marginTop: 14 }}>
+                <div style={{ marginTop: 6 }}>
                   {enviadas.map((u) => (
-                    <TarjetaUsuario key={u.id} u={u}>
+                    <FilaUsuario key={u.id} u={u}>
                       <span style={{ fontFamily: "var(--font-body)", fontSize: 11, textTransform: "uppercase", letterSpacing: 1.5, color: "var(--text-muted)" }}>
                         Pendiente
                       </span>
-                    </TarjetaUsuario>
+                    </FilaUsuario>
                   ))}
                 </div>
               )}
@@ -178,14 +190,13 @@ export function AmistadesShell() {
           ) : matches.length === 0 ? (
             <EmptyState texto="Aún no tienes matches" />
           ) : (
-            <div className="anuncios-grid">
+            <div>
               {matches.map((u) => (
-                <TarjetaUsuario key={u.id} u={u}>
-                  <span className="badge-gold" style={{ fontSize: 9 }}>{PROFILE_TYPE_LABEL[u.profile_type]}</span>
-                  <Link href={`/perfil/${u.nick}`} className="btn-outline-gold" style={{ fontSize: 11 }}>
+                <FilaUsuario key={u.id} u={u}>
+                  <Link href={`/perfil/${u.nick}`} className="btn-outline-gold" style={botonPequeno}>
                     Ver perfil
                   </Link>
-                </TarjetaUsuario>
+                </FilaUsuario>
               ))}
             </div>
           )

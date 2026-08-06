@@ -279,8 +279,8 @@
 
 .tab-nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
-  overflow-x: auto;
   border-bottom: 1px solid rgba(201, 161, 90, 0.18);
 }
 
@@ -458,6 +458,9 @@
   .desktop-nav-links {
     display: none;
   }
+  .navbar-iconos-desktop {
+    display: none !important;
+  }
 }
 
 .site-header {
@@ -514,4 +517,95 @@
   .mensajes-volver {
     display: flex;
   }
+}
+
+.mensaje-borrar {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.mensaje-fila:hover .mensaje-borrar {
+  opacity: 1;
+}
+
+.fila-amistad {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 60px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(201, 161, 90, 0.15);
+}
+.fila-amistad__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.fila-amistad__acciones {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+@media (max-width: 480px) {
+  .fila-amistad {
+    flex-wrap: wrap;
+  }
+  .fila-amistad__acciones {
+    width: 100%;
+    padding-left: 52px;
+  }
+}
+
+@keyframes historiaProgreso {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+.historia-progreso-fill {
+  animation: historiaProgreso 5s linear forwards;
+}
+
+@media (max-width: 768px) {
+  .grupo-layout {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .recomendados-flechas {
+    display: none !important;
+  }
+}
+
+.scroll-sin-barra {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scroll-sin-barra::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes pulsoOnline {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+}
+.punto-pulso {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ade80;
+  animation: pulsoOnline 1.6s ease-in-out infinite;
 }

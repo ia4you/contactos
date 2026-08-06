@@ -7,6 +7,7 @@ import { ISLANDS, PROFILE_TYPES, AVATAR_PLACEHOLDER } from "@/lib/constants";
 import { TabDatos } from "./TabDatos";
 import { TabFotos } from "./TabFotos";
 import { TabGustos } from "./TabGustos";
+import { BarraCompletitud } from "./BarraCompletitud";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
@@ -168,6 +169,10 @@ export function PerfilForm({ usuario, fotosIniciales, fetichesCountInicial }) {
             </div>
           </div>
         </div>
+      </div>
+
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px" }}>
+        <BarraCompletitud usuario={usuario} fotos={fotos} gustosCount={fetichesCount} />
       </div>
 
       {/* Tabs horizontales */}

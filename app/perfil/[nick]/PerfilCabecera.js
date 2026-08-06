@@ -3,13 +3,47 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Heart } from "lucide-react";
+import { Heart, Flame } from "lucide-react";
 import { ISLANDS, PROFILE_TYPES } from "@/lib/constants";
+import { mostrarPuntoOnline } from "@/lib/online";
 import { ReportButton } from "../../components/ReportButton";
 import { BlockButton } from "../../components/BlockButton";
+import { PuntoOnline } from "../../components/PuntoOnline";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
+
+function CompatibilidadBadge({ pct }) {
+  let color = "var(--text-muted)";
+  let Icono = null;
+  if (pct > 80) {
+    color = "#4ade80";
+    Icono = Flame;
+  } else if (pct > 50) {
+    color = "var(--gold)";
+    Icono = Heart;
+  }
+
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 4,
+        fontFamily: "var(--font-body)",
+        fontSize: 11,
+        textTransform: "uppercase",
+        letterSpacing: 1,
+        color,
+        border: `1px solid ${color}`,
+        padding: "4px 10px",
+      }}
+    >
+      {Icono && <Icono size={11} fill={color} />}
+      {pct}% de afinidad
+    </span>
+  );
+}
 
 function GrupoChips({ titulo, valores }) {
   if (!valores || valores.length === 0) return null;
@@ -69,6 +103,7 @@ export function PerfilCabecera({
   miembroDesde,
   esPropio,
   estadoInicial,
+  compatibilidad,
 }) {
   const router = useRouter();
   const [meGusta, setMeGusta] = useState(estadoInicial.meGusta);
@@ -77,6 +112,7 @@ export function PerfilCabecera({
   const [cargandoLike, setCargandoLike] = useState(false);
   const [cargandoAmistad, setCargandoAmistad] = useState(false);
   const [cargandoMensaje, setCargandoMensaje] = useState(false);
+  const online = mostrarPuntoOnline(usuario, esPropio);
 
   async function toggleLike() {
     if (cargandoLike) return;
@@ -154,18 +190,20 @@ export function PerfilCabecera({
         }}
       >
         <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
-          <div
-            style={{
-              position: "relative",
-              width: 100,
-              height: 100,
-              borderRadius: "50%",
-              overflow: "hidden",
-              border: "2px solid var(--gold)",
-              flexShrink: 0,
-            }}
-          >
-            <Image src={avatarSrc} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+          <div style={{ position: "relative", width: 100, height: 100, flexShrink: 0 }}>
+            <div
+              style={{
+                position: "relative",
+                width: "100%",
+                height: "100%",
+                borderRadius: "50%",
+                overflow: "hidden",
+                border: "2px solid var(--gold)",
+              }}
+            >
+              <Image src={avatarSrc} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+            </div>
+            {online && <PuntoOnline size={16} />}
           </div>
 
           <div style={{ maxWidth: 480 }}>
@@ -175,6 +213,7 @@ export function PerfilCabecera({
 
             <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 8 }}>
               <span className="badge-gold">{ISLAND_LABEL[usuario.island]}</span>
+              {compatibilidad && <CompatibilidadBadge pct={compatibilidad.pct} />}
               <span
                 style={{
                   display: "inline-block",

@@ -16,7 +16,21 @@ export function Navbar() {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [menuMovilAbierto, setMenuMovilAbierto] = useState(false);
   const [contadores, setContadores] = useState({ notificaciones_no_leidas: 0, mensajes_no_leidos: 0, visitas_nuevas: 0 });
+  const [montado, setMontado] = useState(false);
   const menuRef = useRef(null);
+
+  // useSession() siempre arranca en "loading" tanto en servidor como en el
+  // primer render del cliente, así que en teoría no debería haber
+  // divergencia — pero para eliminar cualquier posibilidad de hydration
+  // mismatch (React #418/#423) forzamos que el primer render del cliente
+  // sea idéntico al del servidor (estado "no autenticado") y solo después
+  // de montar reflejamos la sesión real, igual que cualquier dato que solo
+  // existe en el cliente (localStorage, window, etc.).
+  useEffect(() => {
+    setMontado(true);
+  }, []);
+
+  const autenticado = montado && status === "authenticated";
 
   useEffect(() => {
     if (status !== "authenticated") return;
@@ -67,7 +81,7 @@ export function Navbar() {
     >
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <Link
-          href="/"
+          href={autenticado ? "/feed" : "/"}
           style={{
             display: "flex",
             alignItems: "center",
@@ -96,7 +110,7 @@ export function Navbar() {
           </span>
         </Link>
 
-        {status === "authenticated" ? (
+        {autenticado ? (
           <div style={{ display: "flex", alignItems: "center", gap: "36px" }}>
             <nav className="desktop-nav-links" style={{ display: "flex", alignItems: "center", gap: "28px" }}>
               <Link href="/feed" className="nav-top-link">
@@ -252,7 +266,7 @@ export function Navbar() {
             </div>
 
             <nav style={{ display: "flex", flexDirection: "column" }}>
-              {status === "authenticated" ? (
+              {autenticado ? (
                 <>
                   <Link href="/feed" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
                     Feed

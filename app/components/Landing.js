@@ -8,12 +8,11 @@ export function Landing() {
       <section
         style={{
           position: "relative",
-          minHeight: "88vh",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           overflow: "hidden",
-          padding: "24px",
+          padding: "96px 24px 40px",
         }}
       >
         <Image
@@ -160,45 +159,6 @@ export function Landing() {
             Gestiona tus solicitudes y decide con quién compartir tus
             fotos privadas.
           </Paso>
-        </div>
-      </section>
-
-      {/* Sección 3b — Últimas incorporaciones (datos ficticios, no reales) */}
-      <section style={{ padding: "100px 56px", textAlign: "center" }}>
-        <p className="kicker" style={{ textAlign: "center" }}>
-          La comunidad crece
-        </p>
-        <h2 className="heading" style={{ marginTop: 16, fontSize: 42 }}>
-          Últimas incorporaciones
-        </h2>
-        <p
-          style={{
-            marginTop: 16,
-            maxWidth: 460,
-            marginLeft: "auto",
-            marginRight: "auto",
-            fontFamily: "var(--font-body)",
-            fontSize: 15,
-            color: "var(--text-secondary)",
-          }}
-        >
-          Únete y descubre quién está cerca de ti.
-        </p>
-
-        <div style={{ marginTop: 48, display: "flex", justifyContent: "center", gap: 32, flexWrap: "wrap" }}>
-          {[
-            { nick: "Luna_GC", tipo: "chica" },
-            { nick: "Marco_TF", tipo: "chico" },
-            { nick: "LosLuna", tipo: "pareja" },
-            { nick: "Nayra_LZ", tipo: "chica" },
-          ].map((u) => (
-            <div key={u.nick} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, width: 90 }}>
-              <div style={{ position: "relative", width: 72, height: 72, borderRadius: "50%", overflow: "hidden", border: "1px solid var(--border-gold)" }}>
-                <Image src={`/images/avatar-${u.tipo}.png`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
-              </div>
-              <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-secondary)" }}>{u.nick}</span>
-            </div>
-          ))}
         </div>
       </section>
 

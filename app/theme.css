@@ -14,6 +14,12 @@
   --font-body: var(--font-jost), sans-serif;
 }
 
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 @keyframes riseIn {
   from {
     opacity: 0;

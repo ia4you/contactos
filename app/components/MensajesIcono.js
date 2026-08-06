@@ -1,24 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { MessageCircle } from "lucide-react";
 
-export function MensajesIcono() {
-  const [contador, setContador] = useState(0);
-
-  useEffect(() => {
-    function cargar() {
-      fetch("/api/mensajes/contador")
-        .then((r) => r.json())
-        .then((d) => setContador(d.noLeidos || 0))
-        .catch(() => {});
-    }
-    cargar();
-    const intervalo = setInterval(cargar, 30000);
-    return () => clearInterval(intervalo);
-  }, []);
-
+export function MensajesIcono({ contador = 0 }) {
   return (
     <Link href="/mensajes" aria-label="Mensajes" className="icon-btn" style={{ position: "relative" }}>
       <MessageCircle size={20} />

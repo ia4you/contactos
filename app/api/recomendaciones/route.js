@@ -13,6 +13,17 @@ function bioDe(u) {
   return u.bio || u.her_bio || u.his_bio || "";
 }
 
+// Mismo cálculo que la sección "Por qué conectáis" del perfil: % de gustos
+// del VISITANTE que también tiene el candidato. Groq nunca decide este
+// número — solo redacta el texto explicativo — para que el porcentaje sea
+// siempre coherente entre el widget de recomendaciones y el perfil.
+function calcularAfinidad(gustosVisitante, gustosCandidato) {
+  if (!gustosVisitante.length) return 0;
+  const candidato = gustosCandidato || [];
+  const comunes = gustosVisitante.filter((g) => candidato.includes(g)).length;
+  return Math.round((comunes / gustosVisitante.length) * 100);
+}
+
 async function obtenerCandidatos(meId, island) {
   const { rows } = await query(
     `SELECT u.id, u.nick, u.profile_type, u.island, u.orientacion, u.rol, u.looking_for,
@@ -96,11 +107,12 @@ async function llamarGroqConTimeout(prompt, ms) {
   return Promise.race([llamada, timeout]);
 }
 
-async function fallback(meId, island) {
+async function fallback(meId, island, gustosUsuario) {
   const { rows } = await query(
     `SELECT u.id, u.nick, u.profile_type, u.island,
             (SELECT filename FROM photos WHERE user_id = u.id AND is_avatar = true AND status = 'approved' LIMIT 1) AS avatar_filename,
-            u.last_active, u.show_last_seen
+            u.last_active, u.show_last_seen,
+            COALESCE((SELECT array_agg(f.nombre) FROM user_fetiches uf JOIN fetiches f ON f.id = uf.fetiche_id WHERE uf.user_id = u.id), '{}') AS gustos
        FROM users u
       WHERE u.id != $1
         AND u.deleted_at IS NULL
@@ -122,7 +134,7 @@ async function fallback(meId, island) {
     avatar_filename: r.avatar_filename,
     last_active: r.last_active,
     show_last_seen: r.show_last_seen,
-    score: null,
+    score: calcularAfinidad(gustosUsuario, r.gustos),
     razon_corta: null,
     razon_detallada: null,
   }));
@@ -196,7 +208,7 @@ export async function GET() {
           avatar_filename: c.avatar_filename,
           last_active: c.last_active,
           show_last_seen: c.show_last_seen,
-          score: r.score,
+          score: calcularAfinidad(gustosUsuario, c.gustos),
           razon_corta: r.razon_corta,
           razon_detallada: r.razon_detallada,
         };
@@ -205,7 +217,7 @@ export async function GET() {
     if (recomendaciones.length === 0) throw new Error("Groq no devolvió recomendaciones válidas.");
   } catch (err) {
     console.error("Fallo de Groq en /api/recomendaciones, usando fallback:", err.message);
-    recomendaciones = await fallback(meId, usuario.island);
+    recomendaciones = await fallback(meId, usuario.island, gustosUsuario);
   }
 
   cache.set(meId, { data: recomendaciones, expiresAt: Date.now() + CACHE_TTL_MS });

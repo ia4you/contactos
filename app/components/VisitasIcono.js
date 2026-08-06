@@ -1,24 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Eye } from "lucide-react";
 
-export function VisitasIcono() {
-  const [contador, setContador] = useState(0);
-
-  useEffect(() => {
-    function cargar() {
-      fetch("/api/visitas/contador")
-        .then((r) => r.json())
-        .then((d) => setContador(d.nuevas || 0))
-        .catch(() => {});
-    }
-    cargar();
-    const intervalo = setInterval(cargar, 30000);
-    return () => clearInterval(intervalo);
-  }, []);
-
+export function VisitasIcono({ contador = 0 }) {
   return (
     <Link href="/visitas" aria-label="Visitas" className="icon-btn" style={{ position: "relative" }}>
       <Eye size={20} />

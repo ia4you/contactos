@@ -451,12 +451,17 @@
 .hamburger-menu {
   display: none;
 }
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .hamburger-menu {
-    display: flex;
+    display: flex !important;
   }
+  /* !important necesario: los <nav> con estas clases llevan
+     display:"flex" inline (para el layout en desktop), y un inline style
+     sin !important siempre gana sobre una regla de hoja de estilos sin
+     !important, sea cual sea su especificidad — sin esto la regla de abajo
+     quedaría escrita pero sin efecto visual real. */
   .desktop-nav-links {
-    display: none;
+    display: none !important;
   }
   .navbar-iconos-desktop {
     display: none !important;
@@ -466,7 +471,7 @@
 .site-header {
   padding: 22px 40px;
 }
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .site-header {
     padding: 16px 20px;
   }

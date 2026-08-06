@@ -8,23 +8,10 @@ import { AVATAR_PLACEHOLDER } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
 import { textoNotificacion } from "@/lib/notificacionTexto";
 
-export function NotificacionesBell() {
-  const [contador, setContador] = useState(0);
+export function NotificacionesBell({ contador = 0, onMarcarLeidas }) {
   const [abierto, setAbierto] = useState(false);
   const [notificaciones, setNotificaciones] = useState(null);
   const ref = useRef(null);
-
-  useEffect(() => {
-    function cargarContador() {
-      fetch("/api/notificaciones/contador")
-        .then((r) => r.json())
-        .then((d) => setContador(d.noLeidas || 0))
-        .catch(() => {});
-    }
-    cargarContador();
-    const intervalo = setInterval(cargarContador, 30000);
-    return () => clearInterval(intervalo);
-  }, []);
 
   useEffect(() => {
     function onClickFuera(e) {
@@ -43,11 +30,11 @@ export function NotificacionesBell() {
     const data = await res.json().catch(() => null);
     setNotificaciones(data?.notificaciones || []);
 
-    // Se marca como leído sin condicionar al contador local: el polling cada
-    // 30s puede ir por detrás de una notificación recién creada, y si el
-    // PATCH solo se disparara cuando contador > 0 esa notificación nunca
-    // llegaría a marcarse como leída.
-    setContador(0);
+    // Se marca como leído sin condicionar al contador recibido por props: el
+    // polling cada 30s puede ir por detrás de una notificación recién
+    // creada, y si el PATCH solo se disparara cuando contador > 0 esa
+    // notificación nunca llegaría a marcarse como leída.
+    onMarcarLeidas?.();
     fetch("/api/notificaciones/leidas", { method: "PATCH" }).catch(() => {});
   }
 

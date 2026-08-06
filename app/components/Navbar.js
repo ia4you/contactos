@@ -15,6 +15,7 @@ export function Navbar() {
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [menuMovilAbierto, setMenuMovilAbierto] = useState(false);
+  const [contadores, setContadores] = useState({ notificaciones_no_leidas: 0, mensajes_no_leidos: 0, visitas_nuevas: 0 });
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -23,6 +24,19 @@ export function Navbar() {
       .then((r) => r.json())
       .then((d) => setAvatarUrl(d.avatarUrl))
       .catch(() => {});
+  }, [status]);
+
+  useEffect(() => {
+    if (status !== "authenticated") return;
+    function cargarStatus() {
+      fetch("/api/status")
+        .then((r) => r.json())
+        .then((d) => setContadores((prev) => ({ ...prev, ...d })))
+        .catch(() => {});
+    }
+    cargarStatus();
+    const intervalo = setInterval(cargarStatus, 30000);
+    return () => clearInterval(intervalo);
   }, [status]);
 
   useEffect(() => {
@@ -116,9 +130,12 @@ export function Navbar() {
                 <Link href="/buscar" aria-label="Buscar" className="icon-btn">
                   <Search size={20} />
                 </Link>
-                <VisitasIcono />
-                <MensajesIcono />
-                <NotificacionesBell />
+                <VisitasIcono contador={contadores.visitas_nuevas} />
+                <MensajesIcono contador={contadores.mensajes_no_leidos} />
+                <NotificacionesBell
+                  contador={contadores.notificaciones_no_leidas}
+                  onMarcarLeidas={() => setContadores((prev) => ({ ...prev, notificaciones_no_leidas: 0 }))}
+                />
 
                 <div style={{ position: "relative" }} ref={menuRef}>
                   <button

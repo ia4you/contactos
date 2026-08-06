@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ISLANDS } from "@/lib/constants";
 
@@ -17,7 +18,13 @@ export function EventoCard({ evento, onAsistir, esPasado }) {
   const aforoRestante = evento.aforo != null ? Math.max(0, evento.aforo - evento.apuntados_count) : null;
 
   return (
-    <div style={{ background: "#141414", border: "1px solid #2a2a2a", padding: 20, display: "flex", flexDirection: "column", gap: 10 }}>
+    <div style={{ background: "#141414", border: "1px solid #2a2a2a", display: "flex", flexDirection: "column" }}>
+      {evento.foto && (
+        <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden" }}>
+          <Image src={`/uploads/eventos/${evento.foto}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+        </div>
+      )}
+      <div style={{ padding: 20, display: "flex", flexDirection: "column", gap: 10 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
         <span className="badge-gold" style={{ fontSize: 9 }}>{TIPO_LABEL[evento.tipo]}</span>
         <span className="badge-gold" style={{ fontSize: 9 }}>{ISLAND_LABEL[evento.isla]}</span>
@@ -67,6 +74,7 @@ export function EventoCard({ evento, onAsistir, esPasado }) {
           )}
         </div>
       )}
+      </div>
     </div>
   );
 }

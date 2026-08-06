@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Image as ImageIcon } from "lucide-react";
 import { ISLANDS } from "@/lib/constants";
+import { LugarAutocomplete } from "./LugarAutocomplete";
 
 const TIPOS = [
   { value: "quedada", label: "Quedada" },
@@ -18,8 +20,32 @@ export function CrearEventoModal({ islaPorDefecto, onClose, onCreado }) {
   const [fecha, setFecha] = useState("");
   const [aforo, setAforo] = useState("");
   const [tipo, setTipo] = useState("quedada");
+  const [archivo, setArchivo] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState("");
+  const inputFileRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
+  function seleccionarArchivo(e) {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setArchivo(f);
+    setPreviewUrl(URL.createObjectURL(f));
+  }
+
+  function quitarArchivo() {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setArchivo(null);
+    setPreviewUrl(null);
+    if (inputFileRef.current) inputFileRef.current.value = "";
+  }
 
   async function guardar() {
     setError("");
@@ -33,19 +59,17 @@ export function CrearEventoModal({ islaPorDefecto, onClose, onCreado }) {
     }
 
     setEnviando(true);
-    const res = await fetch("/api/eventos", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        titulo: titulo.trim(),
-        descripcion: descripcion.trim(),
-        isla,
-        lugar: lugar.trim(),
-        fechaEvento: new Date(fecha).toISOString(),
-        aforo: aforo ? Number(aforo) : null,
-        tipo,
-      }),
-    });
+    const formData = new FormData();
+    formData.append("titulo", titulo.trim());
+    formData.append("descripcion", descripcion.trim());
+    formData.append("isla", isla);
+    formData.append("lugar", lugar.trim());
+    formData.append("fechaEvento", new Date(fecha).toISOString());
+    formData.append("aforo", aforo ? String(Number(aforo)) : "");
+    formData.append("tipo", tipo);
+    if (archivo) formData.append("file", archivo);
+
+    const res = await fetch("/api/eventos", { method: "POST", body: formData });
     const data = await res.json().catch(() => null);
     setEnviando(false);
 
@@ -100,7 +124,7 @@ export function CrearEventoModal({ islaPorDefecto, onClose, onCreado }) {
 
         <label style={{ display: "block", marginTop: 18 }}>
           <span className="label-field">Lugar</span>
-          <input type="text" value={lugar} onChange={(e) => setLugar(e.target.value)} className="input-field" placeholder="Opcional" />
+          <LugarAutocomplete value={lugar} onChange={setLugar} />
         </label>
 
         <div className="grid-2-responsive" style={{ gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 18 }}>
@@ -112,6 +136,36 @@ export function CrearEventoModal({ islaPorDefecto, onClose, onCreado }) {
             <span className="label-field">Aforo (opcional)</span>
             <input type="number" min={1} value={aforo} onChange={(e) => setAforo(e.target.value)} className="input-field" />
           </label>
+        </div>
+
+        <div style={{ marginTop: 18 }}>
+          <span className="label-field">Foto (opcional)</span>
+          {previewUrl ? (
+            <div>
+              <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden", border: "1px solid rgba(201,161,90,0.2)" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={previewUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              </div>
+              <button type="button" onClick={quitarArchivo} className="btn-outline-gold" style={{ marginTop: 8, fontSize: 11, padding: "6px 14px" }}>
+                Quitar foto
+              </button>
+            </div>
+          ) : (
+            <label
+              className="btn-outline-gold"
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer" }}
+            >
+              <ImageIcon size={15} />
+              Subir foto
+              <input
+                ref={inputFileRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                style={{ display: "none" }}
+                onChange={seleccionarArchivo}
+              />
+            </label>
+          )}
         </div>
 
         {error && <p style={{ marginTop: 14, fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}

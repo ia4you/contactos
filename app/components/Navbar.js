@@ -68,18 +68,28 @@ export function Navbar() {
 
   return (
     <header
-      className="site-header"
       style={{
         position: "sticky",
         top: 0,
         zIndex: 40,
-        background: "rgba(14,10,11,0.82)",
-        backdropFilter: "blur(14px)",
-        WebkitBackdropFilter: "blur(14px)",
         borderBottom: "1px solid rgba(201,161,90,0.18)",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      {/* El blur va en un wrapper interno, no en el <header>: backdrop-filter
+          en un ancestro crea un nuevo containing block para sus
+          descendientes position:fixed (el panel/overlay del menú móvil de
+          más abajo), así que un fixed dentro de un elemento con blur deja
+          de posicionarse respecto al viewport y se rompe. La clase
+          site-header (con su padding responsive) se mueve aquí también. */}
+      <div
+        className="site-header"
+        style={{
+          background: "rgba(14,10,11,0.82)",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <Link
           href={autenticado ? "/feed" : "/"}
           style={{
@@ -222,11 +232,12 @@ export function Navbar() {
             </Link>
           </div>
         )}
+        </div>
       </div>
 
       {menuMovilAbierto && (
         <div
-          style={{ position: "fixed", inset: 0, zIndex: 60, background: "rgba(0,0,0,0.55)" }}
+          style={{ position: "fixed", inset: 0, zIndex: 99, background: "rgba(0,0,0,0.7)" }}
           onClick={() => setMenuMovilAbierto(false)}
         >
           <div
@@ -235,6 +246,7 @@ export function Navbar() {
               left: 0,
               top: 0,
               bottom: 0,
+              zIndex: 100,
               width: "min(280px, 80vw)",
               background: "#0e0a0b",
               borderRight: "1px solid rgba(201,161,90,0.18)",

@@ -15,7 +15,7 @@ export async function GET(req, { params }) {
   }
 
   const { rows: eventoRows } = await query(
-    `SELECT e.id, e.titulo, e.descripcion, e.isla, e.lugar, e.fecha_evento, e.aforo, e.tipo, e.user_id, e.created_at,
+    `SELECT e.id, e.titulo, e.descripcion, e.isla, e.lugar, e.fecha_evento, e.aforo, e.tipo, e.foto, e.user_id, e.created_at,
             u.nick AS organizador_nick,
             (SELECT count(*)::int FROM evento_asistentes ea WHERE ea.evento_id = e.id AND ea.status = 'apuntado') AS apuntados_count,
             (SELECT count(*)::int FROM evento_asistentes ea WHERE ea.evento_id = e.id AND ea.status = 'interesado') AS interesados_count,

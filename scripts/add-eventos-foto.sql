@@ -1,0 +1,3 @@
+BEGIN;
+ALTER TABLE eventos ADD COLUMN IF NOT EXISTS foto text;
+COMMIT;

@@ -70,6 +70,12 @@ export function EventoDetalleShell({ eventoId }) {
         ← Volver a eventos
       </Link>
 
+      {evento.foto && (
+        <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden", marginTop: 20, border: "1px solid #2a2a2a" }}>
+          <Image src={`/uploads/eventos/${evento.foto}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+        </div>
+      )}
+
       <div style={{ marginTop: 20, display: "flex", gap: 8, flexWrap: "wrap" }}>
         <span className="badge-gold">{TIPO_LABEL[evento.tipo]}</span>
         <span className="badge-gold">{ISLAND_LABEL[evento.isla]}</span>

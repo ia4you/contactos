@@ -1,8 +1,17 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import { Readable } from "node:stream";
+import fs from "node:fs/promises";
+import path from "node:path";
+import formidable from "formidable";
+import sharp from "sharp";
+import { v4 as uuidv4 } from "uuid";
 import { authOptions } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { ISLANDS } from "@/lib/constants";
+import { directorioSubidasEventos, MIME_A_EXTENSION, MAX_TAMANO_FOTO } from "@/lib/uploads";
+
+export const runtime = "nodejs";
 
 const ISLAND_VALUES = ISLANDS.map((i) => i.value);
 const TIPOS = ["quedada", "fiesta", "club", "otro"];
@@ -37,7 +46,7 @@ export async function GET(req) {
   valores.push(LIMITE + 1, offset);
 
   const { rows } = await query(
-    `SELECT e.id, e.titulo, e.descripcion, e.isla, e.lugar, e.fecha_evento, e.aforo, e.tipo, e.user_id, e.created_at,
+    `SELECT e.id, e.titulo, e.descripcion, e.isla, e.lugar, e.fecha_evento, e.aforo, e.tipo, e.foto, e.user_id, e.created_at,
             u.nick AS organizador_nick,
             (SELECT count(*)::int FROM evento_asistentes ea WHERE ea.evento_id = e.id AND ea.status = 'apuntado') AS apuntados_count,
             (SELECT count(*)::int FROM evento_asistentes ea WHERE ea.evento_id = e.id AND ea.status = 'interesado') AS interesados_count,
@@ -56,40 +65,99 @@ export async function GET(req) {
   return NextResponse.json({ eventos, hasMore });
 }
 
+async function parseFormulario(req, uploadDir) {
+  const nodeReq = Readable.fromWeb(req.body);
+  nodeReq.headers = Object.fromEntries(req.headers);
+  nodeReq.method = "POST";
+
+  const form = formidable({
+    uploadDir,
+    maxFileSize: MAX_TAMANO_FOTO,
+    filter: ({ mimetype }) => Boolean(mimetype && MIME_A_EXTENSION[mimetype]),
+  });
+
+  return new Promise((resolve, reject) => {
+    form.parse(nodeReq, (err, fields, files) => {
+      if (err) reject(err);
+      else resolve({ fields, files });
+    });
+  });
+}
+
 export async function POST(req) {
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "No autorizado." }, { status: 401 });
   }
 
-  const body = await req.json().catch(() => null);
-  const titulo = typeof body?.titulo === "string" ? body.titulo.trim() : "";
-  const descripcion = typeof body?.descripcion === "string" ? body.descripcion.trim() : "";
-  const isla = body?.isla;
-  const lugar = typeof body?.lugar === "string" ? body.lugar.trim() : "";
-  const fechaEvento = body?.fechaEvento;
-  const aforo = body?.aforo != null && body.aforo !== "" ? Number(body.aforo) : null;
-  const tipo = TIPOS.includes(body?.tipo) ? body.tipo : "quedada";
+  const uploadDir = directorioSubidasEventos();
+  await fs.mkdir(uploadDir, { recursive: true });
+
+  let fields;
+  let files;
+  try {
+    ({ fields, files } = await parseFormulario(req, uploadDir));
+  } catch (err) {
+    console.error("Error al procesar la creación del evento:", err);
+    return NextResponse.json({ error: "No se pudo procesar la solicitud. Foto máx. 5MB, formatos jpg/png/webp." }, { status: 400 });
+  }
+
+  const campo = (nombre) => {
+    const v = fields[nombre];
+    return Array.isArray(v) ? v[0] : v;
+  };
+
+  const titulo = (campo("titulo") || "").trim();
+  const descripcion = (campo("descripcion") || "").trim();
+  const isla = campo("isla");
+  const lugar = (campo("lugar") || "").trim();
+  const fechaEvento = campo("fechaEvento");
+  const aforoRaw = campo("aforo");
+  const aforo = aforoRaw != null && aforoRaw !== "" ? Number(aforoRaw) : null;
+  const tipo = TIPOS.includes(campo("tipo")) ? campo("tipo") : "quedada";
+  const archivo = Array.isArray(files.file) ? files.file[0] : files.file;
 
   if (!titulo || titulo.length > 100) {
+    if (archivo) await fs.unlink(archivo.filepath).catch(() => {});
     return NextResponse.json({ error: "El título debe tener entre 1 y 100 caracteres." }, { status: 400 });
   }
   if (!ISLAND_VALUES.includes(isla)) {
+    if (archivo) await fs.unlink(archivo.filepath).catch(() => {});
     return NextResponse.json({ error: "Isla inválida." }, { status: 400 });
   }
   const fecha = new Date(fechaEvento);
   if (Number.isNaN(fecha.getTime()) || fecha.getTime() < Date.now()) {
+    if (archivo) await fs.unlink(archivo.filepath).catch(() => {});
     return NextResponse.json({ error: "La fecha del evento debe ser válida y futura." }, { status: 400 });
   }
   if (aforo != null && (!Number.isInteger(aforo) || aforo < 1)) {
+    if (archivo) await fs.unlink(archivo.filepath).catch(() => {});
     return NextResponse.json({ error: "Aforo inválido." }, { status: 400 });
   }
 
+  let nombreFoto = null;
+  if (archivo) {
+    nombreFoto = `${uuidv4()}.webp`;
+    try {
+      await sharp(archivo.filepath)
+        .rotate()
+        .resize({ width: 1200, withoutEnlargement: true })
+        .webp({ quality: 80 })
+        .toFile(path.join(uploadDir, nombreFoto));
+    } catch (err) {
+      console.error("Error al procesar la foto del evento con sharp:", err);
+      await fs.unlink(archivo.filepath).catch(() => {});
+      return NextResponse.json({ error: "No se pudo procesar la foto." }, { status: 400 });
+    } finally {
+      await fs.unlink(archivo.filepath).catch(() => {});
+    }
+  }
+
   const { rows } = await query(
-    `INSERT INTO eventos (user_id, titulo, descripcion, isla, lugar, fecha_evento, aforo, tipo)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-     RETURNING id, titulo, descripcion, isla, lugar, fecha_evento, aforo, tipo, created_at`,
-    [session.user.id, titulo, descripcion || null, isla, lugar || null, fecha.toISOString(), aforo, tipo]
+    `INSERT INTO eventos (user_id, titulo, descripcion, isla, lugar, fecha_evento, aforo, tipo, foto)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+     RETURNING id, titulo, descripcion, isla, lugar, fecha_evento, aforo, tipo, foto, created_at`,
+    [session.user.id, titulo, descripcion || null, isla, lugar || null, fecha.toISOString(), aforo, tipo, nombreFoto]
   );
 
   return NextResponse.json({ evento: rows[0] });

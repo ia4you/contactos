@@ -35,7 +35,10 @@ export async function middleware(req) {
   // edad): si el gate los redirigiera a "/", un crawler solo vería
   // redirects en vez del contenido real y el SEO no serviría de nada.
   const esPublicoSeo =
-    pathname === "/robots.txt" || pathname === "/sitemap.xml" || pathname.startsWith("/canarias");
+    pathname === "/robots.txt" ||
+    pathname === "/sitemap.xml" ||
+    pathname.startsWith("/canarias") ||
+    /^\/google[a-z0-9]+\.html$/.test(pathname);
 
   if (esEstatico || esPublicoSeo) {
     return NextResponse.next();

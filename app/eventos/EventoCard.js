@@ -14,7 +14,7 @@ function formatearFecha(iso) {
     d.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
 }
 
-export function EventoCard({ evento, onAsistir, esPasado }) {
+export function EventoCard({ evento, onAsistir, esPasado, esPropio, onEditar, onEliminar }) {
   const aforoRestante = evento.aforo != null ? Math.max(0, evento.aforo - evento.apuntados_count) : null;
 
   return (
@@ -47,7 +47,23 @@ export function EventoCard({ evento, onAsistir, esPasado }) {
         {aforoRestante !== null && ` · ${aforoRestante} plazas libres`}
       </p>
 
-      {!esPasado && (
+      {!esPasado && esPropio && (
+        <div style={{ display: "flex", gap: 8, marginTop: 4, flexWrap: "wrap" }}>
+          <button type="button" onClick={() => onEditar(evento)} className="btn-outline-gold" style={{ fontSize: 11 }}>
+            Editar
+          </button>
+          <button
+            type="button"
+            onClick={() => onEliminar(evento.id)}
+            className="btn-outline-gold"
+            style={{ fontSize: 11, borderColor: "rgba(154,58,58,0.5)", color: "#e07a7a" }}
+          >
+            Eliminar
+          </button>
+        </div>
+      )}
+
+      {!esPasado && !esPropio && (
         <div style={{ display: "flex", gap: 8, marginTop: 4, flexWrap: "wrap" }}>
           {evento.mi_status === "apuntado" ? (
             <button type="button" onClick={() => onAsistir(evento.id, "apuntado")} className="btn-outline-gold" style={{ fontSize: 11, borderColor: "rgba(154,58,58,0.5)", color: "#e07a7a" }}>

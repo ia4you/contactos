@@ -38,7 +38,15 @@ function CabeceraUsuario({ userId, nick, profileType, island, avatarFilename, ti
   );
 }
 
-export function AnuncioCardFeed({ anuncio }) {
+export function AnuncioCardFeed({ anuncio, usuarioActualId, onEliminar }) {
+  const esPropio = String(anuncio.user_id) === String(usuarioActualId);
+
+  async function eliminar() {
+    if (!window.confirm("¿Eliminar tu anuncio?")) return;
+    onEliminar(anuncio.id);
+    await fetch(`/api/anuncios/${anuncio.id}`, { method: "DELETE" });
+  }
+
   return (
     <div style={{ position: "relative", background: "#141414", border: "1px solid #2a2a2a", padding: 20, marginBottom: 16 }}>
       <span
@@ -88,7 +96,17 @@ export function AnuncioCardFeed({ anuncio }) {
         {anuncio.descripcion}
       </p>
 
-      <div style={{ marginTop: 16, display: "flex", justifyContent: "flex-end" }}>
+      <div style={{ marginTop: 16, display: "flex", justifyContent: "flex-end", gap: 8 }}>
+        {esPropio && (
+          <button
+            type="button"
+            onClick={eliminar}
+            className="btn-outline-gold"
+            style={{ borderColor: "rgba(154,58,58,0.5)", color: "#e07a7a" }}
+          >
+            Eliminar
+          </button>
+        )}
         <Link href={`/perfil/${anuncio.nick}`} className="btn-outline-gold">
           Ver perfil
         </Link>
@@ -108,7 +126,15 @@ function formatearFechaEvento(iso) {
   );
 }
 
-export function EventoCardFeed({ evento }) {
+export function EventoCardFeed({ evento, usuarioActualId, onEliminar }) {
+  const esPropio = String(evento.user_id) === String(usuarioActualId);
+
+  async function eliminar() {
+    if (!window.confirm("¿Eliminar este evento?")) return;
+    onEliminar(evento.id);
+    await fetch(`/api/eventos/${evento.id}`, { method: "DELETE" });
+  }
+
   return (
     <div style={{ position: "relative", background: "#141414", border: "1px solid #2a2a2a", marginBottom: 16, overflow: "hidden" }}>
       <span
@@ -150,7 +176,17 @@ export function EventoCardFeed({ evento }) {
           </p>
         )}
 
-        <div style={{ marginTop: 16, display: "flex", justifyContent: "flex-end" }}>
+        <div style={{ marginTop: 16, display: "flex", justifyContent: "flex-end", gap: 8 }}>
+          {esPropio && (
+            <button
+              type="button"
+              onClick={eliminar}
+              className="btn-outline-gold"
+              style={{ borderColor: "rgba(154,58,58,0.5)", color: "#e07a7a" }}
+            >
+              Eliminar
+            </button>
+          )}
           <Link href={`/eventos/${evento.id}`} className="btn-outline-gold">
             Ver evento
           </Link>

@@ -55,25 +55,24 @@ export async function GET(req) {
 
   const { rows } = await query(sql, [session.user.id, LIMITE + 1, offset]);
   const hasMore = rows.length > LIMITE;
-  const publicaciones = rows.slice(0, LIMITE).map((p) => ({ ...p, esAnuncio: false }));
+  const publicaciones = rows.slice(0, LIMITE).map((p) => ({ ...p, esAnuncio: false, esEvento: false }));
 
-  if (tab !== "parati" || publicaciones.length === 0) {
+  // Los anuncios y eventos activos se mezclan por created_at solo en la
+  // primera página: como se traen completos (sin paginar por su cuenta),
+  // repetirlos en cada "ver más" los duplicaría en el feed.
+  if (tab !== "parati" || offset > 0) {
     return NextResponse.json({ publicaciones, hasMore });
   }
 
-  // Intercalado de anuncios (Sprint 3, tarea 3d): 1 anuncio relevante cada 5
-  // publicaciones normales, solo en la pestaña "Para ti". "Relevante" =
-  // misma isla que el usuario o busco compatible con lo que busca el
-  // usuario. Se excluyen los propios anuncios y usuarios bloqueados, igual
-  // que en el resto del sitio.
-  const { rows: viewerRows } = await query(
-    `SELECT island, looking_for FROM users WHERE id = $1`,
-    [session.user.id]
-  );
+  const { rows: viewerRows } = await query(`SELECT island FROM users WHERE id = $1`, [session.user.id]);
   const viewer = viewerRows[0];
 
+  // Todos los anuncios y eventos activos (sin límite artificial de "1 cada
+  // 5" ni exclusión de los propios — el usuario puede eliminar los suyos
+  // directamente desde la tarjeta intercalada). Se ordenan priorizando la
+  // isla del usuario, pero sin excluir el resto de islas.
   const { rows: anuncios } = await query(
-    `SELECT a.id, a.titulo, a.descripcion, a.busco, a.island,
+    `SELECT a.id, a.titulo, a.descripcion, a.busco, a.island, a.created_at,
             u.id AS user_id, u.nick, u.profile_type,
             (SELECT filename FROM photos WHERE user_id = u.id AND is_avatar = true AND status = 'approved' LIMIT 1) AS avatar_filename
        FROM anuncios a
@@ -81,29 +80,23 @@ export async function GET(req) {
       WHERE a.deleted_at IS NULL
         AND a.expires_at > now()
         AND u.deleted_at IS NULL
-        AND a.user_id != $1
-        AND (a.island = $2 OR a.busco && $3::text[])
         AND NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))
-      ORDER BY a.created_at DESC
-      LIMIT 40`,
-    [session.user.id, viewer.island, viewer.looking_for]
+      ORDER BY (a.island = $2) DESC, a.created_at DESC
+      LIMIT 200`,
+    [session.user.id, viewer.island]
   );
 
-  // Eventos próximos (misma cadencia que los anuncios: 1 cada 5
-  // publicaciones normales), priorizando los de la isla del usuario sin
-  // excluir el resto — a diferencia de los anuncios, los eventos son
-  // escasos y un filtro estricto por isla los dejaría casi siempre vacíos.
   const { rows: eventos } = await query(
-    `SELECT e.id, e.titulo, e.isla, e.lugar, e.fecha_evento, e.foto, e.tipo,
-            u.nick AS organizador_nick
+    `SELECT e.id, e.titulo, e.isla, e.lugar, e.fecha_evento, e.foto, e.tipo, e.created_at,
+            u.id AS user_id, u.nick AS organizador_nick
        FROM eventos e
        JOIN users u ON u.id = e.user_id
       WHERE e.deleted_at IS NULL
         AND e.fecha_evento > now()
         AND u.deleted_at IS NULL
         AND NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))
-      ORDER BY (e.isla = $2) DESC, e.fecha_evento ASC
-      LIMIT 40`,
+      ORDER BY (e.isla = $2) DESC, e.created_at DESC
+      LIMIT 200`,
     [session.user.id, viewer.island]
   );
 
@@ -111,20 +104,11 @@ export async function GET(req) {
     return NextResponse.json({ publicaciones, hasMore });
   }
 
-  const bloqueBase = Math.floor(offset / LIMITE) * 4;
-  const conPromos = [];
-  publicaciones.forEach((pub, i) => {
-    conPromos.push(pub);
-    if ((i + 1) % 5 === 0) {
-      const slot = bloqueBase + Math.floor(i / 5);
-      if (anuncios.length > 0) {
-        conPromos.push({ ...anuncios[slot % anuncios.length], esAnuncio: true });
-      }
-      if (eventos.length > 0) {
-        conPromos.push({ ...eventos[slot % eventos.length], esEvento: true });
-      }
-    }
-  });
+  const conPromos = [
+    ...publicaciones,
+    ...anuncios.map((a) => ({ ...a, esAnuncio: true, esEvento: false })),
+    ...eventos.map((e) => ({ ...e, esEvento: true, esAnuncio: false })),
+  ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
   return NextResponse.json({ publicaciones: conPromos, hasMore });
 }

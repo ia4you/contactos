@@ -12,14 +12,22 @@ const TIPOS = [
   { value: "otro", label: "Otro" },
 ];
 
-export function CrearEventoModal({ islaPorDefecto, onClose, onCreado }) {
-  const [titulo, setTitulo] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [isla, setIsla] = useState(islaPorDefecto);
-  const [lugar, setLugar] = useState("");
-  const [fecha, setFecha] = useState("");
-  const [aforo, setAforo] = useState("");
-  const [tipo, setTipo] = useState("quedada");
+function aDatetimeLocal(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+export function CrearEventoModal({ eventoExistente, islaPorDefecto, onClose, onGuardado }) {
+  const esEdicion = Boolean(eventoExistente);
+  const [titulo, setTitulo] = useState(eventoExistente?.titulo ?? "");
+  const [descripcion, setDescripcion] = useState(eventoExistente?.descripcion ?? "");
+  const [isla, setIsla] = useState(eventoExistente?.isla ?? islaPorDefecto);
+  const [lugar, setLugar] = useState(eventoExistente?.lugar ?? "");
+  const [fecha, setFecha] = useState(aDatetimeLocal(eventoExistente?.fecha_evento));
+  const [aforo, setAforo] = useState(eventoExistente?.aforo ?? "");
+  const [tipo, setTipo] = useState(eventoExistente?.tipo ?? "quedada");
   const [archivo, setArchivo] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [enviando, setEnviando] = useState(false);
@@ -59,6 +67,31 @@ export function CrearEventoModal({ islaPorDefecto, onClose, onCreado }) {
     }
 
     setEnviando(true);
+
+    if (esEdicion) {
+      const res = await fetch(`/api/eventos/${eventoExistente.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          titulo: titulo.trim(),
+          descripcion: descripcion.trim(),
+          isla,
+          lugar: lugar.trim(),
+          fechaEvento: new Date(fecha).toISOString(),
+          aforo: aforo ? Number(aforo) : null,
+          tipo,
+        }),
+      });
+      const data = await res.json().catch(() => null);
+      setEnviando(false);
+      if (!res.ok) {
+        setError(data?.error || "No se pudo guardar el evento.");
+        return;
+      }
+      onGuardado(data.evento);
+      return;
+    }
+
     const formData = new FormData();
     formData.append("titulo", titulo.trim());
     formData.append("descripcion", descripcion.trim());
@@ -77,7 +110,7 @@ export function CrearEventoModal({ islaPorDefecto, onClose, onCreado }) {
       setError(data?.error || "No se pudo crear el evento.");
       return;
     }
-    onCreado(data.evento);
+    onGuardado(data.evento);
   }
 
   return (
@@ -90,7 +123,7 @@ export function CrearEventoModal({ islaPorDefecto, onClose, onCreado }) {
         onClick={(e) => e.stopPropagation()}
       >
         <h3 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
-          Crear evento
+          {esEdicion ? "Editar evento" : "Crear evento"}
         </h3>
 
         <label style={{ display: "block", marginTop: 18 }}>
@@ -138,35 +171,37 @@ export function CrearEventoModal({ islaPorDefecto, onClose, onCreado }) {
           </label>
         </div>
 
-        <div style={{ marginTop: 18 }}>
-          <span className="label-field">Foto (opcional)</span>
-          {previewUrl ? (
-            <div>
-              <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden", border: "1px solid rgba(201,161,90,0.2)" }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={previewUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        {!esEdicion && (
+          <div style={{ marginTop: 18 }}>
+            <span className="label-field">Foto (opcional)</span>
+            {previewUrl ? (
+              <div>
+                <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden", border: "1px solid rgba(201,161,90,0.2)" }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={previewUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                </div>
+                <button type="button" onClick={quitarArchivo} className="btn-outline-gold" style={{ marginTop: 8, fontSize: 11, padding: "6px 14px" }}>
+                  Quitar foto
+                </button>
               </div>
-              <button type="button" onClick={quitarArchivo} className="btn-outline-gold" style={{ marginTop: 8, fontSize: 11, padding: "6px 14px" }}>
-                Quitar foto
-              </button>
-            </div>
-          ) : (
-            <label
-              className="btn-outline-gold"
-              style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer" }}
-            >
-              <ImageIcon size={15} />
-              Subir foto
-              <input
-                ref={inputFileRef}
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                style={{ display: "none" }}
-                onChange={seleccionarArchivo}
-              />
-            </label>
-          )}
-        </div>
+            ) : (
+              <label
+                className="btn-outline-gold"
+                style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer" }}
+              >
+                <ImageIcon size={15} />
+                Subir foto
+                <input
+                  ref={inputFileRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  style={{ display: "none" }}
+                  onChange={seleccionarArchivo}
+                />
+              </label>
+            )}
+          </div>
+        )}
 
         {error && <p style={{ marginTop: 14, fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
 
@@ -175,7 +210,7 @@ export function CrearEventoModal({ islaPorDefecto, onClose, onCreado }) {
             Cancelar
           </button>
           <button type="button" onClick={guardar} disabled={enviando} className="btn-gold" style={{ flex: 1 }}>
-            {enviando ? "Creando…" : "Crear evento"}
+            {enviando ? "Guardando…" : esEdicion ? "Guardar cambios" : "Crear evento"}
           </button>
         </div>
       </div>

@@ -52,6 +52,14 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
     setPublicaciones((prev) => prev.filter((p) => p.esAnuncio || p.esEvento || p.id !== id));
   }
 
+  function onEliminarAnuncio(id) {
+    setPublicaciones((prev) => prev.filter((p) => !(p.esAnuncio && p.id === id)));
+  }
+
+  function onEliminarEvento(id) {
+    setPublicaciones((prev) => prev.filter((p) => !(p.esEvento && p.id === id)));
+  }
+
   return (
     <div className="feed-layout" style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 20px 80px" }}>
       <aside className="feed-sidebar-izq">
@@ -102,9 +110,9 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
           <>
             {publicaciones.map((p) =>
               p.esAnuncio ? (
-                <AnuncioCardFeed key={`anuncio-${p.id}`} anuncio={p} />
+                <AnuncioCardFeed key={`anuncio-${p.id}`} anuncio={p} usuarioActualId={usuario.id} onEliminar={onEliminarAnuncio} />
               ) : p.esEvento ? (
-                <EventoCardFeed key={`evento-${p.id}`} evento={p} />
+                <EventoCardFeed key={`evento-${p.id}`} evento={p} usuarioActualId={usuario.id} onEliminar={onEliminarEvento} />
               ) : (
                 <PublicacionCard key={p.id} publicacion={p} usuarioActualId={usuario.id} onEliminar={onEliminar} />
               )

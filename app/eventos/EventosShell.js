@@ -19,6 +19,7 @@ export function EventosShell({ usuario }) {
   const [filtroIsla, setFiltroIsla] = useState("");
   const [filtroTipo, setFiltroTipo] = useState("");
   const [modalAbierto, setModalAbierto] = useState(false);
+  const [eventoEnEdicion, setEventoEnEdicion] = useState(null);
   const [pasadosAbierto, setPasadosAbierto] = useState(false);
   const [pasados, setPasados] = useState(null);
 
@@ -73,9 +74,32 @@ export function EventosShell({ usuario }) {
     setPasados(actualizar);
   }
 
-  function onCreado(evento) {
+  function abrirCrear() {
+    setEventoEnEdicion(null);
+    setModalAbierto(true);
+  }
+
+  function abrirEditar(evento) {
+    setEventoEnEdicion(evento);
+    setModalAbierto(true);
+  }
+
+  function onGuardado(evento) {
     setModalAbierto(false);
-    setEventos((prev) => [{ ...evento, organizador_nick: usuario.nick, apuntados_count: 0, interesados_count: 0, mi_status: null }, ...(prev || [])]);
+    if (eventoEnEdicion) {
+      const actualizar = (lista) => (lista ? lista.map((e) => (e.id === evento.id ? { ...e, ...evento } : e)) : lista);
+      setEventos(actualizar);
+      setPasados(actualizar);
+    } else {
+      setEventos((prev) => [{ ...evento, organizador_nick: usuario.nick, apuntados_count: 0, interesados_count: 0, mi_status: null }, ...(prev || [])]);
+    }
+  }
+
+  async function eliminarEvento(id) {
+    if (!window.confirm("¿Eliminar este evento?")) return;
+    setEventos((prev) => (prev ? prev.filter((e) => e.id !== id) : prev));
+    setPasados((prev) => (prev ? prev.filter((e) => e.id !== id) : prev));
+    await fetch(`/api/eventos/${id}`, { method: "DELETE" });
   }
 
   return (
@@ -87,7 +111,7 @@ export function EventosShell({ usuario }) {
             Eventos
           </h1>
         </div>
-        <button type="button" onClick={() => setModalAbierto(true)} className="btn-gold">
+        <button type="button" onClick={abrirCrear} className="btn-gold">
           Crear evento
         </button>
       </div>
@@ -124,7 +148,14 @@ export function EventosShell({ usuario }) {
         ) : (
           <div className="anuncios-grid">
             {eventos.map((e) => (
-              <EventoCard key={e.id} evento={e} onAsistir={onAsistir} />
+              <EventoCard
+                key={e.id}
+                evento={e}
+                onAsistir={onAsistir}
+                esPropio={String(e.user_id) === String(usuario.id)}
+                onEditar={abrirEditar}
+                onEliminar={eliminarEvento}
+              />
             ))}
           </div>
         )}
@@ -162,7 +193,15 @@ export function EventosShell({ usuario }) {
             ) : (
               <div className="anuncios-grid">
                 {pasados.map((e) => (
-                  <EventoCard key={e.id} evento={e} onAsistir={onAsistir} esPasado />
+                  <EventoCard
+                    key={e.id}
+                    evento={e}
+                    onAsistir={onAsistir}
+                    esPasado
+                    esPropio={String(e.user_id) === String(usuario.id)}
+                    onEditar={abrirEditar}
+                    onEliminar={eliminarEvento}
+                  />
                 ))}
               </div>
             )}
@@ -171,7 +210,12 @@ export function EventosShell({ usuario }) {
       </div>
 
       {modalAbierto && (
-        <CrearEventoModal islaPorDefecto={usuario.island} onClose={() => setModalAbierto(false)} onCreado={onCreado} />
+        <CrearEventoModal
+          eventoExistente={eventoEnEdicion}
+          islaPorDefecto={usuario.island}
+          onClose={() => setModalAbierto(false)}
+          onGuardado={onGuardado}
+        />
       )}
     </div>
   );

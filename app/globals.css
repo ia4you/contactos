@@ -6,16 +6,4 @@
   .text-balance {
     text-wrap: balance;
   }
-
-  /* Efecto de discreción: las fotos de listados aparecen desenfocadas por
-     defecto y se revelan al pasar el ratón — firma visual del sitio. */
-  .foto-discreta {
-    filter: blur(14px);
-    transition: filter 0.3s ease;
-  }
-
-  .foto-discreta:hover,
-  .foto-discreta:focus-visible {
-    filter: blur(0);
-  }
 }

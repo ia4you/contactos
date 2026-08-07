@@ -643,3 +643,37 @@ body {
     display: none;
   }
 }
+
+/* Cabecera de /perfil/[nick]: en desktop se mantienen las dos columnas
+   (info a la izquierda, acciones a la derecha) tal cual están en línea;
+   en móvil todo se centra en una sola columna. Los !important son
+   necesarios porque los elementos llevan flex-direction/text-align/etc.
+   como estilo inline para el layout de desktop, que siempre gana sobre
+   una regla de hoja de estilos sin !important. */
+@media (max-width: 768px) {
+  .perfil-cabecera-row {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+  .perfil-cabecera-info {
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100%;
+  }
+  .perfil-cabecera-textos {
+    text-align: center !important;
+    max-width: 100% !important;
+  }
+  .perfil-cabecera-badges {
+    justify-content: center !important;
+  }
+  .perfil-cabecera-acciones {
+    width: 100%;
+    align-self: center !important;
+  }
+  .perfil-cabecera-acciones button,
+  .perfil-cabecera-acciones a {
+    width: 100%;
+  }
+}

@@ -40,6 +40,14 @@ export const metadata = {
   ],
   authors: [{ name: "Contactos Turel" }],
   manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Contactos",
+  },
+  icons: {
+    apple: "/icons/icon-192.png",
+  },
   openGraph: {
     type: "website",
     locale: "es_ES",

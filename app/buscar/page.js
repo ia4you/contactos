@@ -324,7 +324,7 @@ function TarjetaPerfil({ perfil }) {
         textDecoration: "none",
       }}
     >
-      <Image src={src} alt="" fill unoptimized={false} className="foto-discreta" style={{ objectFit: "cover" }} />
+      <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
 
       <div
         style={{

@@ -181,6 +181,7 @@ export function PerfilCabecera({
       }}
     >
       <div
+        className="perfil-cabecera-row"
         style={{
           maxWidth: 1100,
           margin: "0 auto",
@@ -190,7 +191,7 @@ export function PerfilCabecera({
           justifyContent: "space-between",
         }}
       >
-        <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
+        <div className="perfil-cabecera-info" style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
           <div style={{ position: "relative", width: 100, height: 100, flexShrink: 0 }}>
             <div
               style={{
@@ -208,12 +209,12 @@ export function PerfilCabecera({
             {usuario.is_demo && <DemoBadge />}
           </div>
 
-          <div style={{ maxWidth: 480 }}>
+          <div className="perfil-cabecera-textos" style={{ maxWidth: 480 }}>
             <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
               {usuario.nick}
             </h1>
 
-            <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 8 }}>
+            <div className="perfil-cabecera-badges" style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 8 }}>
               <span className="badge-gold">{ISLAND_LABEL[usuario.island]}</span>
               {compatibilidad && <CompatibilidadBadge pct={compatibilidad.pct} />}
               <span
@@ -253,7 +254,7 @@ export function PerfilCabecera({
         </div>
 
         {!esPropio && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 10, alignSelf: "flex-start" }}>
+          <div className="perfil-cabecera-acciones" style={{ display: "flex", flexDirection: "column", gap: 10, alignSelf: "flex-start" }}>
             <button
               type="button"
               onClick={toggleLike}

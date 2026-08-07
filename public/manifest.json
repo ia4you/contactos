@@ -1,22 +1,14 @@
 {
-  "name": "contactos.turel.es",
+  "name": "Contactos Liberal Canarias",
   "short_name": "Contactos",
-  "start_url": "/",
+  "description": "La comunidad liberal de Canarias",
+  "start_url": "/feed",
   "display": "standalone",
-  "background_color": "#0B0E1A",
-  "theme_color": "#0B0E1A",
+  "background_color": "#0e0a0b",
+  "theme_color": "#0e0a0b",
+  "orientation": "portrait",
   "icons": [
-    {
-      "src": "/icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    }
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }

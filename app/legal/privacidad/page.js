@@ -81,8 +81,7 @@ export default function Privacidad() {
         fotografía certificas que todas las personas que aparecen en ella
         son mayores de 18 años y han dado su consentimiento. Puedes marcar
         cualquier fotografía como privada para que solo sea visible para
-        ti. En los listados de búsqueda las fotografías pueden mostrarse
-        con un efecto visual de desenfoque.
+        ti.
       </p>
 
       <p>

@@ -227,7 +227,7 @@ export function Navbar() {
             >
               <Menu size={22} />
             </button>
-            <Link href="/login" className="btn-outline-gold">
+            <Link href="/login" className="btn-outline-gold navbar-acceder-desktop">
               Acceder
             </Link>
           </div>
@@ -331,11 +331,24 @@ export function Navbar() {
                     Perfiles
                   </Link>
                   <Link href="/login" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
-                    Acceder
+                    Iniciar sesión
                   </Link>
                 </>
               )}
             </nav>
+
+            {!autenticado && (
+              <div style={{ padding: "20px 24px", marginTop: "auto" }}>
+                <Link
+                  href="/registro"
+                  onClick={() => setMenuMovilAbierto(false)}
+                  className="btn-gold"
+                  style={{ display: "block", textAlign: "center" }}
+                >
+                  Crear perfil
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -97,6 +97,69 @@ export function AnuncioCardFeed({ anuncio }) {
   );
 }
 
+const TIPO_EVENTO_LABEL = { quedada: "Quedada", fiesta: "Fiesta", club: "Club", otro: "Otro" };
+
+function formatearFechaEvento(iso) {
+  const d = new Date(iso);
+  return (
+    d.toLocaleDateString("es-ES", { day: "2-digit", month: "short", year: "numeric" }) +
+    " · " +
+    d.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })
+  );
+}
+
+export function EventoCardFeed({ evento }) {
+  return (
+    <div style={{ position: "relative", background: "#141414", border: "1px solid #2a2a2a", marginBottom: 16, overflow: "hidden" }}>
+      <span
+        style={{
+          position: "absolute",
+          right: 0,
+          top: 0,
+          zIndex: 1,
+          fontFamily: "var(--font-body)",
+          fontSize: 10,
+          textTransform: "uppercase",
+          letterSpacing: 1.5,
+          padding: "5px 12px",
+          background: "var(--gold-light)",
+          color: "var(--bg)",
+        }}
+      >
+        Evento
+      </span>
+
+      {evento.foto && (
+        <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden" }}>
+          <Image src={`/uploads/eventos/${evento.foto}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+        </div>
+      )}
+
+      <div style={{ padding: 20 }}>
+        <span className="badge-gold" style={{ fontSize: 9 }}>{TIPO_EVENTO_LABEL[evento.tipo]}</span>
+
+        <h3 className="heading" style={{ marginTop: 10, fontSize: 18, color: "var(--text)" }}>
+          {evento.titulo}
+        </h3>
+        <p style={{ marginTop: 6, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)" }}>
+          {formatearFechaEvento(evento.fecha_evento)}
+        </p>
+        {evento.lugar && (
+          <p style={{ marginTop: 2, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+            {evento.lugar} · {ISLAND_LABEL[evento.isla]}
+          </p>
+        )}
+
+        <div style={{ marginTop: 16, display: "flex", justifyContent: "flex-end" }}>
+          <Link href={`/eventos/${evento.id}`} className="btn-outline-gold">
+            Ver evento
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
   const p = publicacion;
   const [meGusta, setMeGusta] = useState(p.me_gusta);

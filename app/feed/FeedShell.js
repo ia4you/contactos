@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Composer } from "./Composer";
-import { PublicacionCard, AnuncioCardFeed } from "./PublicacionCard";
+import { PublicacionCard, AnuncioCardFeed, EventoCardFeed } from "./PublicacionCard";
 import { JuegosBanner } from "./JuegosBanner";
 import { ActivosIslaWidget } from "./ActivosIslaWidget";
 import { HistoriasFranja } from "./HistoriasFranja";
@@ -49,7 +49,7 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
   }
 
   function onEliminar(id) {
-    setPublicaciones((prev) => prev.filter((p) => p.esAnuncio || p.id !== id));
+    setPublicaciones((prev) => prev.filter((p) => p.esAnuncio || p.esEvento || p.id !== id));
   }
 
   return (
@@ -103,6 +103,8 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
             {publicaciones.map((p) =>
               p.esAnuncio ? (
                 <AnuncioCardFeed key={`anuncio-${p.id}`} anuncio={p} />
+              ) : p.esEvento ? (
+                <EventoCardFeed key={`evento-${p.id}`} evento={p} />
               ) : (
                 <PublicacionCard key={p.id} publicacion={p} usuarioActualId={usuario.id} onEliminar={onEliminar} />
               )

@@ -472,6 +472,9 @@ body {
   .navbar-iconos-desktop {
     display: none !important;
   }
+  .navbar-acceder-desktop {
+    display: none !important;
+  }
 }
 
 .site-header {

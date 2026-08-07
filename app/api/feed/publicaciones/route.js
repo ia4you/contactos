@@ -89,22 +89,44 @@ export async function GET(req) {
     [session.user.id, viewer.island, viewer.looking_for]
   );
 
-  if (anuncios.length === 0) {
+  // Eventos próximos (misma cadencia que los anuncios: 1 cada 5
+  // publicaciones normales), priorizando los de la isla del usuario sin
+  // excluir el resto — a diferencia de los anuncios, los eventos son
+  // escasos y un filtro estricto por isla los dejaría casi siempre vacíos.
+  const { rows: eventos } = await query(
+    `SELECT e.id, e.titulo, e.isla, e.lugar, e.fecha_evento, e.foto, e.tipo,
+            u.nick AS organizador_nick
+       FROM eventos e
+       JOIN users u ON u.id = e.user_id
+      WHERE e.deleted_at IS NULL
+        AND e.fecha_evento > now()
+        AND u.deleted_at IS NULL
+        AND NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))
+      ORDER BY (e.isla = $2) DESC, e.fecha_evento ASC
+      LIMIT 40`,
+    [session.user.id, viewer.island]
+  );
+
+  if (anuncios.length === 0 && eventos.length === 0) {
     return NextResponse.json({ publicaciones, hasMore });
   }
 
   const bloqueBase = Math.floor(offset / LIMITE) * 4;
-  const conAnuncios = [];
+  const conPromos = [];
   publicaciones.forEach((pub, i) => {
-    conAnuncios.push(pub);
+    conPromos.push(pub);
     if ((i + 1) % 5 === 0) {
       const slot = bloqueBase + Math.floor(i / 5);
-      const anuncio = anuncios[slot % anuncios.length];
-      conAnuncios.push({ ...anuncio, esAnuncio: true });
+      if (anuncios.length > 0) {
+        conPromos.push({ ...anuncios[slot % anuncios.length], esAnuncio: true });
+      }
+      if (eventos.length > 0) {
+        conPromos.push({ ...eventos[slot % eventos.length], esEvento: true });
+      }
     }
   });
 
-  return NextResponse.json({ publicaciones: conAnuncios, hasMore });
+  return NextResponse.json({ publicaciones: conPromos, hasMore });
 }
 
 async function parseFormulario(req, uploadDir) {

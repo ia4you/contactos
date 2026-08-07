@@ -5,6 +5,7 @@ import { Composer } from "./Composer";
 import { PublicacionCard, AnuncioCardFeed, EventoCardFeed } from "./PublicacionCard";
 import { JuegosBanner } from "./JuegosBanner";
 import { ActivosIslaWidget } from "./ActivosIslaWidget";
+import { FotosTopWidget } from "./FotosTopWidget";
 import { HistoriasFranja } from "./HistoriasFranja";
 import { RecomendadosWidget } from "./RecomendadosWidget";
 import { AhoraOnlineCarrusel } from "./AhoraOnlineCarrusel";
@@ -78,6 +79,8 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
         )}
 
         <ActivosIslaWidget usuarios={activosIsla} isla={usuario.island} />
+
+        {tab === "parati" && <FotosTopWidget />}
 
         <div className="tab-nav" style={{ marginBottom: 24 }}>
           <button

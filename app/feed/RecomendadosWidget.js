@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Flame } from "lucide-react";
-import { ISLANDS, AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { ISLANDS, avatarSrc } from "@/lib/constants";
 import { mostrarPuntoOnline } from "@/lib/online";
 import { PuntoOnline } from "../components/PuntoOnline";
 
@@ -27,7 +27,7 @@ function TarjetaSkeleton() {
 }
 
 function TarjetaRecomendacion({ r }) {
-  const src = r.avatar_filename ? `/uploads/${r.user_id}/${r.avatar_filename}` : AVATAR_PLACEHOLDER[r.profile_type];
+  const src = avatarSrc(r.user_id, r.avatar_filename, r.profile_type);
   const score = estiloScore(r.score ?? 0);
 
   return (
@@ -76,7 +76,7 @@ function TarjetaRecomendacion({ r }) {
 }
 
 function FilaRecomendacionCompacta({ r }) {
-  const src = r.avatar_filename ? `/uploads/${r.user_id}/${r.avatar_filename}` : AVATAR_PLACEHOLDER[r.profile_type];
+  const src = avatarSrc(r.user_id, r.avatar_filename, r.profile_type);
   const score = estiloScore(r.score ?? 0);
 
   return (

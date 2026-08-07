@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { Cormorant_Garamond, Jost } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import "./theme.css";
 import { Providers } from "./providers";
@@ -11,19 +12,61 @@ const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
   weight: ["400", "500", "600"],
   style: ["normal", "italic"],
+  display: "swap",
 });
 
 const jost = Jost({
   subsets: ["latin"],
   variable: "--font-jost",
   weight: ["300", "400", "500", "600"],
+  display: "swap",
 });
 
 export const metadata = {
-  title: "Contactos — Club Liberal Canarias",
+  metadataBase: new URL("https://contactos.turel.es"),
+  title: {
+    default: "Contactos Liberales en Canarias | Club Liberal Canarias",
+    template: "%s | Contactos Liberales Canarias",
+  },
   description:
-    "Un espacio íntimo para el ambiente liberal en Canarias. Discreción y privacidad ante todo.",
+    "La comunidad liberal de Canarias. Contactos discretos para parejas, chicas y chicos del ambiente liberal en las 8 islas. Únete gratis.",
+  keywords: [
+    "contactos liberales canarias",
+    "parejas liberales canarias",
+    "ambiente liberal gran canaria",
+    "club liberal tenerife",
+    "contactos swinger canarias",
+    "parejas canarias",
+  ],
+  authors: [{ name: "Contactos Turel" }],
   manifest: "/manifest.json",
+  openGraph: {
+    type: "website",
+    locale: "es_ES",
+    url: "https://contactos.turel.es",
+    siteName: "Contactos Liberales Canarias",
+    title: "Contactos Liberales en Canarias | Club Liberal",
+    description:
+      "La comunidad liberal de Canarias. Contactos discretos para parejas y personas del ambiente liberal en las 8 islas.",
+    images: [
+      {
+        url: "/images/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Contactos Liberales Canarias",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contactos Liberales en Canarias",
+    description: "La comunidad liberal de Canarias. Únete gratis.",
+    images: ["/images/og-image.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export const viewport = {
@@ -46,6 +89,7 @@ export default function RootLayout({ children }) {
           <div style={{ flex: 1 }}>{children}</div>
           {gateOk && <Footer />}
         </Providers>
+        <GoogleAnalytics gaId="G-Y5GCHELG2S" />
       </body>
     </html>
   );

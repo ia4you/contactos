@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ISLANDS, AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { ISLANDS, avatarSrc } from "@/lib/constants";
 import { PuntoOnline } from "../components/PuntoOnline";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
@@ -45,7 +45,7 @@ export function AhoraOnlineCarrusel() {
 
       <div className="scroll-sin-barra" style={{ marginTop: 14, display: "flex", gap: 16, overflowX: "auto" }}>
         {usuarios.map((u) => {
-          const src = u.avatar_filename ? `/uploads/${u.id}/${u.avatar_filename}` : AVATAR_PLACEHOLDER[u.profile_type];
+          const src = avatarSrc(u.id, u.avatar_filename, u.profile_type);
           return (
             <Link
               key={u.id}

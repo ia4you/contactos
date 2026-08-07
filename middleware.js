@@ -30,7 +30,14 @@ export async function middleware(req) {
     pathname === "/sw.js" ||
     pathname === "/favicon.ico";
 
-  if (esEstatico) {
+  // robots.txt, sitemap.xml y las páginas /canarias/[isla] son contenido
+  // público pensado para rastreadores (Googlebot nunca lleva la cookie de
+  // edad): si el gate los redirigiera a "/", un crawler solo vería
+  // redirects en vez del contenido real y el SEO no serviría de nada.
+  const esPublicoSeo =
+    pathname === "/robots.txt" || pathname === "/sitemap.xml" || pathname.startsWith("/canarias");
+
+  if (esEstatico || esPublicoSeo) {
     return NextResponse.next();
   }
 
@@ -39,14 +46,19 @@ export async function middleware(req) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  if (PROTECTED_ROUTES.some((ruta) => pathname.startsWith(ruta))) {
+  const esProtegida = PROTECTED_ROUTES.some((ruta) => pathname.startsWith(ruta));
+  if (esProtegida) {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
     if (!token) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+  if (esProtegida) {
+    response.headers.set("X-Robots-Tag", "noindex, nofollow");
+  }
+  return response;
 }
 
 export const config = {

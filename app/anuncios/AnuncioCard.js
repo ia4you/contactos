@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ISLANDS, PROFILE_TYPES, LOOKING_FOR_OPTIONS, AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { ISLANDS, PROFILE_TYPES, LOOKING_FOR_OPTIONS, avatarSrc } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
@@ -12,9 +12,7 @@ const BUSCO_LABEL = Object.fromEntries(LOOKING_FOR_OPTIONS.map((l) => [l.value, 
 
 export function AnuncioCard({ anuncio, esPropio, onEditar, onEliminar }) {
   const [expandido, setExpandido] = useState(false);
-  const src = anuncio.avatar_filename
-    ? `/uploads/${anuncio.user_id}/${anuncio.avatar_filename}`
-    : AVATAR_PLACEHOLDER[anuncio.profile_type];
+  const src = avatarSrc(anuncio.user_id, anuncio.avatar_filename, anuncio.profile_type);
 
   const descripcionLarga = anuncio.descripcion.length > 140;
 

@@ -4,11 +4,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Send, ArrowLeft, Trash2 } from "lucide-react";
-import { ISLANDS, AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { ISLANDS, avatarSrc } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
 import { mostrarPuntoOnline } from "@/lib/online";
 import { EmptyState } from "../components/EmptyState";
 import { PuntoOnline } from "../components/PuntoOnline";
+import { DemoBadge } from "../components/DemoBadge";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 
@@ -51,6 +52,22 @@ export function MensajesShell({ usuarioId }) {
   useEffect(() => {
     if (activaId) cargarChat(activaId);
   }, [activaId, cargarChat]);
+
+  // Los perfiles demo responden con un retraso de 3-8s generado en el
+  // servidor (ver lib/demoReply.js); sin polling, la respuesta llegaría a
+  // la BD pero no se vería en el chat abierto hasta recargar.
+  useEffect(() => {
+    if (!activaId || !otro?.is_demo) return;
+    const intervalo = setInterval(async () => {
+      const res = await fetch(`/api/mensajes/${activaId}`);
+      const data = await res.json().catch(() => null);
+      if (data) {
+        setMensajes(data.mensajes);
+        fetch(`/api/mensajes/${activaId}/leidos`, { method: "PATCH" }).catch(() => {});
+      }
+    }, 3000);
+    return () => clearInterval(intervalo);
+  }, [activaId, otro?.is_demo]);
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -141,9 +158,7 @@ export function MensajesShell({ usuarioId }) {
           </div>
         ) : (
           conversaciones.map((c) => {
-            const src = c.avatar_filename
-              ? `/uploads/${c.otro_id}/${c.avatar_filename}`
-              : AVATAR_PLACEHOLDER[c.profile_type];
+            const src = avatarSrc(c.otro_id, c.avatar_filename, c.profile_type);
             return (
               <div
                 key={c.id}
@@ -173,6 +188,7 @@ export function MensajesShell({ usuarioId }) {
                     <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
                   </div>
                   {mostrarPuntoOnline(c) && <PuntoOnline />}
+                  {c.is_demo && <DemoBadge style={{ fontSize: 6, padding: "1px 3px", bottom: -1, right: -1 }} />}
                 </Link>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
@@ -256,7 +272,7 @@ export function MensajesShell({ usuarioId }) {
               <div style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}>
                 <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
                   <Image
-                    src={otro.avatar_filename ? `/uploads/${otro.id}/${otro.avatar_filename}` : AVATAR_PLACEHOLDER[otro.profile_type]}
+                    src={avatarSrc(otro.id, otro.avatar_filename, otro.profile_type)}
                     alt=""
                     fill
                     unoptimized={false}
@@ -264,6 +280,7 @@ export function MensajesShell({ usuarioId }) {
                   />
                 </div>
                 {mostrarPuntoOnline(otro) && <PuntoOnline />}
+                {otro.is_demo && <DemoBadge style={{ fontSize: 6, padding: "1px 3px", bottom: -1, right: -1 }} />}
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>

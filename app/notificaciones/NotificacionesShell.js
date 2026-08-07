@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { AVATAR_PLACEHOLDER, avatarSrc } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
 import { textoNotificacion } from "@/lib/notificacionTexto";
 import { EmptyState } from "../components/EmptyState";
@@ -79,9 +79,7 @@ export function NotificacionesShell() {
                   <p className="kicker" style={{ letterSpacing: 3 }}>{titulo}</p>
                   <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 2 }}>
                     {items.map((n) => {
-                      const src = n.avatar_filename
-                        ? `/uploads/${n.from_id}/${n.avatar_filename}`
-                        : AVATAR_PLACEHOLDER[n.profile_type] || AVATAR_PLACEHOLDER.chica;
+                      const src = avatarSrc(n.from_id, n.avatar_filename, n.profile_type) || AVATAR_PLACEHOLDER.chica;
                       return (
                         <div
                           key={n.id}

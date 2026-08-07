@@ -4,12 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Filter } from "lucide-react";
+import { DemoBadge } from "../components/DemoBadge";
 import {
   ISLANDS,
   PROFILE_TYPES,
   LOOKING_FOR_OPTIONS,
   ORIENTACION_OPTIONS,
-  AVATAR_PLACEHOLDER,
+  avatarSrc,
 } from "@/lib/constants";
 import { GustosModal } from "../components/GustosModal";
 import { MultiSelectChips } from "../components/MultiSelectChips";
@@ -309,9 +310,7 @@ function Bloque({ titulo, children }) {
 }
 
 function TarjetaPerfil({ perfil }) {
-  const src = perfil.filename
-    ? `/uploads/${perfil.id}/${perfil.filename}`
-    : AVATAR_PLACEHOLDER[perfil.profile_type];
+  const src = avatarSrc(perfil.id, perfil.filename, perfil.profile_type);
 
   return (
     <Link
@@ -335,6 +334,8 @@ function TarjetaPerfil({ perfil }) {
           pointerEvents: "none",
         }}
       />
+
+      {perfil.is_demo && <DemoBadge style={{ bottom: 8, right: 8, fontSize: 9 }} />}
 
       {mostrarPuntoOnline(perfil) && (
         <span

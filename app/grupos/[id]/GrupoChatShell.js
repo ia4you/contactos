@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Send } from "lucide-react";
-import { AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { avatarSrc } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
 
 export function GrupoChatShell({ grupoId, usuarioId }) {
@@ -96,7 +96,7 @@ export function GrupoChatShell({ grupoId, usuarioId }) {
               ) : (
                 mensajes.map((m) => {
                   const esMio = String(m.user_id) === String(usuarioId);
-                  const src = m.avatar_filename ? `/uploads/${m.user_id}/${m.avatar_filename}` : AVATAR_PLACEHOLDER.chica;
+                  const src = avatarSrc(m.user_id, m.avatar_filename, "chica");
                   return (
                     <div key={m.id} style={{ display: "flex", gap: 10, flexDirection: esMio ? "row-reverse" : "row" }}>
                       <div style={{ position: "relative", width: 28, height: 28, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
@@ -154,7 +154,7 @@ export function GrupoChatShell({ grupoId, usuarioId }) {
         <p className="kicker" style={{ letterSpacing: 2 }}>Miembros</p>
         <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 12 }}>
           {miembros.map((m) => {
-            const src = m.avatar_filename ? `/uploads/${m.id}/${m.avatar_filename}` : AVATAR_PLACEHOLDER[m.profile_type];
+            const src = avatarSrc(m.id, m.avatar_filename, m.profile_type);
             return (
               <Link key={m.id} href={`/perfil/${m.nick}`} style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
                 <div style={{ position: "relative", width: 30, height: 30, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>

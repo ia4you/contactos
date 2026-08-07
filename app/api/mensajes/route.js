@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { crearNotificacion } from "@/lib/notificaciones";
+import { generarRespuestaDemo } from "@/lib/demoReply";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -13,7 +14,7 @@ export async function GET() {
 
   const { rows } = await query(
     `SELECT c.id, c.last_message_at,
-            u.id AS otro_id, u.nick, u.profile_type, u.island, u.last_active, u.show_last_seen,
+            u.id AS otro_id, u.nick, u.profile_type, u.island, u.last_active, u.show_last_seen, u.is_demo,
             (SELECT filename FROM photos WHERE user_id = u.id AND is_avatar = true AND status = 'approved' LIMIT 1) AS avatar_filename,
             (SELECT texto FROM mensajes m WHERE m.conversacion_id = c.id AND m.deleted_at IS NULL ORDER BY m.created_at DESC LIMIT 1) AS ultimo_texto,
             (SELECT count(*)::int FROM mensajes m WHERE m.conversacion_id = c.id AND m.sender_id != $1 AND m.leido = false AND m.deleted_at IS NULL) AS no_leidos
@@ -72,6 +73,18 @@ export async function POST(req) {
 
   await query(`UPDATE conversaciones SET last_message_at = now() WHERE id = $1`, [conversacionId]);
   await crearNotificacion(toUserId, "mensaje", meId, mensaje.id);
+
+  const { rows: demoRows } = await query(
+    `SELECT id, nick, profile_type, island, bio, her_bio, his_bio, orientacion, rol
+       FROM users WHERE id = $1 AND is_demo = true`,
+    [toUserId]
+  );
+  if (demoRows[0]) {
+    // Fire-and-forget: no se espera a que termine para responder al usuario.
+    generarRespuestaDemo(demoRows[0], conversacionId, meId, texto).catch((err) => {
+      console.error("Error en generarRespuestaDemo:", err);
+    });
+  }
 
   return NextResponse.json({ conversacionId, mensaje });
 }

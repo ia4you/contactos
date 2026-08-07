@@ -5,16 +5,15 @@ export const metadata = { title: "Aviso legal — contactos.turel.es" };
 export default function AvisoLegal() {
   return (
     <LegalPage kicker="Información legal" titulo="Aviso legal">
-      {/* REVISAR LEGALMENTE */}
       <p>
         En cumplimiento de la Ley 34/2002, de 11 de julio, de Servicios de la
         Sociedad de la Información y de Comercio Electrónico (LSSI-CE), se
         informa a los usuarios de contactos.turel.es de los siguientes datos:
       </p>
       <p>
-        <strong>Titular del sitio:</strong> Turel (datos identificativos
-        completos pendientes de incorporar). <strong>Contacto:</strong>{" "}
-        soporte@turel.es
+        <strong>Titular:</strong> José Rodríguez Hernández.{" "}
+        <strong>NIF:</strong> 42829454-G. <strong>Dirección:</strong> 35018,
+        Las Palmas de Gran Canaria. <strong>Contacto:</strong> jose@turel.es
       </p>
       <p>
         <strong>Objeto:</strong> contactos.turel.es es una plataforma de

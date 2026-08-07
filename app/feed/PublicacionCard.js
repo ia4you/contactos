@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heart, MessageCircle, X } from "lucide-react";
-import { ISLANDS, PROFILE_TYPES, AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { ISLANDS, PROFILE_TYPES, avatarSrc } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
 import { mostrarPuntoOnline } from "@/lib/online";
 import { PuntoOnline } from "../components/PuntoOnline";
@@ -13,7 +13,7 @@ const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
 
 function CabeceraUsuario({ userId, nick, profileType, island, avatarFilename, tiempo, lastActive, showLastSeen }) {
-  const src = avatarFilename ? `/uploads/${userId}/${avatarFilename}` : AVATAR_PLACEHOLDER[profileType];
+  const src = avatarSrc(userId, avatarFilename, profileType);
   const online = mostrarPuntoOnline({ last_active: lastActive, show_last_seen: showLastSeen });
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -367,7 +367,7 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
                 <div key={c.id} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
                   <div style={{ position: "relative", width: 28, height: 28, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
                     <Image
-                      src={c.avatar_filename ? `/uploads/${c.user_id}/${c.avatar_filename}` : AVATAR_PLACEHOLDER.chica}
+                      src={avatarSrc(c.user_id, c.avatar_filename, "chica")}
                       alt=""
                       fill
                       unoptimized={false}

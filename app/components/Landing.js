@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ISLANDS_SEO } from "../canarias/islasData";
 
 export function Landing() {
   return (
@@ -106,12 +107,12 @@ export function Landing() {
           }}
         >
           <Pilar numeral="I" titulo="Privacidad total">
-            Tus fotos y datos permanecen ocultos hasta que decides
-            compartirlos con quien tú elijas.
+            Tú decides qué compartes y con quién. Marca tus fotos como
+            privadas y controla quién puede verte.
           </Pilar>
-          <Pilar numeral="II" titulo="Perfiles verificados">
-            Revisamos cada perfil y cada fotografía antes de que sean
-            visibles para el resto de la comunidad.
+          <Pilar numeral="II" titulo="Comunidad real">
+            Perfiles con gustos, orientación y lo que buscan. Nuestra IA te
+            recomienda las personas más afines a ti.
           </Pilar>
           <Pilar numeral="III" titulo="Control absoluto">
             Tú decides quién te ve, a quién respondes y cuándo cerrar tu
@@ -149,16 +150,68 @@ export function Landing() {
           }}
         >
           <Paso numero="1" titulo="Crea tu perfil">
-            Regístrate en un paso, elige tu tipo de perfil y qué buscas.
+            Regístrate en minutos, elige tu tipo de perfil, tus gustos y lo
+            que buscas en Canarias.
           </Paso>
-          <Paso numero="2" titulo="Explora y conecta">
-            Filtra por isla, revisa perfiles verificados y contacta con
-            quien te interese.
+          <Paso numero="2" titulo="Descubre y conecta">
+            Explora perfiles, el feed de la comunidad, eventos y grupos por
+            isla. Filtra por afinidad con IA.
           </Paso>
-          <Paso numero="3" titulo="Encuentra tu afinidad" ultimo>
-            Gestiona tus solicitudes y decide con quién compartir tus
-            fotos privadas.
+          <Paso numero="3" titulo="Encuentra tu conexión" ultimo>
+            Envía mensajes, comparte historias, crea anuncios y conecta con
+            quien realmente encaja contigo.
           </Paso>
+        </div>
+      </section>
+
+      {/* Sección 3b — Elige tu isla (enlazado interno hacia /canarias/[isla]) */}
+      <section style={{ padding: "100px 56px", textAlign: "center" }}>
+        <p className="kicker" style={{ textAlign: "center" }}>
+          Toda Canarias
+        </p>
+        <h2 className="heading" style={{ marginTop: 16, fontSize: 42 }}>
+          Elige tu isla
+        </h2>
+
+        <div
+          style={{
+            marginTop: 56,
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gap: 20,
+            maxWidth: 1000,
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}
+        >
+          {ISLANDS_SEO.map((isla) => (
+            <Link
+              key={isla.slug}
+              href={`/canarias/${isla.slug}`}
+              style={{
+                display: "block",
+                padding: "24px 20px",
+                border: "1px solid rgba(201,161,90,0.18)",
+                textDecoration: "none",
+                transition: "border-color 0.2s ease",
+              }}
+            >
+              <h3 className="heading" style={{ fontSize: 18, color: "var(--text)" }}>
+                {isla.label}
+              </h3>
+              <span
+                style={{
+                  marginTop: 8,
+                  display: "block",
+                  fontFamily: "var(--font-body)",
+                  fontSize: 12,
+                  color: "var(--gold)",
+                }}
+              >
+                Ver perfiles en {isla.label} →
+              </span>
+            </Link>
+          ))}
         </div>
       </section>
 

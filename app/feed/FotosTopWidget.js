@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { avatarSrc } from "@/lib/constants";
 
 const MEDALLAS = ["🥇", "🥈", "🥉"];
 
@@ -28,7 +29,7 @@ export function FotosTopWidget() {
             href={`/perfil/${f.nick}`}
             style={{ position: "relative", flex: "0 0 200px", aspectRatio: "1 / 1", overflow: "hidden", textDecoration: "none" }}
           >
-            <Image src={`/uploads/${f.user_id}/${f.filename}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+            <Image src={avatarSrc(f.user_id, f.filename, null)} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
 
             <span style={{ position: "absolute", left: 8, top: 8, fontSize: 22 }}>{MEDALLAS[i]}</span>
 

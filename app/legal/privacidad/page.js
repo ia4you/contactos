@@ -35,10 +35,11 @@ export default function Privacidad() {
 
       <p>
         <strong>Finalidad:</strong> gestionar tu cuenta y perfil, permitir la
-        conexión con otros usuarios, moderar contenido (verificación de
-        fotografías) y enviarte las comunicaciones estrictamente necesarias
-        para el funcionamiento del servicio (verificación de email,
-        recuperación de contraseña).
+        conexión con otros usuarios, moderar contenido mediante un sistema
+        de denuncias entre usuarios, con revisión manual por parte del
+        responsable del tratamiento cuando sea necesario, y enviarte las
+        comunicaciones estrictamente necesarias para el funcionamiento del
+        servicio (verificación de email, recuperación de contraseña).
       </p>
 
       <p>
@@ -74,10 +75,14 @@ export default function Privacidad() {
       </p>
 
       <p>
-        <strong>Confidencialidad de las fotografías:</strong> tus fotografías
-        no son visibles para el resto de usuarios hasta que son revisadas y
-        aprobadas, y en los listados públicos se muestran desenfocadas por
-        defecto.
+        <strong>Confidencialidad de las fotografías:</strong> Las
+        fotografías que publicas son visibles para el resto de usuarios
+        registrados de forma inmediata tras su subida. Al publicar una
+        fotografía certificas que todas las personas que aparecen en ella
+        son mayores de 18 años y han dado su consentimiento. Puedes marcar
+        cualquier fotografía como privada para que solo sea visible para
+        ti. En los listados de búsqueda las fotografías pueden mostrarse
+        con un efecto visual de desenfoque.
       </p>
 
       <p>
@@ -85,6 +90,17 @@ export default function Privacidad() {
         salvo obligación legal. Los proveedores de infraestructura (hosting,
         correo) actúan como encargados del tratamiento conforme al art. 28
         RGPD.
+      </p>
+
+      <p>
+        <strong>Uso de inteligencia artificial:</strong> este sitio utiliza
+        sistemas de inteligencia artificial (modelo LLaMA a través de la
+        API de Groq) para generar recomendaciones de perfiles compatibles y
+        analizar la afinidad entre usuarios en base a sus gustos e
+        intereses declarados. Este procesamiento se realiza sobre datos que
+        el propio usuario ha proporcionado voluntariamente en su perfil. No
+        se toman decisiones automatizadas con efectos jurídicos sobre el
+        usuario conforme al art. 22 RGPD.
       </p>
     </LegalPage>
   );

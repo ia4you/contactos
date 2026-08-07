@@ -3,9 +3,10 @@ import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { query } from "@/lib/db";
-import { AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { AVATAR_PLACEHOLDER, avatarSrc as resolverAvatarSrc } from "@/lib/constants";
 import { crearNotificacion } from "@/lib/notificaciones";
 import { PerfilCabecera } from "./PerfilCabecera";
+import { DemoBanner } from "./DemoBanner";
 import { FotosGridPublico } from "./FotosGridPublico";
 import { PorQueConectais } from "./PorQueConectais";
 
@@ -19,7 +20,7 @@ export default async function PerfilPublico({ params }) {
 
   const { rows: userRows } = await query(
     `SELECT id, nick, profile_type, island, bio, genero, orientacion, rol, verified, created_at,
-            last_active, show_last_seen
+            last_active, show_last_seen, is_demo
        FROM users WHERE lower(nick) = lower($1) AND deleted_at IS NULL`,
     [params.nick]
   );
@@ -139,9 +140,7 @@ export default async function PerfilPublico({ params }) {
   }
 
   const avatarFoto = fotos[0];
-  const avatarSrc = avatarFoto
-    ? `/uploads/${usuario.id}/${avatarFoto.filename}`
-    : AVATAR_PLACEHOLDER[usuario.profile_type];
+  const avatarSrc = resolverAvatarSrc(usuario.id, avatarFoto?.filename, usuario.profile_type);
 
   const fecha = new Date(usuario.created_at);
   const miembroDesde = `${MESES[fecha.getMonth()]} ${fecha.getFullYear()}`;
@@ -156,6 +155,8 @@ export default async function PerfilPublico({ params }) {
         estadoInicial={estadoInicial}
         compatibilidad={compatibilidad}
       />
+
+      {usuario.is_demo && <DemoBanner />}
 
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 24px" }}>
         {fotos.length === 0 ? (

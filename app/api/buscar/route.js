@@ -86,7 +86,7 @@ export async function GET(req) {
 
   const sql = `
     SELECT
-      u.id, u.nick, u.profile_type, u.island, u.verified, u.last_active, u.show_last_seen,
+      u.id, u.nick, u.profile_type, u.island, u.verified, u.last_active, u.show_last_seen, u.is_demo,
       (SELECT p.filename FROM photos p
          WHERE p.user_id = u.id AND p.status = 'approved' AND p.is_private = false
          ORDER BY p.is_avatar DESC, p.created_at DESC

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ISLANDS, PROFILE_TYPES, AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { ISLANDS, PROFILE_TYPES, avatarSrc } from "@/lib/constants";
 import { mostrarPuntoOnline } from "@/lib/online";
 import { EmptyState } from "../components/EmptyState";
 import { PuntoOnline } from "../components/PuntoOnline";
@@ -18,7 +18,7 @@ const TABS = [
 ];
 
 function FilaUsuario({ u, children }) {
-  const src = u.avatar_filename ? `/uploads/${u.id}/${u.avatar_filename}` : AVATAR_PLACEHOLDER[u.profile_type];
+  const src = avatarSrc(u.id, u.avatar_filename, u.profile_type);
   return (
     <div className="fila-amistad">
       <Link href={`/perfil/${u.nick}`} style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}>

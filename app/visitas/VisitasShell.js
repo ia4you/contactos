@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ISLANDS, PROFILE_TYPES, AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { ISLANDS, PROFILE_TYPES, avatarSrc } from "@/lib/constants";
 import { mostrarPuntoOnline } from "@/lib/online";
 import { tiempoRelativo } from "@/lib/tiempo";
 import { EmptyState } from "../components/EmptyState";
@@ -55,7 +55,7 @@ export function VisitasShell() {
         ) : (
           <>
             {visitas.map((v) => {
-              const src = v.avatar_filename ? `/uploads/${v.id}/${v.avatar_filename}` : AVATAR_PLACEHOLDER[v.profile_type];
+              const src = avatarSrc(v.id, v.avatar_filename, v.profile_type);
               return (
                 <div
                   key={`${v.id}-${v.visited_at}`}

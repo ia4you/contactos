@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Heart } from "lucide-react";
 import { ReportButton } from "../../components/ReportButton";
+import { avatarSrc } from "@/lib/constants";
 
 function FotoItem({ usuarioId, foto, esPropio }) {
   const [meGusta, setMeGusta] = useState(foto.meGusta);
@@ -39,7 +40,7 @@ function FotoItem({ usuarioId, foto, esPropio }) {
         }}
       >
         <Image
-          src={`/uploads/${usuarioId}/${foto.filename}`}
+          src={avatarSrc(usuarioId, foto.filename, null)}
           alt=""
           fill
           unoptimized={false}

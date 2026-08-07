@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { avatarSrc } from "@/lib/constants";
 
 export function TabBloqueados() {
   const [bloqueados, setBloqueados] = useState(null);
@@ -36,7 +36,7 @@ export function TabBloqueados() {
       ) : (
         <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 12 }}>
           {bloqueados.map((u) => {
-            const src = u.filename ? `/uploads/${u.id}/${u.filename}` : AVATAR_PLACEHOLDER[u.profile_type];
+            const src = avatarSrc(u.id, u.filename, u.profile_type);
             return (
               <div
                 key={u.id}

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/third-parties": "^14.2.35",
     "bcryptjs": "^3.0.3",
     "formidable": "^3.5.4",
     "groq-sdk": "^1.5.0",

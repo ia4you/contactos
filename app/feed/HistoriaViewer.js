@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { X, Eye } from "lucide-react";
-import { AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { avatarSrc } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
 
 export function HistoriaViewer({ grupos, indiceGrupoInicial, meId, onClose }) {
@@ -58,9 +58,7 @@ export function HistoriaViewer({ grupos, indiceGrupoInicial, meId, onClose }) {
 
   if (!grupo || !historia) return null;
 
-  const avatarSrc = grupo.avatarFilename
-    ? `/uploads/${grupo.userId}/${grupo.avatarFilename}`
-    : AVATAR_PLACEHOLDER[grupo.profileType];
+  const avatarUrl = avatarSrc(grupo.userId, grupo.avatarFilename, grupo.profileType);
   const esDueno = grupo.userId === meId;
 
   return (
@@ -84,7 +82,7 @@ export function HistoriaViewer({ grupos, indiceGrupoInicial, meId, onClose }) {
 
         <div style={{ position: "absolute", top: 24, left: 14, right: 14, zIndex: 3, display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{ position: "relative", width: 32, height: 32, borderRadius: "50%", overflow: "hidden", border: "1px solid rgba(255,255,255,0.4)" }}>
-            <Image src={avatarSrc} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+            <Image src={avatarUrl} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
           </div>
           <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#fff", fontWeight: 500 }}>{grupo.nick}</span>
           <span style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(255,255,255,0.6)" }}>{tiempoRelativo(historia.created_at)}</span>

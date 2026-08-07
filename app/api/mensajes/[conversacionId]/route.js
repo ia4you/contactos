@@ -17,7 +17,7 @@ export async function GET(req, { params }) {
 
   const { rows: convRows } = await query(
     `SELECT c.id, c.user1_id, c.user2_id,
-            u.id AS otro_id, u.nick, u.profile_type, u.island, u.last_active, u.show_last_seen,
+            u.id AS otro_id, u.nick, u.profile_type, u.island, u.last_active, u.show_last_seen, u.is_demo,
             (SELECT filename FROM photos WHERE user_id = u.id AND is_avatar = true AND status = 'approved' LIMIT 1) AS avatar_filename
        FROM conversaciones c
        JOIN users u ON u.id = (CASE WHEN c.user1_id = $2 THEN c.user2_id ELSE c.user1_id END)
@@ -50,6 +50,7 @@ export async function GET(req, { params }) {
       avatar_filename: conversacion.avatar_filename,
       last_active: conversacion.last_active,
       show_last_seen: conversacion.show_last_seen,
+      is_demo: conversacion.is_demo,
     },
     mensajes: mensajes.reverse(),
   });

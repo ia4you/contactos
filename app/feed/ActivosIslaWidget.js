@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ISLANDS, AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { ISLANDS, avatarSrc } from "@/lib/constants";
 import { mostrarPuntoOnline } from "@/lib/online";
 import { PuntoOnline } from "../components/PuntoOnline";
 
@@ -16,7 +16,7 @@ export function ActivosIslaWidget({ usuarios, isla }) {
       </h3>
       <div style={{ marginTop: 14, display: "flex", gap: 18, flexWrap: "wrap" }}>
         {usuarios.map((u) => {
-          const src = u.avatar_filename ? `/uploads/${u.id}/${u.avatar_filename}` : AVATAR_PLACEHOLDER[u.profile_type];
+          const src = avatarSrc(u.id, u.avatar_filename, u.profile_type);
           return (
             <Link
               key={u.id}

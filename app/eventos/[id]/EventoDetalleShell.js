@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ISLANDS, AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { ISLANDS, avatarSrc } from "@/lib/constants";
 import { notFound } from "next/navigation";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
@@ -138,7 +138,7 @@ export function EventoDetalleShell({ eventoId }) {
           </h2>
           <div style={{ marginTop: 16, display: "flex", flexWrap: "wrap", gap: 14 }}>
             {asistentes.map((a) => {
-              const src = a.avatar_filename ? `/uploads/${a.id}/${a.avatar_filename}` : AVATAR_PLACEHOLDER[a.profile_type];
+              const src = avatarSrc(a.id, a.avatar_filename, a.profile_type);
               return (
                 <Link key={a.id} href={`/perfil/${a.nick}`} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 60, textDecoration: "none" }}>
                   <div style={{ position: "relative", width: 44, height: 44, borderRadius: "50%", overflow: "hidden", border: a.status === "apuntado" ? "2px solid var(--gold)" : "2px solid rgba(244,234,217,0.2)" }}>

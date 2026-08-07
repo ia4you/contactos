@@ -9,6 +9,7 @@ import { mostrarPuntoOnline } from "@/lib/online";
 import { ReportButton } from "../../components/ReportButton";
 import { BlockButton } from "../../components/BlockButton";
 import { PuntoOnline } from "../../components/PuntoOnline";
+import { DemoBadge } from "../../components/DemoBadge";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
@@ -204,6 +205,7 @@ export function PerfilCabecera({
               <Image src={avatarSrc} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
             </div>
             {online && <PuntoOnline size={16} />}
+            {usuario.is_demo && <DemoBadge />}
           </div>
 
           <div style={{ maxWidth: 480 }}>

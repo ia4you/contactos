@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Bell } from "lucide-react";
-import { AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { AVATAR_PLACEHOLDER, avatarSrc } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
 import { textoNotificacion } from "@/lib/notificacionTexto";
 
@@ -78,9 +78,7 @@ export function NotificacionesBell({ contador = 0, onMarcarLeidas }) {
             </p>
           ) : (
             notificaciones.map((n) => {
-              const src = n.avatar_filename
-                ? `/uploads/${n.from_id}/${n.avatar_filename}`
-                : AVATAR_PLACEHOLDER[n.profile_type] || AVATAR_PLACEHOLDER.chica;
+              const src = avatarSrc(n.from_id, n.avatar_filename, n.profile_type) || AVATAR_PLACEHOLDER.chica;
               return (
                 <div
                   key={n.id}

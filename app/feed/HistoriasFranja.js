@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Plus } from "lucide-react";
-import { AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { AVATAR_PLACEHOLDER, avatarSrc } from "@/lib/constants";
 import { CrearHistoriaModal } from "./CrearHistoriaModal";
 import { HistoriaViewer } from "./HistoriaViewer";
 
@@ -118,7 +118,7 @@ export function HistoriasFranja({ usuario, avatarUrl }) {
         </button>
 
         {otros.map((g, i) => {
-          const src = g.avatarFilename ? `/uploads/${g.userId}/${g.avatarFilename}` : AVATAR_PLACEHOLDER[g.profileType];
+          const src = avatarSrc(g.userId, g.avatarFilename, g.profileType);
           const noVistas = g.historias.some((h) => !h.vista);
           return (
             <button

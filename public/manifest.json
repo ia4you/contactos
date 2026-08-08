@@ -2,7 +2,7 @@
   "name": "Contactos Liberal Canarias",
   "short_name": "Contactos",
   "description": "La comunidad liberal de Canarias",
-  "start_url": "/feed",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#0e0a0b",
   "theme_color": "#0e0a0b",

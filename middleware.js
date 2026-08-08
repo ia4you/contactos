@@ -2,10 +2,7 @@ import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 const GATE_COOKIE = "edad_confirmada";
-// "/perfil/" lleva barra final a propósito: así solo coincide con las
-// páginas de perfil de usuario concretas ("/perfil/algun-nick"), no con
-// cualquier futura ruta que empiece igual.
-const PROTECTED_ROUTES = ["/mi-perfil", "/ajustes", "/perfil/", "/buscar", "/feed", "/anuncios", "/mensajes", "/amistades", "/notificaciones", "/visitas", "/eventos", "/grupos", "/admin"];
+const PROTECTED_ROUTES = ["/mi-perfil", "/feed", "/mensajes", "/ajustes", "/amistades", "/visitas", "/notificaciones", "/buscar", "/grupos", "/eventos", "/anuncios", "/explorar", "/perfil", "/admin"];
 
 // Sin la cookie de confirmación de edad, ninguna ruta del sitio es visible
 // salvo "/" (que muestra la pantalla de verificación de edad en vez de la

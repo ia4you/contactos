@@ -11,7 +11,11 @@ const CACHE_NAME = "contactos-turel-v1";
 // puede fallar si el body ya se ha empezado a consumir.
 const RUTAS_EXCLUIDAS = ["/admin", "/api/", "/uploads/", "/feed", "/mensajes"];
 
-self.addEventListener("install", () => {
+// Chrome exige que el evento install cachee al menos un recurso para
+// considerar la PWA instalable (si no, el banner de instalación nunca
+// aparece, aunque el resto de requisitos se cumplan).
+self.addEventListener("install", (event) => {
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(["/"])));
   self.skipWaiting();
 });
 

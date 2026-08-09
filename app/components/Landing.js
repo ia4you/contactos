@@ -1,8 +1,13 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ISLANDS_SEO } from "../canarias/islasData";
 
 export function Landing() {
+  const [videoError, setVideoError] = useState(false);
+
   return (
     <main>
       {/* Sección 1 — Hero */}
@@ -16,18 +21,39 @@ export function Landing() {
           padding: "96px 24px 40px",
         }}
       >
-        <Image
-          src="/images/siluetas-pareja.png"
-          alt=""
-          fill
-          priority
-          unoptimized={false}
-          style={{ objectFit: "cover", width: "100%", height: "100%" }}
-        />
+        {videoError ? (
+          <Image
+            src="/images/siluetas-pareja.png"
+            alt=""
+            fill
+            priority
+            unoptimized={false}
+            style={{ objectFit: "cover", width: "100%", height: "100%", zIndex: 0 }}
+          />
+        ) : (
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            onError={() => setVideoError(true)}
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              zIndex: 0,
+            }}
+          >
+            <source src="/videos/hero.mp4" type="video/mp4" />
+          </video>
+        )}
         <div
           style={{
             position: "absolute",
             inset: 0,
+            zIndex: 0,
             background:
               "radial-gradient(ellipse at 30% 20%, rgba(107,21,36,0.35), transparent 60%), " +
               "linear-gradient(180deg, rgba(14,10,11,0.55) 0%, rgba(14,10,11,0.88) 78%, #0e0a0b 100%)",

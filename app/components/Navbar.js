@@ -4,18 +4,61 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { Search, Menu, X } from "lucide-react";
+import { Search, Menu, X, MessageCircle, Bell, Eye, Users } from "lucide-react";
 import { AVATAR_PLACEHOLDER } from "@/lib/constants";
 import { MensajesIcono } from "./MensajesIcono";
 import { NotificacionesBell } from "./NotificacionesBell";
 import { VisitasIcono } from "./VisitasIcono";
+
+function IconoMovil({ href, icono: Icono, contador, etiqueta, onClick }) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      aria-label={etiqueta}
+      style={{
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: 44,
+        height: 44,
+        color: "var(--text-secondary)",
+      }}
+    >
+      <Icono size={22} />
+      {contador > 0 && (
+        <span
+          style={{
+            position: "absolute",
+            top: 2,
+            right: 2,
+            minWidth: 16,
+            height: 16,
+            borderRadius: 8,
+            background: "#c94b4b",
+            color: "#fff",
+            fontSize: 10,
+            fontWeight: 600,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "0 3px",
+          }}
+        >
+          {contador > 9 ? "9+" : contador}
+        </span>
+      )}
+    </Link>
+  );
+}
 
 export function Navbar() {
   const { data: session, status } = useSession();
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [menuMovilAbierto, setMenuMovilAbierto] = useState(false);
-  const [contadores, setContadores] = useState({ notificaciones_no_leidas: 0, mensajes_no_leidos: 0, visitas_nuevas: 0 });
+  const [contadores, setContadores] = useState({ notificaciones_no_leidas: 0, mensajes_no_leidos: 0, visitas_nuevas: 0, solicitudes_pendientes: 0 });
   const [montado, setMontado] = useState(false);
   const menuRef = useRef(null);
 
@@ -295,15 +338,46 @@ export function Navbar() {
                   <Link href="/grupos" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
                     Grupos
                   </Link>
-                  <Link href="/visitas" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
-                    Visitas
-                  </Link>
-                  <Link href="/mensajes" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
-                    Mensajes
-                  </Link>
-                  <Link href="/notificaciones" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
-                    Notificaciones
-                  </Link>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-around",
+                      padding: "10px 16px",
+                      borderBottom: "1px solid rgba(201,161,90,0.12)",
+                    }}
+                  >
+                    <IconoMovil
+                      href="/mensajes"
+                      icono={MessageCircle}
+                      contador={contadores.mensajes_no_leidos}
+                      etiqueta="Mensajes"
+                      onClick={() => setMenuMovilAbierto(false)}
+                    />
+                    <IconoMovil
+                      href="/notificaciones"
+                      icono={Bell}
+                      contador={contadores.notificaciones_no_leidas}
+                      etiqueta="Notificaciones"
+                      onClick={() => setMenuMovilAbierto(false)}
+                    />
+                    <IconoMovil
+                      href="/visitas"
+                      icono={Eye}
+                      contador={contadores.visitas_nuevas}
+                      etiqueta="Visitas"
+                      onClick={() => setMenuMovilAbierto(false)}
+                    />
+                    <IconoMovil
+                      href="/amistades"
+                      icono={Users}
+                      contador={contadores.solicitudes_pendientes}
+                      etiqueta="Amistades"
+                      onClick={() => setMenuMovilAbierto(false)}
+                    />
+                  </div>
+
                   <Link href="/buscar" onClick={() => setMenuMovilAbierto(false)} className="mobile-menu-link">
                     Buscar
                   </Link>

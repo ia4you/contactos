@@ -24,7 +24,11 @@ export async function GET() {
          WHERE v.visited_id = $1
            AND u.deleted_at IS NULL
            AND v.visited_at > COALESCE((SELECT visitas_vistas_at FROM users WHERE id = $1), 'epoch'::timestamptz)
-           AND NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))) AS visitas_nuevas
+           AND NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))) AS visitas_nuevas,
+       (SELECT count(*)::int
+          FROM amistades a
+          JOIN users u ON u.id = a.from_id
+         WHERE a.to_id = $1 AND a.status = 'pending' AND u.deleted_at IS NULL) AS solicitudes_pendientes
     `,
     [meId]
   );

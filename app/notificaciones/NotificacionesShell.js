@@ -2,9 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { AVATAR_PLACEHOLDER, avatarSrc } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
 import { textoNotificacion } from "@/lib/notificacionTexto";
+import { hrefNotificacion } from "@/lib/notificacionHref";
 import { EmptyState } from "../components/EmptyState";
 
 const LIMITE = 20;
@@ -32,6 +35,7 @@ function agrupar(notificaciones) {
 }
 
 export function NotificacionesShell() {
+  const { data: session } = useSession();
   const [notificaciones, setNotificaciones] = useState(null);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(false);
@@ -80,15 +84,20 @@ export function NotificacionesShell() {
                   <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 2 }}>
                     {items.map((n) => {
                       const src = avatarSrc(n.from_id, n.avatar_filename, n.profile_type) || AVATAR_PLACEHOLDER.chica;
+                      const href = hrefNotificacion(n, session?.user?.name);
+                      const Envoltorio = href ? Link : "div";
                       return (
-                        <div
+                        <Envoltorio
                           key={n.id}
+                          {...(href ? { href } : {})}
                           style={{
                             display: "flex",
                             gap: 14,
                             padding: "14px 16px",
                             background: n.leida ? "transparent" : "rgba(201,161,90,0.06)",
                             borderBottom: "1px solid rgba(201,161,90,0.1)",
+                            textDecoration: "none",
+                            cursor: href ? "pointer" : "default",
                           }}
                         >
                           <div style={{ position: "relative", width: 40, height: 40, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
@@ -102,7 +111,7 @@ export function NotificacionesShell() {
                               {tiempoRelativo(n.created_at)}
                             </p>
                           </div>
-                        </div>
+                        </Envoltorio>
                       );
                     })}
                   </div>

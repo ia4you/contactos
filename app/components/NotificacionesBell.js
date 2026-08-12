@@ -3,12 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { Bell } from "lucide-react";
 import { AVATAR_PLACEHOLDER, avatarSrc } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
 import { textoNotificacion } from "@/lib/notificacionTexto";
+import { hrefNotificacion } from "@/lib/notificacionHref";
 
 export function NotificacionesBell({ contador = 0, onMarcarLeidas }) {
+  const { data: session } = useSession();
   const [abierto, setAbierto] = useState(false);
   const [notificaciones, setNotificaciones] = useState(null);
   const ref = useRef(null);
@@ -79,15 +82,20 @@ export function NotificacionesBell({ contador = 0, onMarcarLeidas }) {
           ) : (
             notificaciones.map((n) => {
               const src = avatarSrc(n.from_id, n.avatar_filename, n.profile_type) || AVATAR_PLACEHOLDER.chica;
+              const href = hrefNotificacion(n, session?.user?.name);
+              const Envoltorio = href ? Link : "div";
               return (
-                <div
+                <Envoltorio
                   key={n.id}
+                  {...(href ? { href, onClick: () => setAbierto(false) } : {})}
                   style={{
                     display: "flex",
                     gap: 10,
                     padding: "12px 18px",
                     borderBottom: "1px solid rgba(201,161,90,0.1)",
                     background: n.leida ? "transparent" : "rgba(201,161,90,0.06)",
+                    textDecoration: "none",
+                    cursor: href ? "pointer" : "default",
                   }}
                 >
                   <div style={{ position: "relative", width: 32, height: 32, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
@@ -101,7 +109,7 @@ export function NotificacionesBell({ contador = 0, onMarcarLeidas }) {
                       {tiempoRelativo(n.created_at)}
                     </p>
                   </div>
-                </div>
+                </Envoltorio>
               );
             })
           )}

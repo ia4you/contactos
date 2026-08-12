@@ -342,6 +342,26 @@ body {
   }
 }
 
+@keyframes fotoDestacadaPulso {
+  0%,
+  100% {
+    border-color: rgba(201, 161, 90, 0.2);
+    box-shadow: none;
+  }
+  25%,
+  75% {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201, 161, 90, 0.35);
+  }
+  50% {
+    border-color: rgba(201, 161, 90, 0.2);
+    box-shadow: none;
+  }
+}
+.foto-destacada {
+  animation: fotoDestacadaPulso 2s ease-in-out;
+}
+
 .foto-overlay-btn {
   width: 100%;
   border: 1px solid var(--border-gold);

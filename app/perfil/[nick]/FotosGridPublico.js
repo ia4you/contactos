@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Heart } from "lucide-react";
 import { ReportButton } from "../../components/ReportButton";
 import { avatarSrc } from "@/lib/constants";
 
-function FotoItem({ usuarioId, foto, esPropio }) {
+function FotoItem({ usuarioId, foto, esPropio, destacada }) {
   const [meGusta, setMeGusta] = useState(foto.meGusta);
   const [likesCount, setLikesCount] = useState(foto.likesCount);
   const [cargando, setCargando] = useState(false);
@@ -29,9 +29,9 @@ function FotoItem({ usuarioId, foto, esPropio }) {
   }
 
   return (
-    <div>
+    <div id={`foto-${foto.id}`}>
       <div
-        className="group"
+        className={destacada ? "group foto-destacada" : "group"}
         style={{
           position: "relative",
           aspectRatio: "1 / 1",
@@ -117,10 +117,30 @@ function FotoItem({ usuarioId, foto, esPropio }) {
 }
 
 export function FotosGridPublico({ usuarioId, fotos, esPropio }) {
+  const [fotoDestacadaId, setFotoDestacadaId] = useState(null);
+
+  // Deep link desde una notificación de like ("/perfil/nick#foto-123"): hace
+  // scroll hasta la foto y la resalta un instante para que quede claro cuál
+  // es, sin depender de que el usuario la busque en la cuadrícula.
+  useEffect(() => {
+    const hash = window.location.hash;
+    const match = hash.match(/^#foto-(\d+)$/);
+    if (!match) return;
+    const id = Number(match[1]);
+    document.getElementById(`foto-${id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+    setFotoDestacadaId(id);
+  }, []);
+
   return (
     <div className="fotos-grid-2a">
       {fotos.map((foto) => (
-        <FotoItem key={foto.id} usuarioId={usuarioId} foto={foto} esPropio={esPropio} />
+        <FotoItem
+          key={foto.id}
+          usuarioId={usuarioId}
+          foto={foto}
+          esPropio={esPropio}
+          destacada={foto.id === fotoDestacadaId}
+        />
       ))}
     </div>
   );

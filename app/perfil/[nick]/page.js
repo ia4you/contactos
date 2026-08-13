@@ -3,12 +3,13 @@ import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { query } from "@/lib/db";
-import { AVATAR_PLACEHOLDER, avatarSrc as resolverAvatarSrc } from "@/lib/constants";
+import { AVATAR_PLACEHOLDER, avatarSrc as resolverAvatarSrc, PUBLICACIONES_PERFIL_LIMITE } from "@/lib/constants";
 import { crearNotificacion } from "@/lib/notificaciones";
 import { PerfilCabecera } from "./PerfilCabecera";
 import { DemoBanner } from "./DemoBanner";
 import { FotosGridPublico } from "./FotosGridPublico";
 import { PorQueConectais } from "./PorQueConectais";
+import { PublicacionesPerfil } from "./PublicacionesPerfil";
 
 const MESES = [
   "enero", "febrero", "marzo", "abril", "mayo", "junio",
@@ -19,7 +20,7 @@ export default async function PerfilPublico({ params }) {
   const session = await getServerSession(authOptions);
 
   const { rows: userRows } = await query(
-    `SELECT id, nick, profile_type, island, bio, genero, orientacion, rol, verified, created_at,
+    `SELECT id, nick, profile_type, island, bio, her_bio, his_bio, genero, orientacion, rol, verified, created_at,
             last_active, show_last_seen, is_demo
        FROM users WHERE lower(nick) = lower($1) AND deleted_at IS NULL`,
     [params.nick]
@@ -139,6 +140,18 @@ export default async function PerfilPublico({ params }) {
     gustosPorCategoria[g.categoria].push(g.nombre);
   }
 
+  const { rows: publicacionesRows } = await query(
+    `SELECT p.id, p.tipo, p.contenido, p.created_at, ph.filename AS photo_filename
+       FROM publicaciones p
+       LEFT JOIN photos ph ON ph.id = p.photo_id
+      WHERE p.user_id = $1 AND p.deleted_at IS NULL
+      ORDER BY p.created_at DESC
+      LIMIT $2`,
+    [usuario.id, PUBLICACIONES_PERFIL_LIMITE + 1]
+  );
+  const hasMorePublicacionesInicial = publicacionesRows.length > PUBLICACIONES_PERFIL_LIMITE;
+  const publicacionesIniciales = publicacionesRows.slice(0, PUBLICACIONES_PERFIL_LIMITE);
+
   const avatarFoto = fotos[0];
   const avatarSrc = resolverAvatarSrc(usuario.id, avatarFoto?.filename, usuario.profile_type);
 
@@ -195,6 +208,16 @@ export default async function PerfilPublico({ params }) {
         )}
 
         {!esPropio && <PorQueConectais nick={usuario.nick} />}
+
+        {publicacionesIniciales.length > 0 && (
+          <PublicacionesPerfil
+            nick={usuario.nick}
+            usuario={usuario}
+            avatarFilename={avatarFoto?.filename}
+            publicacionesIniciales={publicacionesIniciales}
+            hasMoreInicial={hasMorePublicacionesInicial}
+          />
+        )}
       </div>
     </main>
   );

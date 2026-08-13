@@ -241,10 +241,25 @@ export function PerfilCabecera({
               Miembro desde {miembroDesde}
             </p>
 
-            {usuario.bio && (
-              <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
-                {usuario.bio}
-              </p>
+            {usuario.profile_type === "pareja" ? (
+              <>
+                {usuario.her_bio && (
+                  <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
+                    <strong style={{ color: "var(--text)" }}>Ella:</strong> {usuario.her_bio}
+                  </p>
+                )}
+                {usuario.his_bio && (
+                  <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
+                    <strong style={{ color: "var(--text)" }}>Él:</strong> {usuario.his_bio}
+                  </p>
+                )}
+              </>
+            ) : (
+              usuario.bio && (
+                <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
+                  {usuario.bio}
+                </p>
+              )
             )}
 
             <GrupoChips titulo="Género" valores={usuario.genero} />

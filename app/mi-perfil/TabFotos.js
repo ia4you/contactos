@@ -5,12 +5,30 @@ import Image from "next/image";
 import { Upload, Star } from "lucide-react";
 import { EmptyState } from "../components/EmptyState";
 
+function useFotoDestacadaDesdeHash() {
+  const [fotoDestacadaId, setFotoDestacadaId] = useState(null);
+
+  // Deep link desde una notificación de like ("#foto-123"): hace scroll
+  // hasta la foto y la resalta un instante para que quede claro cuál es.
+  useEffect(() => {
+    const hash = window.location.hash;
+    const match = hash.match(/^#foto-(\d+)$/);
+    if (!match) return;
+    const id = Number(match[1]);
+    document.getElementById(`foto-${id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+    setFotoDestacadaId(id);
+  }, []);
+
+  return fotoDestacadaId;
+}
+
 const ESTADO_BADGE = {
   approved: { texto: "Aprobada", color: "#4a9a6a" },
   rejected: { texto: "Rechazada", color: "#9a3a3a" },
 };
 
 export function TabFotos({ usuarioId, fotos, setFotos }) {
+  const fotoDestacadaId = useFotoDestacadaDesdeHash();
   const [errorFoto, setErrorFoto] = useState("");
   const inputFileRef = useRef(null);
 
@@ -162,10 +180,12 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
           {fotos.map((foto) => {
             const badge = ESTADO_BADGE[foto.status];
             const noAprobada = foto.status !== "approved";
+            const destacada = foto.id === fotoDestacadaId;
             return (
               <div
                 key={foto.id}
-                className="group"
+                id={`foto-${foto.id}`}
+                className={destacada ? "group foto-destacada" : "group"}
                 style={{
                   position: "relative",
                   aspectRatio: "1 / 1",

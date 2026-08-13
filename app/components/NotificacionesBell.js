@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { Bell } from "lucide-react";
 import { AVATAR_PLACEHOLDER, avatarSrc } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
@@ -11,7 +10,6 @@ import { textoNotificacion } from "@/lib/notificacionTexto";
 import { hrefNotificacion } from "@/lib/notificacionHref";
 
 export function NotificacionesBell({ contador = 0, onMarcarLeidas }) {
-  const { data: session } = useSession();
   const [abierto, setAbierto] = useState(false);
   const [notificaciones, setNotificaciones] = useState(null);
   const ref = useRef(null);
@@ -82,7 +80,7 @@ export function NotificacionesBell({ contador = 0, onMarcarLeidas }) {
           ) : (
             notificaciones.map((n) => {
               const src = avatarSrc(n.from_id, n.avatar_filename, n.profile_type) || AVATAR_PLACEHOLDER.chica;
-              const href = hrefNotificacion(n, session?.user?.name);
+              const href = hrefNotificacion(n);
               const Envoltorio = href ? Link : "div";
               return (
                 <Envoltorio

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { ISLANDS, PROFILE_TYPES, AVATAR_PLACEHOLDER } from "@/lib/constants";
 import { TabDatos } from "./TabDatos";
 import { TabFotos } from "./TabFotos";
@@ -18,7 +19,10 @@ const MESES = [
 ];
 
 export function PerfilForm({ usuario, fotosIniciales, fetichesCountInicial }) {
-  const [seccion, setSeccion] = useState("datos");
+  const searchParams = useSearchParams();
+  // Deep link desde una notificación de like a una foto
+  // ("/mi-perfil?tab=fotos#foto-123"): abre directamente el tab de fotos.
+  const [seccion, setSeccion] = useState(() => (searchParams.get("tab") === "fotos" ? "fotos" : "datos"));
   const [fotos, setFotos] = useState(fotosIniciales);
   const [fetichesCount, setFetichesCount] = useState(fetichesCountInicial);
   const [bioExpandida, setBioExpandida] = useState(false);

@@ -100,14 +100,30 @@ export async function GET(req) {
     [session.user.id, viewer.island]
   );
 
-  if (anuncios.length === 0 && eventos.length === 0) {
+  // Eventos de clubs (Sprint Clubs): mismo criterio que anuncios/eventos —
+  // activos, priorizando la isla del usuario, sin límite artificial. Sin
+  // check de bloqueos (no hay user_id involucrado, es contenido de negocio,
+  // no generado por usuarios) así que solo hace falta $1 para la isla.
+  const { rows: clubEventos } = await query(
+    `SELECT ce.id, ce.titulo, ce.fecha_evento, ce.precio, ce.foto, ce.created_at,
+            c.id AS club_id, c.nombre AS club_nombre, c.slug AS club_slug, c.isla
+       FROM club_eventos ce
+       JOIN clubs c ON c.id = ce.club_id
+      WHERE ce.fecha_evento > now() AND c.activo = true
+      ORDER BY (c.isla = $1) DESC, ce.created_at DESC
+      LIMIT 200`,
+    [viewer.island]
+  );
+
+  if (anuncios.length === 0 && eventos.length === 0 && clubEventos.length === 0) {
     return NextResponse.json({ publicaciones, hasMore });
   }
 
   const conPromos = [
     ...publicaciones,
-    ...anuncios.map((a) => ({ ...a, esAnuncio: true, esEvento: false })),
-    ...eventos.map((e) => ({ ...e, esEvento: true, esAnuncio: false })),
+    ...anuncios.map((a) => ({ ...a, esAnuncio: true, esEvento: false, esClubEvento: false })),
+    ...eventos.map((e) => ({ ...e, esEvento: true, esAnuncio: false, esClubEvento: false })),
+    ...clubEventos.map((ce) => ({ ...ce, esClubEvento: true, esEvento: false, esAnuncio: false })),
   ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
   return NextResponse.json({ publicaciones: conPromos, hasMore });

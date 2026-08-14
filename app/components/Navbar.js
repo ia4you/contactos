@@ -167,7 +167,7 @@ export function Navbar() {
           <Link href={autenticado ? "/feed" : "/"} style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/logo-t.jpeg"
+              src="/images/logo-t.png"
               alt="Contactos"
               className="navbar-logo"
               style={{ height: "40px", width: "auto", objectFit: "contain" }}

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 const GATE_COOKIE = "edad_confirmada";
-const PROTECTED_ROUTES = ["/mi-perfil", "/feed", "/mensajes", "/ajustes", "/amistades", "/visitas", "/notificaciones", "/buscar", "/grupos", "/eventos", "/anuncios", "/explorar", "/perfil", "/admin"];
+const PROTECTED_ROUTES = ["/mi-perfil", "/feed", "/mensajes", "/ajustes", "/amistades", "/visitas", "/notificaciones", "/buscar", "/grupos", "/eventos", "/anuncios", "/explorar", "/perfil", "/admin", "/clubs", "/likes"];
 
 // Sin la cookie de confirmación de edad, ninguna ruta del sitio es visible
 // salvo "/" (que muestra la pantalla de verificación de edad en vez de la

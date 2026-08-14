@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { ISLANDS } from "@/lib/constants";
 import { EventoCard } from "./EventoCard";
@@ -15,10 +16,12 @@ const TIPOS = [
 ];
 
 export function EventosShell({ usuario }) {
+  const searchParams = useSearchParams();
   const [eventos, setEventos] = useState(null);
   const [filtroIsla, setFiltroIsla] = useState("");
   const [filtroTipo, setFiltroTipo] = useState("");
-  const [modalAbierto, setModalAbierto] = useState(false);
+  // Deep link desde el menú "+" del navbar ("/eventos?crear=1").
+  const [modalAbierto, setModalAbierto] = useState(() => searchParams.get("crear") === "1");
   const [eventoEnEdicion, setEventoEnEdicion] = useState(null);
   const [pasadosAbierto, setPasadosAbierto] = useState(false);
   const [pasados, setPasados] = useState(null);

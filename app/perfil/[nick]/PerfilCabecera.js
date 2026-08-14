@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Heart, Flame } from "lucide-react";
@@ -113,7 +113,23 @@ export function PerfilCabecera({
   const [cargandoLike, setCargandoLike] = useState(false);
   const [cargandoAmistad, setCargandoAmistad] = useState(false);
   const [cargandoMensaje, setCargandoMensaje] = useState(false);
+  const [corazonAnimado, setCorazonAnimado] = useState(false);
   const online = mostrarPuntoOnline(usuario, esPropio);
+
+  // El valor inicial ya viene por SSR (estadoInicial), pero se revalida al
+  // montar para que el corazón de la cabecera siempre refleje el estado
+  // real de /api/likes/perfil/[userId] tal como se pidió.
+  useEffect(() => {
+    if (esPropio) return;
+    fetch(`/api/likes/perfil/${usuario.id}`)
+      .then((r) => r.json())
+      .then((d) => {
+        setMeGusta(d.meGusta);
+        if (d.match) setMatch(true);
+      })
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [usuario.id, esPropio]);
 
   async function toggleLike() {
     if (cargandoLike) return;
@@ -128,6 +144,8 @@ export function PerfilCabecera({
     if (res.ok && data) {
       setMeGusta(data.meGusta);
       if (data.match) setMatch(true);
+      setCorazonAnimado(true);
+      setTimeout(() => setCorazonAnimado(false), 350);
     }
   }
 
@@ -276,12 +294,18 @@ export function PerfilCabecera({
               disabled={cargandoLike}
               style={{
                 ...estiloBotonBase,
-                border: "1px solid var(--gold)",
-                color: meGusta ? "var(--bg)" : "var(--gold)",
-                background: meGusta ? "var(--gold)" : "transparent",
+                border: `1px solid ${meGusta ? "#e07a7a" : "var(--gold)"}`,
+                color: meGusta ? "#e07a7a" : "var(--gold)",
+                background: "transparent",
               }}
             >
-              <Heart size={15} fill={meGusta ? "var(--bg)" : "none"} />
+              <Heart
+                size={15}
+                fill={meGusta ? "#e07a7a" : "none"}
+                color={meGusta ? "#e07a7a" : "var(--gold)"}
+                className={corazonAnimado ? "corazon-pop" : undefined}
+                style={{ transition: "fill 0.25s ease, color 0.25s ease" }}
+              />
               {meGusta ? "Te gusta" : "Dar like"}
             </button>
 

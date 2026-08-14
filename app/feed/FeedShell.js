@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Composer } from "./Composer";
-import { PublicacionCard, AnuncioCardFeed, EventoCardFeed } from "./PublicacionCard";
+import { PublicacionCard, AnuncioCardFeed, EventoCardFeed, ClubEventoCardFeed } from "./PublicacionCard";
 import { JuegosBanner } from "./JuegosBanner";
 import { ActivosIslaWidget } from "./ActivosIslaWidget";
 import { FotosTopWidget } from "./FotosTopWidget";
@@ -10,11 +11,14 @@ import { HistoriasFranja } from "./HistoriasFranja";
 import { RecomendadosWidget } from "./RecomendadosWidget";
 import { AhoraOnlineCarrusel } from "./AhoraOnlineCarrusel";
 import { MisGruposSidebar } from "./MisGruposSidebar";
+import { FeedNavSidebar } from "./FeedNavSidebar";
 import { EmptyState } from "../components/EmptyState";
 
 const LIMITE = 20;
 
 export function FeedShell({ usuario, avatarFilename, activosIsla }) {
+  const searchParams = useSearchParams();
+  const compose = searchParams.get("compose");
   const [tab, setTab] = useState("parati");
   const [publicaciones, setPublicaciones] = useState([]);
   const [offset, setOffset] = useState(0);
@@ -64,7 +68,7 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
   return (
     <div className="feed-layout" style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 20px 80px" }}>
       <aside className="feed-sidebar-izq">
-        <MisGruposSidebar />
+        <FeedNavSidebar tab={tab} onCambiarTab={cambiarTab} miNick={usuario.nick} />
       </aside>
 
       <div style={{ maxWidth: 680, width: "100%", margin: "0 auto", background: "var(--bg)" }}>
@@ -74,7 +78,7 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
 
         {tab === "parati" && (
           <div style={{ marginBottom: 24 }}>
-            <Composer usuario={usuario} avatarUrl={avatarUrl} onPublicado={onPublicado} />
+            <Composer usuario={usuario} avatarUrl={avatarUrl} onPublicado={onPublicado} autoAbrir={compose} />
           </div>
         )}
 
@@ -116,6 +120,8 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
                 <AnuncioCardFeed key={`anuncio-${p.id}`} anuncio={p} usuarioActualId={usuario.id} onEliminar={onEliminarAnuncio} />
               ) : p.esEvento ? (
                 <EventoCardFeed key={`evento-${p.id}`} evento={p} usuarioActualId={usuario.id} onEliminar={onEliminarEvento} />
+              ) : p.esClubEvento ? (
+                <ClubEventoCardFeed key={`club-evento-${p.id}`} evento={p} />
               ) : (
                 <PublicacionCard key={p.id} publicacion={p} usuarioActualId={usuario.id} onEliminar={onEliminar} />
               )
@@ -140,6 +146,7 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
       <aside className="feed-sidebar-der">
         <JuegosBanner vertical />
         <RecomendadosWidget compacto />
+        <MisGruposSidebar />
       </aside>
     </div>
   );

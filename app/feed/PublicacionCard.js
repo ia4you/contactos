@@ -196,6 +196,56 @@ export function EventoCardFeed({ evento, usuarioActualId, onEliminar }) {
   );
 }
 
+export function ClubEventoCardFeed({ evento }) {
+  return (
+    <div style={{ position: "relative", background: "#141414", border: "1px solid #2a2a2a", marginBottom: 16, overflow: "hidden" }}>
+      <span
+        style={{
+          position: "absolute",
+          right: 0,
+          top: 0,
+          zIndex: 1,
+          fontFamily: "var(--font-body)",
+          fontSize: 10,
+          textTransform: "uppercase",
+          letterSpacing: 1.5,
+          padding: "5px 12px",
+          background: "#7A2E3F",
+          color: "#fff",
+        }}
+      >
+        Club
+      </span>
+
+      {evento.foto && (
+        <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden" }}>
+          <Image src={evento.foto} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+        </div>
+      )}
+
+      <div style={{ padding: 20 }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--gold)" }}>
+          {evento.club_nombre} · <span style={{ color: "var(--text-muted)" }}>{ISLAND_LABEL[evento.isla]}</span>
+        </p>
+
+        <h3 className="heading" style={{ marginTop: 8, fontSize: 18, color: "var(--text)" }}>
+          {evento.titulo}
+        </h3>
+        <p style={{ marginTop: 6, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+          {formatearFechaEvento(evento.fecha_evento)}
+          {evento.precio && ` · ${evento.precio}`}
+        </p>
+
+        <div style={{ marginTop: 16, display: "flex", justifyContent: "flex-end" }}>
+          <Link href={`/clubs/${evento.club_slug}`} className="btn-outline-gold">
+            Ver club
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
   const p = publicacion;
   const [meGusta, setMeGusta] = useState(p.me_gusta);
@@ -299,6 +349,8 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
                 alt=""
                 fill
                 unoptimized={false}
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
                 style={{ objectFit: "cover" }}
               />
             </div>

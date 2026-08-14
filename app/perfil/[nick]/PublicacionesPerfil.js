@@ -54,6 +54,8 @@ function TarjetaPublicacion({ publicacion, usuario, avatarFilename }) {
                 alt=""
                 fill
                 unoptimized={false}
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
                 style={{ objectFit: "cover" }}
               />
             </div>

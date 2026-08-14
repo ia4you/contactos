@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Filter } from "lucide-react";
 import { ISLANDS, LOOKING_FOR_OPTIONS } from "@/lib/constants";
 import { MultiSelectChips } from "../components/MultiSelectChips";
@@ -12,6 +13,7 @@ const LIMITE = 20;
 const ESTADO_INICIAL = { islas: [], busco: [] };
 
 export function AnunciosShell({ usuario }) {
+  const searchParams = useSearchParams();
   const [filtros, setFiltros] = useState(ESTADO_INICIAL);
   const [anuncios, setAnuncios] = useState([]);
   const [offset, setOffset] = useState(0);
@@ -19,7 +21,8 @@ export function AnunciosShell({ usuario }) {
   const [cargando, setCargando] = useState(true);
   const [filtrosAbiertosMovil, setFiltrosAbiertosMovil] = useState(false);
   const [anuncioPropio, setAnuncioPropio] = useState(undefined);
-  const [modalAbierto, setModalAbierto] = useState(false);
+  // Deep link desde el menú "+" del navbar ("/anuncios?crear=1").
+  const [modalAbierto, setModalAbierto] = useState(() => searchParams.get("crear") === "1");
   const [anuncioEnEdicion, setAnuncioEnEdicion] = useState(null);
 
   const cargar = useCallback(async (filtrosActuales, offsetActual, append) => {

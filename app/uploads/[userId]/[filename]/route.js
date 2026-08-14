@@ -45,6 +45,13 @@ export async function GET(req, { params }) {
       // nombre nunca cambia de contenido, así que se cachea de forma
       // agresiva tanto en el navegador como en el optimizador de next/image.
       "Cache-Control": "public, max-age=31536000, immutable",
+      // "inline" (no "attachment"): el navegador la muestra en vez de
+      // ofrecer descargarla directamente al pedir la URL sin pasar por
+      // next/image. No es una protección real (un right-click "guardar
+      // imagen" la sigue guardando igual), solo evita el caso trivial de
+      // que la URL directa fuerce una descarga.
+      "Content-Disposition": "inline",
+      "X-Content-Type-Options": "nosniff",
     },
   });
 }

@@ -5,8 +5,8 @@ import Image from "next/image";
 import { Image as ImageIcon } from "lucide-react";
 import { AVATAR_PLACEHOLDER } from "@/lib/constants";
 
-export function Composer({ usuario, avatarUrl, onPublicado }) {
-  const [expandido, setExpandido] = useState(false);
+export function Composer({ usuario, avatarUrl, onPublicado, autoAbrir }) {
+  const [expandido, setExpandido] = useState(autoAbrir === "texto" || autoAbrir === "foto");
   const [texto, setTexto] = useState("");
   const [archivo, setArchivo] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -20,6 +20,14 @@ export function Composer({ usuario, avatarUrl, onPublicado }) {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
   }, [previewUrl]);
+
+  // Deep link desde el menú "+" del navbar ("/feed?compose=foto"): el
+  // textarea ya se abre vía el estado inicial de `expandido`, aquí solo
+  // falta disparar el selector de archivo.
+  useEffect(() => {
+    if (autoAbrir === "foto") inputFileRef.current?.click();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const imagenAvatar = avatarUrl || AVATAR_PLACEHOLDER[usuario.profile_type] || AVATAR_PLACEHOLDER.chica;
 

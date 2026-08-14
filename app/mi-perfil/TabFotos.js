@@ -198,6 +198,8 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
                   alt=""
                   fill
                   unoptimized={false}
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
                   style={{
                     objectFit: "cover",
                     opacity: noAprobada ? 0.5 : 1,

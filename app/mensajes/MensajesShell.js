@@ -15,6 +15,8 @@ const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 
 export function MensajesShell({ usuarioId }) {
   const [conversaciones, setConversaciones] = useState(null);
+  const [subTab, setSubTab] = useState("todas");
+  const [busqueda, setBusqueda] = useState("");
   const [activaId, setActivaId] = useState(null);
   const [otro, setOtro] = useState(null);
   const [mensajes, setMensajes] = useState([]);
@@ -141,11 +143,34 @@ export function MensajesShell({ usuarioId }) {
     window.history.replaceState(null, "", "/mensajes");
   }
 
+  const conversacionesFiltradas = (conversaciones || []).filter(
+    (c) =>
+      (subTab === "todas" || c.no_leidos > 0) &&
+      (!busqueda.trim() || c.nick.toLowerCase().includes(busqueda.trim().toLowerCase()))
+  );
+
   return (
     <div className={`mensajes-layout ${otro ? "chat-abierto" : ""}`}>
       <aside className="mensajes-sidebar" style={{ background: "#150f10", borderRight: "1px solid rgba(201,161,90,0.18)", overflowY: "auto" }}>
         <div style={{ padding: "20px 20px 12px" }}>
           <p className="kicker">Mensajes</p>
+          <input
+            type="text"
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            placeholder="Buscar conversación…"
+            className="input-field"
+            style={{ marginTop: 12, fontSize: 13, padding: "9px 12px" }}
+          />
+        </div>
+
+        <div className="tab-nav" style={{ padding: "0 12px" }}>
+          <button type="button" onClick={() => setSubTab("todas")} className={`tab-nav-item ${subTab === "todas" ? "active" : ""}`} style={{ padding: "10px 12px" }}>
+            Todas
+          </button>
+          <button type="button" onClick={() => setSubTab("no_leidas")} className={`tab-nav-item ${subTab === "no_leidas" ? "active" : ""}`} style={{ padding: "10px 12px" }}>
+            No leídas
+          </button>
         </div>
 
         {conversaciones === null ? (
@@ -156,8 +181,12 @@ export function MensajesShell({ usuarioId }) {
           <div style={{ padding: "0 12px" }}>
             <EmptyState texto="Cuando conectes con alguien podrás enviarle un mensaje" alto={120} />
           </div>
+        ) : conversacionesFiltradas.length === 0 ? (
+          <p style={{ padding: "20px", fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>
+            Sin resultados.
+          </p>
         ) : (
-          conversaciones.map((c) => {
+          conversacionesFiltradas.map((c) => {
             const src = avatarSrc(c.otro_id, c.avatar_filename, c.profile_type);
             return (
               <div
@@ -172,7 +201,7 @@ export function MensajesShell({ usuarioId }) {
                   gap: 12,
                   width: "100%",
                   padding: "14px 20px",
-                  background: activaId === c.id ? "rgba(201,161,90,0.1)" : "transparent",
+                  background: activaId === c.id ? "rgba(201,161,90,0.1)" : c.no_leidos > 0 ? "#1c1416" : "transparent",
                   border: "none",
                   borderBottom: "1px solid rgba(201,161,90,0.08)",
                   cursor: "pointer",
@@ -182,7 +211,7 @@ export function MensajesShell({ usuarioId }) {
                 <Link
                   href={`/perfil/${c.nick}`}
                   onClick={(e) => e.stopPropagation()}
-                  style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}
+                  style={{ position: "relative", width: 44, height: 44, flexShrink: 0 }}
                 >
                   <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
                     <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
@@ -192,8 +221,23 @@ export function MensajesShell({ usuarioId }) {
                 </Link>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
-                    <span style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text)", fontWeight: 500 }}>
-                      {c.nick}
+                    <span style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0 }}>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-body)",
+                          fontSize: 14,
+                          color: c.no_leidos > 0 ? "var(--text)" : "var(--text-muted)",
+                          fontWeight: c.no_leidos > 0 ? 700 : 500,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {c.nick}
+                      </span>
+                      <span className="badge-gold" style={{ fontSize: 8, padding: "1px 5px", flexShrink: 0 }}>
+                        {ISLAND_LABEL[c.island]}
+                      </span>
                     </span>
                     {c.last_message_at && (
                       <span style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "var(--text-muted)", flexShrink: 0 }}>

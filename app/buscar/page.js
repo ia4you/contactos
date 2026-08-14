@@ -324,7 +324,15 @@ function TarjetaPerfil({ perfil }) {
         textDecoration: "none",
       }}
     >
-      <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+      <Image
+        src={src}
+        alt=""
+        fill
+        unoptimized={false}
+        draggable={false}
+        onContextMenu={(e) => e.preventDefault()}
+        style={{ objectFit: "cover" }}
+      />
 
       <div
         style={{

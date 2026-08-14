@@ -28,7 +28,18 @@ export async function GET() {
        (SELECT count(*)::int
           FROM amistades a
           JOIN users u ON u.id = a.from_id
-         WHERE a.to_id = $1 AND a.status = 'pending' AND u.deleted_at IS NULL) AS solicitudes_pendientes
+         WHERE a.to_id = $1 AND a.status = 'pending' AND u.deleted_at IS NULL) AS solicitudes_pendientes,
+       (SELECT count(*)::int FROM (
+          SELECT created_at FROM likes
+           WHERE to_id = $1
+             AND created_at > COALESCE((SELECT ultima_vista_likes FROM users WHERE id = $1), now() - interval '30 days')
+          UNION ALL
+          SELECT fl.created_at
+            FROM foto_likes fl
+            JOIN photos p ON p.id = fl.photo_id
+           WHERE p.user_id = $1
+             AND fl.created_at > COALESCE((SELECT ultima_vista_likes FROM users WHERE id = $1), now() - interval '30 days')
+        ) AS nuevos) AS likes_nuevos
     `,
     [meId]
   );

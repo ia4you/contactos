@@ -7,46 +7,33 @@ import { AVATAR_PLACEHOLDER, avatarSrc } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
 import { textoNotificacion } from "@/lib/notificacionTexto";
 import { hrefNotificacion } from "@/lib/notificacionHref";
+import { mostrarPuntoOnline } from "@/lib/online";
 import { EmptyState } from "../components/EmptyState";
+import { PuntoOnline } from "../components/PuntoOnline";
+import { DemoBadge } from "../components/DemoBadge";
 
-const LIMITE = 20;
+const LIMITE = 30;
 
-function inicioDia(d) {
-  const x = new Date(d);
-  x.setHours(0, 0, 0, 0);
-  return x;
-}
-
-function agrupar(notificaciones) {
-  const hoy = inicioDia(new Date());
-  const ayer = new Date(hoy.getTime() - 86400000);
-  const haceUnaSemana = new Date(hoy.getTime() - 7 * 86400000);
-
-  const grupos = { Hoy: [], Ayer: [], "Esta semana": [], Antes: [] };
-  for (const n of notificaciones) {
-    const fecha = inicioDia(n.created_at);
-    if (fecha.getTime() === hoy.getTime()) grupos.Hoy.push(n);
-    else if (fecha.getTime() === ayer.getTime()) grupos.Ayer.push(n);
-    else if (fecha.getTime() > haceUnaSemana.getTime()) grupos["Esta semana"].push(n);
-    else grupos.Antes.push(n);
-  }
-  return grupos;
-}
+const TABS = [
+  { value: "todas", label: "Todas" },
+  { value: "likes", label: "Likes" },
+  { value: "comentarios", label: "Comentarios" },
+  { value: "amistades", label: "Amistades" },
+  { value: "visitas", label: "Visitas" },
+];
 
 export function NotificacionesShell() {
+  const [tab, setTab] = useState("todas");
   const [notificaciones, setNotificaciones] = useState(null);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [cargando, setCargando] = useState(false);
 
-  useEffect(() => {
-    cargar(0, false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  async function cargar(offsetActual, append) {
+  async function cargar(tabActual, offsetActual, append) {
     setCargando(true);
-    const res = await fetch(`/api/notificaciones?offset=${offsetActual}`);
+    const params = new URLSearchParams({ offset: String(offsetActual), limite: String(LIMITE) });
+    if (tabActual !== "todas") params.set("categoria", tabActual);
+    const res = await fetch(`/api/notificaciones?${params.toString()}`);
     const data = await res.json().catch(() => null);
     setCargando(false);
     if (!res.ok || !data) return;
@@ -56,69 +43,90 @@ export function NotificacionesShell() {
     setOffset(offsetActual + LIMITE);
   }
 
-  const grupos = notificaciones ? agrupar(notificaciones) : null;
+  useEffect(() => {
+    cargar(tab, 0, false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab]);
+
+  function cambiarTab(nuevoTab) {
+    if (nuevoTab === tab) return;
+    setTab(nuevoTab);
+    setOffset(0);
+  }
 
   return (
-    <div style={{ maxWidth: 640, margin: "0 auto", padding: "40px 24px 80px" }}>
-      <p className="kicker">Actividad</p>
-      <h1 className="heading" style={{ fontSize: 32, color: "var(--text)", marginTop: 6 }}>
-        Notificaciones
-      </h1>
+    <div style={{ maxWidth: 680, margin: "0 auto", padding: "40px 0 80px" }}>
+      <div style={{ padding: "0 24px" }}>
+        <h1 className="heading" style={{ fontSize: 32, color: "var(--text)" }}>
+          Notificaciones
+        </h1>
+      </div>
 
-      <div style={{ marginTop: 32 }}>
+      <div className="tab-nav" style={{ marginTop: 20, padding: "0 24px" }}>
+        {TABS.map((t) => (
+          <button
+            key={t.value}
+            type="button"
+            onClick={() => cambiarTab(t.value)}
+            className={`tab-nav-item ${tab === t.value ? "active" : ""}`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      <div style={{ marginTop: 8 }}>
         {notificaciones === null ? (
-          <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)", padding: "40px 0" }}>
+          <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)", padding: "40px 24px" }}>
             Cargando…
           </p>
         ) : notificaciones.length === 0 ? (
-          <EmptyState texto="Aún no tienes notificaciones" />
+          <div style={{ padding: "0 24px" }}>
+            <EmptyState texto="No hay notificaciones aquí" />
+          </div>
         ) : (
           <>
-            {Object.entries(grupos)
-              .filter(([, items]) => items.length > 0)
-              .map(([titulo, items]) => (
-                <div key={titulo} style={{ marginBottom: 32 }}>
-                  <p className="kicker" style={{ letterSpacing: 3 }}>{titulo}</p>
-                  <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 2 }}>
-                    {items.map((n) => {
-                      const src = avatarSrc(n.from_id, n.avatar_filename, n.profile_type) || AVATAR_PLACEHOLDER.chica;
-                      const href = hrefNotificacion(n);
-                      const Envoltorio = href ? Link : "div";
-                      return (
-                        <Envoltorio
-                          key={n.id}
-                          {...(href ? { href } : {})}
-                          style={{
-                            display: "flex",
-                            gap: 14,
-                            padding: "14px 16px",
-                            background: n.leida ? "transparent" : "rgba(201,161,90,0.06)",
-                            borderBottom: "1px solid rgba(201,161,90,0.1)",
-                            textDecoration: "none",
-                            cursor: href ? "pointer" : "default",
-                          }}
-                        >
-                          <div style={{ position: "relative", width: 40, height: 40, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
-                            <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
-                          </div>
-                          <div>
-                            <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text)" }}>
-                              {textoNotificacion(n)}
-                            </p>
-                            <p style={{ marginTop: 3, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
-                              {tiempoRelativo(n.created_at)}
-                            </p>
-                          </div>
-                        </Envoltorio>
-                      );
-                    })}
+            {notificaciones.map((n) => {
+              const src = avatarSrc(n.from_id, n.avatar_filename, n.profile_type) || AVATAR_PLACEHOLDER.chica;
+              const href = hrefNotificacion(n);
+              const Envoltorio = href ? Link : "div";
+              return (
+                <Envoltorio
+                  key={n.id}
+                  {...(href ? { href } : {})}
+                  className="notificacion-fila"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 14,
+                    padding: "14px 24px",
+                    borderBottom: "1px solid #2a2a2a",
+                    textDecoration: "none",
+                    cursor: href ? "pointer" : "default",
+                  }}
+                >
+                  <div style={{ position: "relative", width: 44, height: 44, flexShrink: 0 }}>
+                    <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
+                      <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+                    </div>
+                    {n.from_id && mostrarPuntoOnline({ last_active: n.last_active, show_last_seen: n.show_last_seen }) && <PuntoOnline />}
+                    {n.is_demo && <DemoBadge />}
                   </div>
-                </div>
-              ))}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: n.leida ? "var(--text-secondary)" : "var(--text)" }}>
+                      {textoNotificacion(n)}
+                    </p>
+                  </div>
+                  <span style={{ flexShrink: 0, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
+                    {tiempoRelativo(n.created_at)}
+                  </span>
+                </Envoltorio>
+              );
+            })}
 
             {hasMore && (
-              <div style={{ textAlign: "center" }}>
-                <button type="button" onClick={() => cargar(offset, true)} disabled={cargando} className="btn-outline-gold">
+              <div style={{ textAlign: "center", marginTop: 24 }}>
+                <button type="button" onClick={() => cargar(tab, offset, true)} disabled={cargando} className="btn-outline-gold">
                   {cargando ? "Cargando…" : "Ver más"}
                 </button>
               </div>

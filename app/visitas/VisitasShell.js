@@ -8,11 +8,12 @@ import { mostrarPuntoOnline } from "@/lib/online";
 import { tiempoRelativo } from "@/lib/tiempo";
 import { EmptyState } from "../components/EmptyState";
 import { PuntoOnline } from "../components/PuntoOnline";
+import { DemoBadge } from "../components/DemoBadge";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
 
-const LIMITE = 20;
+const LIMITE = 30;
 
 export function VisitasShell() {
   const [visitas, setVisitas] = useState(null);
@@ -39,47 +40,63 @@ export function VisitasShell() {
   }, []);
 
   return (
-    <div style={{ maxWidth: 640, margin: "0 auto", padding: "40px 24px 80px" }}>
-      <p className="kicker">Actividad</p>
-      <h1 className="heading" style={{ fontSize: 32, color: "var(--text)", marginTop: 6 }}>
-        Quién te ha visitado
-      </h1>
+    <div style={{ maxWidth: 680, margin: "0 auto", padding: "40px 0 80px" }}>
+      <div style={{ padding: "0 24px" }}>
+        <h1 className="heading" style={{ fontSize: 32, color: "var(--text)" }}>
+          Quién ha visitado mi perfil
+        </h1>
+        <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>
+          Las últimas 500 visitas de los últimos 30 días
+        </p>
+      </div>
 
-      <div style={{ marginTop: 32 }}>
+      <div style={{ marginTop: 24 }}>
         {visitas === null ? (
-          <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)", padding: "40px 0" }}>
+          <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)", padding: "40px 24px" }}>
             Cargando…
           </p>
         ) : visitas.length === 0 ? (
-          <EmptyState texto="Aún no has recibido visitas" />
+          <div style={{ padding: "0 24px" }}>
+            <EmptyState texto="Aún no has recibido visitas" />
+          </div>
         ) : (
           <>
             {visitas.map((v) => {
               const src = avatarSrc(v.id, v.avatar_filename, v.profile_type);
               return (
-                <div
+                <Link
                   key={`${v.id}-${v.visited_at}`}
-                  style={{ display: "flex", alignItems: "center", gap: 14, padding: "12px 0", borderBottom: "1px solid rgba(201,161,90,0.12)" }}
+                  href={`/perfil/${v.nick}`}
+                  className="visita-fila"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 14,
+                    padding: "14px 24px",
+                    borderBottom: "1px solid #2a2a2a",
+                    textDecoration: "none",
+                  }}
                 >
-                  <Link href={`/perfil/${v.nick}`} style={{ position: "relative", width: 44, height: 44, flexShrink: 0 }}>
+                  <div style={{ position: "relative", width: 44, height: 44, flexShrink: 0 }}>
                     <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
                       <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
                     </div>
                     {mostrarPuntoOnline(v) && <PuntoOnline />}
-                  </Link>
+                    {v.is_demo && <DemoBadge />}
+                  </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                      <Link href={`/perfil/${v.nick}`} className="heading" style={{ fontSize: 15, color: "var(--text)", textDecoration: "none" }}>
+                      <span className="heading" style={{ fontSize: 15, color: "var(--text)" }}>
                         {v.nick}
-                      </Link>
+                      </span>
                       <span className="badge-gold" style={{ fontSize: 9 }}>{ISLAND_LABEL[v.island]}</span>
                       <span className="badge-gold" style={{ fontSize: 9 }}>{PROFILE_TYPE_LABEL[v.profile_type]}</span>
                     </div>
-                    <p style={{ marginTop: 3, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
-                      {tiempoRelativo(v.visited_at)}
-                    </p>
                   </div>
-                </div>
+                  <span style={{ flexShrink: 0, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
+                    {tiempoRelativo(v.visited_at)}
+                  </span>
+                </Link>
               );
             })}
 

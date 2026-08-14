@@ -10,6 +10,7 @@ function FotoItem({ usuarioId, foto, esPropio, destacada }) {
   const [meGusta, setMeGusta] = useState(foto.meGusta);
   const [likesCount, setLikesCount] = useState(foto.likesCount);
   const [cargando, setCargando] = useState(false);
+  const [mostrarCorazon, setMostrarCorazon] = useState(false);
 
   async function toggleLike(e) {
     e.stopPropagation();
@@ -28,10 +29,33 @@ function FotoItem({ usuarioId, foto, esPropio, destacada }) {
     }
   }
 
+  // Doble click estilo Instagram: solo da like, nunca lo quita (si ya
+  // tiene like, el doble click no hace nada, ni siquiera reproduce la
+  // animación — evita el efecto sorpresa de "me quitó el like sin querer").
+  async function darLikeDobleClick(e) {
+    e.stopPropagation();
+    if (meGusta || cargando) return;
+    setCargando(true);
+    const res = await fetch("/api/likes/foto", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ photo_id: foto.id }),
+    });
+    const data = await res.json().catch(() => null);
+    setCargando(false);
+    if (res.ok && data) {
+      setMeGusta(data.meGusta);
+      setLikesCount(data.likesCount);
+      setMostrarCorazon(true);
+      setTimeout(() => setMostrarCorazon(false), 1000);
+    }
+  }
+
   return (
     <div id={`foto-${foto.id}`}>
       <div
         className={destacada ? "group foto-destacada" : "group"}
+        onDoubleClick={darLikeDobleClick}
         style={{
           position: "relative",
           aspectRatio: "1 / 1",
@@ -44,8 +68,25 @@ function FotoItem({ usuarioId, foto, esPropio, destacada }) {
           alt=""
           fill
           unoptimized={false}
+          draggable={false}
+          onContextMenu={(e) => e.preventDefault()}
           style={{ objectFit: "cover" }}
         />
+
+        {mostrarCorazon && (
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              pointerEvents: "none",
+            }}
+          >
+            <Heart size={72} fill="#e07a7a" color="#e07a7a" className="corazon-doble-click" />
+          </div>
+        )}
 
         {!esPropio && (
           <div

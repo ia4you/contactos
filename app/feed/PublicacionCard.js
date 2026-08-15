@@ -246,6 +246,53 @@ export function ClubEventoCardFeed({ evento }) {
   );
 }
 
+export function BlogPostCardFeed({ post }) {
+  return (
+    <div style={{ position: "relative", background: "#141414", border: "1px solid #2a2a2a", marginBottom: 16, overflow: "hidden" }}>
+      <span
+        style={{
+          position: "absolute",
+          right: 0,
+          top: 0,
+          zIndex: 1,
+          fontFamily: "var(--font-body)",
+          fontSize: 10,
+          textTransform: "uppercase",
+          letterSpacing: 1.5,
+          padding: "5px 12px",
+          background: "var(--gold-light)",
+          color: "var(--bg)",
+        }}
+      >
+        Blog
+      </span>
+
+      {post.foto && (
+        <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden" }}>
+          <Image src={`/uploads/blog/${post.foto}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+        </div>
+      )}
+
+      <div style={{ padding: 20 }}>
+        <h3 className="heading" style={{ fontFamily: "var(--font-display)", fontSize: 18, color: "var(--text)" }}>
+          {post.titulo}
+        </h3>
+        {post.extracto && (
+          <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+            {post.extracto}
+          </p>
+        )}
+
+        <div style={{ marginTop: 16, display: "flex", justifyContent: "flex-end" }}>
+          <Link href={`/blog/${post.slug}`} className="btn-outline-gold">
+            Leer artículo
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
   const p = publicacion;
   const [meGusta, setMeGusta] = useState(p.me_gusta);

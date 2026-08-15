@@ -4,11 +4,13 @@ import { useState } from "react";
 import { AdminDashboard } from "./AdminDashboard";
 import { AdminUsuarios } from "./AdminUsuarios";
 import { AdminDenuncias } from "./AdminDenuncias";
+import { AdminBlog } from "./AdminBlog";
 
 const TABS = [
   { id: "dashboard", label: "Dashboard" },
   { id: "usuarios", label: "Usuarios" },
   { id: "denuncias", label: "Denuncias" },
+  { id: "blog", label: "Blog" },
 ];
 
 export function AdminShell() {
@@ -38,6 +40,7 @@ export function AdminShell() {
         {tab === "dashboard" && <AdminDashboard />}
         {tab === "usuarios" && <AdminUsuarios />}
         {tab === "denuncias" && <AdminDenuncias />}
+        {tab === "blog" && <AdminBlog />}
       </div>
     </div>
   );

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Composer } from "./Composer";
-import { PublicacionCard, AnuncioCardFeed, EventoCardFeed, ClubEventoCardFeed } from "./PublicacionCard";
+import { PublicacionCard, AnuncioCardFeed, EventoCardFeed, ClubEventoCardFeed, BlogPostCardFeed } from "./PublicacionCard";
 import { JuegosBanner } from "./JuegosBanner";
 import { ActivosIslaWidget } from "./ActivosIslaWidget";
 import { FotosTopWidget } from "./FotosTopWidget";
@@ -68,7 +68,7 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
   return (
     <div className="feed-layout" style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 20px 80px" }}>
       <aside className="feed-sidebar-izq">
-        <FeedNavSidebar tab={tab} onCambiarTab={cambiarTab} miNick={usuario.nick} />
+        <FeedNavSidebar />
       </aside>
 
       <div style={{ maxWidth: 680, width: "100%", margin: "0 auto", background: "var(--bg)" }}>
@@ -122,6 +122,8 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
                 <EventoCardFeed key={`evento-${p.id}`} evento={p} usuarioActualId={usuario.id} onEliminar={onEliminarEvento} />
               ) : p.esClubEvento ? (
                 <ClubEventoCardFeed key={`club-evento-${p.id}`} evento={p} />
+              ) : p.esBlogPost ? (
+                <BlogPostCardFeed key={`blog-${p.id}`} post={p} />
               ) : (
                 <PublicacionCard key={p.id} publicacion={p} usuarioActualId={usuario.id} onEliminar={onEliminar} />
               )

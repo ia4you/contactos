@@ -1,4 +1,17 @@
+import { query } from "@/lib/db";
+
+// La consulta a blog_posts requiere BD, que no está disponible durante
+// `next build` (fuera de la red docker donde vive el contenedor de
+// Postgres) — forzarlo a dinámico evita que el build intente prerenderizar
+// esta ruta de forma estática, y de paso el sitemap refleja artículos
+// nuevos sin necesidad de un rebuild.
+export const dynamic = "force-dynamic";
+
 export default async function sitemap() {
+  const { rows: posts } = await query(
+    `SELECT slug, updated_at FROM blog_posts WHERE publicado = true ORDER BY publicado_at DESC`
+  );
+
   return [
     {
       url: "https://contactos.turel.es",
@@ -66,6 +79,18 @@ export default async function sitemap() {
       changeFrequency: "weekly",
       priority: 0.6,
     },
+    {
+      url: "https://contactos.turel.es/blog",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    ...posts.map((p) => ({
+      url: `https://contactos.turel.es/blog/${p.slug}`,
+      lastModified: p.updated_at,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    })),
     {
       url: "https://contactos.turel.es/legal/aviso-legal",
       lastModified: new Date(),

@@ -115,15 +115,27 @@ export async function GET(req) {
     [viewer.island]
   );
 
-  if (anuncios.length === 0 && eventos.length === 0 && clubEventos.length === 0) {
+  // Artículos del blog: se inyectan igual que anuncios/eventos, pero sin
+  // fecha de caducidad natural — para no acabar arrastrando el archivo
+  // entero en cada carga del feed, solo se consideran los 20 más recientes.
+  const { rows: blogPosts } = await query(
+    `SELECT id, titulo, slug, extracto, foto, publicado_at AS created_at
+       FROM blog_posts
+      WHERE publicado = true
+      ORDER BY publicado_at DESC
+      LIMIT 20`
+  );
+
+  if (anuncios.length === 0 && eventos.length === 0 && clubEventos.length === 0 && blogPosts.length === 0) {
     return NextResponse.json({ publicaciones, hasMore });
   }
 
   const conPromos = [
     ...publicaciones,
-    ...anuncios.map((a) => ({ ...a, esAnuncio: true, esEvento: false, esClubEvento: false })),
-    ...eventos.map((e) => ({ ...e, esEvento: true, esAnuncio: false, esClubEvento: false })),
-    ...clubEventos.map((ce) => ({ ...ce, esClubEvento: true, esEvento: false, esAnuncio: false })),
+    ...anuncios.map((a) => ({ ...a, esAnuncio: true, esEvento: false, esClubEvento: false, esBlogPost: false })),
+    ...eventos.map((e) => ({ ...e, esEvento: true, esAnuncio: false, esClubEvento: false, esBlogPost: false })),
+    ...clubEventos.map((ce) => ({ ...ce, esClubEvento: true, esEvento: false, esAnuncio: false, esBlogPost: false })),
+    ...blogPosts.map((b) => ({ ...b, esBlogPost: true, esClubEvento: false, esEvento: false, esAnuncio: false })),
   ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
   return NextResponse.json({ publicaciones: conPromos, hasMore });

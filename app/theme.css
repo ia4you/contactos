@@ -342,6 +342,34 @@ body {
   }
 }
 
+.fotos-grid-publicas {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+}
+@media (min-width: 768px) {
+  .fotos-grid-publicas {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+@media (min-width: 640px) {
+  .blog-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .blog-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 @keyframes fotoDestacadaPulso {
   0%,
   100% {
@@ -573,6 +601,9 @@ body {
   .navbar-logo {
     height: 32px !important;
   }
+  .navbar-logo-texto {
+    display: none !important;
+  }
 }
 @media (max-width: 400px) {
   .logo-subtitle,
@@ -758,6 +789,24 @@ body {
   color: #f4ead9;
 }
 .feed-nav-item.activo {
+  color: #f4ead9;
+  border-left-color: #c9a15a;
+}
+.feed-nav-item-texto {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 9px 20px;
+  border-left: 2px solid transparent;
+  font-family: var(--font-body);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #ab9a8d;
+  text-decoration: none;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.feed-nav-item-texto:hover {
   color: #f4ead9;
   border-left-color: #c9a15a;
 }

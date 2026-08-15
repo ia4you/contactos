@@ -14,7 +14,7 @@ export async function GET(req) {
   const offset = Math.max(0, Number(req.nextUrl.searchParams.get("offset")) || 0);
 
   const { rows } = await query(
-    `SELECT u.id, u.nick, u.profile_type, u.island, u.last_active, u.show_last_seen, u.is_demo, v.visited_at,
+    `SELECT u.id, u.nick, u.profile_type, u.island, u.last_active, u.show_last_seen, u.is_demo, u.badge_especial, v.visited_at,
             (SELECT filename FROM photos WHERE user_id = u.id AND is_avatar = true AND status = 'approved' LIMIT 1) AS avatar_filename
        FROM visits v
        JOIN users u ON u.id = v.visitor_id

@@ -21,7 +21,7 @@ export default async function PerfilPublico({ params }) {
 
   const { rows: userRows } = await query(
     `SELECT id, nick, profile_type, island, bio, her_bio, his_bio, genero, orientacion, rol, verified, created_at,
-            last_active, show_last_seen, is_demo
+            last_active, show_last_seen, is_demo, badge_especial
        FROM users WHERE lower(nick) = lower($1) AND deleted_at IS NULL`,
     [params.nick]
   );

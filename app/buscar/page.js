@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Filter } from "lucide-react";
-import { DemoBadge } from "../components/DemoBadge";
+import { UsuarioBadge } from "../components/UsuarioBadge";
 import {
   ISLANDS,
   PROFILE_TYPES,
@@ -343,7 +343,7 @@ function TarjetaPerfil({ perfil }) {
         }}
       />
 
-      {perfil.is_demo && <DemoBadge style={{ bottom: 8, right: 8, fontSize: 9 }} />}
+      <UsuarioBadge badgeEspecial={perfil.badge_especial} isDemo={perfil.is_demo} style={{ bottom: 8, right: 8, fontSize: 9 }} />
 
       {mostrarPuntoOnline(perfil) && (
         <span

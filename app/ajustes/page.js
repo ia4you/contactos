@@ -11,7 +11,7 @@ export default async function Ajustes() {
   const { rows: userRows } = await query(
     `SELECT id, nick, email, profile_type, island, bio, her_bio, his_bio,
             her_birthdate, his_birthdate, looking_for, genero, orientacion, rol, verified, created_at,
-            estado_relacion, sitios_web, show_in_search, show_last_seen, only_verified
+            estado_relacion, sitios_web, show_in_search, show_last_seen, only_verified, nick_changed_at
        FROM users WHERE id = $1`,
     [session.user.id]
   );

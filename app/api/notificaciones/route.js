@@ -34,7 +34,7 @@ export async function GET(req) {
 
   const { rows } = await query(
     `SELECT n.id, n.tipo, n.entity_id, n.leida, n.created_at,
-            u.id AS from_id, u.nick, u.profile_type, u.is_demo, u.last_active, u.show_last_seen,
+            u.id AS from_id, u.nick, u.profile_type, u.is_demo, u.badge_especial, u.last_active, u.show_last_seen,
             (SELECT filename FROM photos WHERE user_id = u.id AND is_avatar = true AND status = 'approved' LIMIT 1) AS avatar_filename
        FROM notificaciones n
        LEFT JOIN users u ON u.id = n.from_user_id AND u.deleted_at IS NULL

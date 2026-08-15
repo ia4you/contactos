@@ -14,7 +14,7 @@ export async function GET(req) {
   const offset = Math.max(0, Number(req.nextUrl.searchParams.get("offset")) || 0);
 
   const { rows } = await query(
-    `SELECT l.from_id AS id, l.created_at, u.nick, u.profile_type, u.island, u.last_active, u.show_last_seen, u.is_demo,
+    `SELECT l.from_id AS id, l.created_at, u.nick, u.profile_type, u.island, u.last_active, u.show_last_seen, u.is_demo, u.badge_especial,
             (SELECT filename FROM photos WHERE user_id = u.id AND is_avatar = true AND status = 'approved' LIMIT 1) AS avatar_filename,
             EXISTS (
               SELECT 1 FROM matches m

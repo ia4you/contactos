@@ -38,9 +38,10 @@ export async function GET() {
     `SELECT filename FROM photos WHERE user_id = $1 AND is_avatar = true AND status = 'approved' LIMIT 1`,
     [session.user.id]
   );
+  const { rows: userRows } = await query(`SELECT island FROM users WHERE id = $1`, [session.user.id]);
 
   const avatarUrl = rows[0] ? `/uploads/${session.user.id}/${rows[0].filename}` : null;
-  return NextResponse.json({ avatarUrl });
+  return NextResponse.json({ avatarUrl, island: userRows[0]?.island ?? null });
 }
 
 // Actualización parcial: /mi-perfil sigue enviando bio/isla/qué-busco/

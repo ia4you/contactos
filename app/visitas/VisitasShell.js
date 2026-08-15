@@ -8,7 +8,7 @@ import { mostrarPuntoOnline } from "@/lib/online";
 import { tiempoRelativo } from "@/lib/tiempo";
 import { EmptyState } from "../components/EmptyState";
 import { PuntoOnline } from "../components/PuntoOnline";
-import { DemoBadge } from "../components/DemoBadge";
+import { UsuarioBadge } from "../components/UsuarioBadge";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
@@ -82,7 +82,7 @@ export function VisitasShell() {
                       <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
                     </div>
                     {mostrarPuntoOnline(v) && <PuntoOnline />}
-                    {v.is_demo && <DemoBadge />}
+                    <UsuarioBadge badgeEspecial={v.badge_especial} isDemo={v.is_demo} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>

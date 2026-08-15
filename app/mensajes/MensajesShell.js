@@ -9,7 +9,7 @@ import { tiempoRelativo } from "@/lib/tiempo";
 import { mostrarPuntoOnline } from "@/lib/online";
 import { EmptyState } from "../components/EmptyState";
 import { PuntoOnline } from "../components/PuntoOnline";
-import { DemoBadge } from "../components/DemoBadge";
+import { UsuarioBadge } from "../components/UsuarioBadge";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 
@@ -217,7 +217,7 @@ export function MensajesShell({ usuarioId }) {
                     <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
                   </div>
                   {mostrarPuntoOnline(c) && <PuntoOnline />}
-                  {c.is_demo && <DemoBadge style={{ fontSize: 6, padding: "1px 3px", bottom: -1, right: -1 }} />}
+                  <UsuarioBadge badgeEspecial={c.badge_especial} isDemo={c.is_demo} style={{ fontSize: 6, padding: "1px 3px", bottom: -1, right: -1 }} />
                 </Link>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
@@ -324,7 +324,7 @@ export function MensajesShell({ usuarioId }) {
                   />
                 </div>
                 {mostrarPuntoOnline(otro) && <PuntoOnline />}
-                {otro.is_demo && <DemoBadge style={{ fontSize: 6, padding: "1px 3px", bottom: -1, right: -1 }} />}
+                <UsuarioBadge badgeEspecial={otro.badge_especial} isDemo={otro.is_demo} style={{ fontSize: 6, padding: "1px 3px", bottom: -1, right: -1 }} />
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>

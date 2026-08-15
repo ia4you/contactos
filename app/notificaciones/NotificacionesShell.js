@@ -10,7 +10,7 @@ import { hrefNotificacion } from "@/lib/notificacionHref";
 import { mostrarPuntoOnline } from "@/lib/online";
 import { EmptyState } from "../components/EmptyState";
 import { PuntoOnline } from "../components/PuntoOnline";
-import { DemoBadge } from "../components/DemoBadge";
+import { UsuarioBadge } from "../components/UsuarioBadge";
 
 const LIMITE = 30;
 
@@ -47,6 +47,18 @@ export function NotificacionesShell() {
     cargar(tab, 0, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);
+
+  // Marca todas como leídas al entrar a la página (no depende de "tab": solo
+  // debe dispararse una vez al montar, no en cada cambio de pestaña). El
+  // evento avisa al navbar para que refresque el badge ya mismo, sin
+  // esperar a su poll de 30s a /api/status.
+  useEffect(() => {
+    fetch("/api/notificaciones/leidas", { method: "PATCH" })
+      .then((res) => {
+        if (res.ok) window.dispatchEvent(new Event("contactos:status-actualizado"));
+      })
+      .catch(() => {});
+  }, []);
 
   function cambiarTab(nuevoTab) {
     if (nuevoTab === tab) return;
@@ -110,7 +122,7 @@ export function NotificacionesShell() {
                       <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
                     </div>
                     {n.from_id && mostrarPuntoOnline({ last_active: n.last_active, show_last_seen: n.show_last_seen }) && <PuntoOnline />}
-                    {n.is_demo && <DemoBadge />}
+                    <UsuarioBadge badgeEspecial={n.badge_especial} isDemo={n.is_demo} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: n.leida ? "var(--text-secondary)" : "var(--text)" }}>

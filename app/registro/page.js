@@ -10,8 +10,6 @@ import {
   GENERO_MAX,
   ORIENTACION_OPTIONS,
   ORIENTACION_MAX,
-  ROL_OPTIONS,
-  ROL_MAX,
   FECHA_NACIMIENTO_MIN,
   FECHA_NACIMIENTO_MAX,
 } from "@/lib/constants";
@@ -23,6 +21,8 @@ const ESTADO_INICIAL = {
   nick: "",
   genero: [],
   orientacion: [],
+  // Sin campo en el formulario (se configura después desde /ajustes), pero
+  // se sigue enviando vacío porque la API lo valida como array requerido.
   rol: [],
   herBirthdate: "",
   hisBirthdate: "",
@@ -156,16 +156,7 @@ export default function Registro() {
           max={ORIENTACION_MAX}
         />
 
-        {/* 5. Rol */}
-        <MultiSelectChips
-          label="Rol"
-          options={ROL_OPTIONS}
-          selected={form.rol}
-          onChange={(v) => actualizar("rol", v)}
-          max={ROL_MAX}
-        />
-
-        {/* 6. Fecha de nacimiento */}
+        {/* 5. Fecha de nacimiento */}
         {form.profileType === "pareja" ? (
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
             <label>
@@ -208,7 +199,7 @@ export default function Registro() {
           </label>
         )}
 
-        {/* 7. Isla */}
+        {/* 6. Isla */}
         <label>
           <span className="label-field">Isla</span>
           <select
@@ -224,7 +215,7 @@ export default function Registro() {
           </select>
         </label>
 
-        {/* 8. Email y contraseña */}
+        {/* 7. Email y contraseña */}
         <label>
           <span className="label-field">Email</span>
           <input
@@ -248,7 +239,7 @@ export default function Registro() {
           />
         </label>
 
-        {/* 9. Qué buscas */}
+        {/* 8. Qué buscas */}
         <div>
           <span className="label-field">¿Qué buscas?</span>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
@@ -276,7 +267,7 @@ export default function Registro() {
           </div>
         </div>
 
-        {/* 10. Checkboxes RGPD */}
+        {/* 9. Checkboxes RGPD */}
         <div
           style={{
             display: "flex",

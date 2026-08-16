@@ -54,32 +54,26 @@ function IconoBadge({ href, icono: Icono, contador, etiqueta, opcional }) {
   );
 }
 
-function MenuCrear({ onClose }) {
+// Solo visible en móvil (ver .navbar-boton-movil en theme.css): en desktop
+// el sidebar izquierdo de /feed ya cubre esta navegación, así que el "+"
+// no tiene función ahí y se elimina por completo. En móvil pasa a ser un
+// menú de navegación a secciones secundarias, no de creación de contenido
+// (eso ya lo cubre el composer del feed).
+function MenuMovil({ onClose }) {
   return (
     <div className="dropdown-menu" style={{ background: "#1c1416", zIndex: 200, minWidth: 210, left: 0, right: "auto" }}>
-      <Link href="/feed?compose=texto" onClick={onClose} className="dropdown-item">
-        📝 Publicar texto
+      <Link href="/grupos" onClick={onClose} className="dropdown-item">
+        👥 Grupos
       </Link>
-      <Link href="/feed?compose=foto" onClick={onClose} className="dropdown-item">
-        📷 Subir foto
+      <Link href="/eventos" onClick={onClose} className="dropdown-item">
+        📅 Eventos
       </Link>
-      <Link href="/anuncios?crear=1" onClick={onClose} className="dropdown-item">
-        ✏️ Crear anuncio
+      <Link href="/clubs" onClick={onClose} className="dropdown-item">
+        🏛️ Clubs
       </Link>
-      <Link href="/eventos?crear=1" onClick={onClose} className="dropdown-item">
-        📅 Crear evento
+      <Link href="/blog" onClick={onClose} className="dropdown-item">
+        📝 Blog
       </Link>
-      <button
-        type="button"
-        onClick={() => {
-          onClose();
-          signOut({ callbackUrl: "/" });
-        }}
-        className="dropdown-item"
-        style={{ borderTop: "1px solid rgba(201,161,90,0.18)", color: "#9a3a3a" }}
-      >
-        🚪 Cerrar sesión
-      </button>
     </div>
   );
 }
@@ -259,17 +253,17 @@ export function Navbar() {
 
           {autenticado ? (
             <div className="navbar-acciones" style={{ display: "flex", alignItems: "center", gap: 20 }}>
-              <div style={{ position: "relative" }} ref={menuCrearRef}>
+              <div className="navbar-boton-movil" style={{ position: "relative" }} ref={menuCrearRef}>
                 <button
                   type="button"
                   onClick={() => setMenuCrearAbierto((v) => !v)}
-                  aria-label="Crear"
+                  aria-label="Menú"
                   className="icon-btn"
                   style={{ width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center" }}
                 >
                   <Plus size={22} />
                 </button>
-                {menuCrearAbierto && <MenuCrear onClose={() => setMenuCrearAbierto(false)} />}
+                {menuCrearAbierto && <MenuMovil onClose={() => setMenuCrearAbierto(false)} />}
               </div>
 
               <IconoBadge href="/buscar" icono={Search} etiqueta="Buscar" />

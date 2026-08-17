@@ -56,7 +56,8 @@ export default function IslaPage({ params }) {
   const isla = obtenerIsla(params.isla);
   if (!isla) notFound();
 
-  const faqs = faqParaIsla(isla);
+  const introParrafos = Array.isArray(isla.intro) ? isla.intro : [isla.intro];
+  const faqs = isla.faq || faqParaIsla(isla);
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -84,19 +85,22 @@ export default function IslaPage({ params }) {
         <h1 className="heading" style={{ marginTop: 16, fontSize: "clamp(30px, 5vw, 46px)", color: "var(--text)" }}>
           {isla.h1}
         </h1>
-        <p
-          style={{
-            marginTop: 24,
-            fontFamily: "var(--font-body)",
-            fontSize: 16,
-            fontWeight: 300,
-            lineHeight: 1.7,
-            color: "#cdbdae",
-            textAlign: "left",
-          }}
-        >
-          {isla.intro}
-        </p>
+        {introParrafos.map((parrafo, i) => (
+          <p
+            key={i}
+            style={{
+              marginTop: i === 0 ? 24 : 16,
+              fontFamily: "var(--font-body)",
+              fontSize: 16,
+              fontWeight: 300,
+              lineHeight: 1.7,
+              color: "#cdbdae",
+              textAlign: "left",
+            }}
+          >
+            {parrafo}
+          </p>
+        ))}
 
         <div style={{ marginTop: 32 }}>
           <Link href="/registro" className="btn-gold">
@@ -117,25 +121,43 @@ export default function IslaPage({ params }) {
           <h2 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
             La comunidad liberal de {isla.label}
           </h2>
-          <p
-            style={{
-              marginTop: 18,
-              fontFamily: "var(--font-body)",
-              fontSize: 15,
-              fontWeight: 300,
-              lineHeight: 1.7,
-              color: "var(--text-secondary)",
-            }}
-          >
-            En {isla.label} conviven parejas liberales, chicas y chicos del ambiente con perfiles
-            muy distintos entre sí: desde quienes ya viven activamente el estilo de vida swinger
-            hasta personas que se acercan por primera vez con curiosidad y respeto. La comunidad se
-            mueve tanto en torno a {isla.capital} como al resto de la isla, con quedadas informales,
-            eventos puntuales y conversaciones que, gracias a la plataforma, pueden empezar de forma
-            privada antes de dar cualquier paso presencial. No es necesario frecuentar locales
-            concretos ni depender de contactos personales para formar parte de esta comunidad: basta
-            con crear un perfil y dejar que la afinidad haga el resto.
-          </p>
+          {isla.comunidadTexto ? (
+            isla.comunidadTexto.map((parrafo, i) => (
+              <p
+                key={i}
+                style={{
+                  marginTop: i === 0 ? 18 : 14,
+                  fontFamily: "var(--font-body)",
+                  fontSize: 15,
+                  fontWeight: 300,
+                  lineHeight: 1.7,
+                  color: "var(--text-secondary)",
+                }}
+              >
+                {parrafo}
+              </p>
+            ))
+          ) : (
+            <p
+              style={{
+                marginTop: 18,
+                fontFamily: "var(--font-body)",
+                fontSize: 15,
+                fontWeight: 300,
+                lineHeight: 1.7,
+                color: "var(--text-secondary)",
+              }}
+            >
+              En {isla.label} conviven parejas liberales, chicas y chicos del ambiente con perfiles
+              muy distintos entre sí: desde quienes ya viven activamente el estilo de vida swinger
+              hasta personas que se acercan por primera vez con curiosidad y respeto. La comunidad se
+              mueve tanto en torno a {isla.capital} como al resto de la isla, con quedadas informales,
+              eventos puntuales y conversaciones que, gracias a la plataforma, pueden empezar de forma
+              privada antes de dar cualquier paso presencial. No es necesario frecuentar locales
+              concretos ni depender de contactos personales para formar parte de esta comunidad: basta
+              con crear un perfil y dejar que la afinidad haga el resto.
+            </p>
+          )}
         </div>
       </section>
 
@@ -154,15 +176,25 @@ export default function IslaPage({ params }) {
             marginRight: "auto",
           }}
         >
-          <PasoIsla numero="1" titulo="Crea tu perfil">
-            Regístrate gratis, elige tu tipo de perfil y cuenta qué buscas en {isla.label}.
-          </PasoIsla>
-          <PasoIsla numero="2" titulo="Busca por isla">
-            Filtra perfiles de {isla.label} afines a tus gustos y a lo que buscas.
-          </PasoIsla>
-          <PasoIsla numero="3" titulo="Conecta">
-            Escribe con discreción y decide tú qué compartir y cuándo dar el siguiente paso.
-          </PasoIsla>
+          {isla.pasos ? (
+            isla.pasos.map((paso, i) => (
+              <PasoIsla key={paso.titulo} numero={String(i + 1)} titulo={paso.titulo}>
+                {paso.texto}
+              </PasoIsla>
+            ))
+          ) : (
+            <>
+              <PasoIsla numero="1" titulo="Crea tu perfil">
+                Regístrate gratis, elige tu tipo de perfil y cuenta qué buscas en {isla.label}.
+              </PasoIsla>
+              <PasoIsla numero="2" titulo="Busca por isla">
+                Filtra perfiles de {isla.label} afines a tus gustos y a lo que buscas.
+              </PasoIsla>
+              <PasoIsla numero="3" titulo="Conecta">
+                Escribe con discreción y decide tú qué compartir y cuándo dar el siguiente paso.
+              </PasoIsla>
+            </>
+          )}
         </div>
       </section>
 
@@ -197,11 +229,11 @@ export default function IslaPage({ params }) {
 
       <section style={{ padding: "100px 24px", textAlign: "center" }}>
         <h2 className="heading" style={{ fontSize: 34, color: "var(--text)" }}>
-          Tu comunidad liberal en {isla.label} te espera.
+          {isla.ctaTitulo || `Tu comunidad liberal en ${isla.label} te espera.`}
         </h2>
         <div style={{ marginTop: 32 }}>
           <Link href="/registro" className="btn-gold">
-            Ver perfiles en {isla.label}
+            {isla.ctaBoton || `Ver perfiles en ${isla.label}`}
           </Link>
         </div>
       </section>

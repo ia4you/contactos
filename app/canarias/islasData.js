@@ -17,12 +17,61 @@ export const ISLANDS_SEO = [
     slug: "tenerife",
     capital: "Santa Cruz de Tenerife",
     label: "Tenerife",
-    h1: "Contactos Liberales en Tenerife | Ambiente Liberal Tenerife",
+    h1: "Contactos Liberales en Tenerife — Ambiente Liberal en la Isla",
     metaTitle: "Contactos Liberales Tenerife — Ambiente Liberal en Tenerife",
     metaDescription:
-      "Comunidad liberal en Tenerife. Contactos discretos para parejas y personas del ambiente liberal. La mayor comunidad swinger de Tenerife.",
-    intro:
-      "Tenerife es la isla más poblada de Canarias y también una de las que más movimiento liberal concentra, con Santa Cruz de Tenerife y La Laguna como puntos de referencia de una comunidad diversa y consolidada. Parejas liberales, chicas y chicos del ambiente coinciden aquí en un contexto abierto, donde la discreción convive con una vida social activa durante todo el año. Contactos.turel.es nace para dar a esa comunidad un espacio propio: un lugar donde conectar sin depender de grupos cerrados o boca a boca, con perfiles reales de personas que viven en la isla y comparten una forma similar de entender las relaciones. La plataforma permite filtrar por isla, tipo de perfil y gustos, de modo que encontrar afinidad en Tenerife sea rápido y sencillo, ya sea que busques una pareja para intercambio, conocer gente nueva del ambiente o simplemente formar parte de una comunidad que entiende tu estilo de vida sin juzgarlo. El control sobre tu privacidad es total: decides qué fotos compartir, con quién y cuándo. Si estás en el norte, en la capital o en el sur turístico de la isla, la comunidad liberal de Tenerife te espera. Crear tu perfil es gratuito y solo lleva unos minutos.",
+      "Comunidad liberal activa en Tenerife. Perfiles reales en Adeje, Santa Cruz, La Laguna y toda la isla. Registro gratuito y discreto.",
+    intro: [
+      "Tenerife es la isla más grande de Canarias y también la que concentra la mayor actividad del ambiente liberal del archipiélago. Desde Santa Cruz hasta el sur — Adeje, Los Cristianos, Las Américas — pasando por La Laguna y el norte de la isla, existe una comunidad activa y discreta que lleva años buscando un espacio propio donde conectar sin prejuicios ni limitaciones.",
+      "Contactos Liberales Canarias nació precisamente para dar respuesta a esa necesidad. Una plataforma canaria, hecha desde las islas y para las islas, donde encontrarás perfiles reales de parejas, chicas y chicos del ambiente liberal tinerfeño que buscan lo mismo que tú: conexiones auténticas, sin anuncios, sin perfiles falsos y sin muros de pago.",
+    ],
+    comunidadTexto: [
+      "Tenerife tiene una de las comunidades liberales más activas de España. El sur de la isla — especialmente la zona de Adeje y Costa Adeje — concentra gran parte de la actividad gracias al turismo internacional y a una mentalidad más abierta. Pero no te confundas: el ambiente local tinerfeño tiene su propia identidad, alejada del turismo de paso y mucho más interesada en conexiones reales y duraderas.",
+      "En nuestra plataforma encontrarás parejas heterosexuales y bisexuales del sur y el norte de la isla, chicas y chicos con distintas orientaciones y gustos, y personas interesadas en todo el espectro del lifestyle liberal — desde el intercambio de parejas hasta el BDSM, pasando por el naturismo y las fiestas privadas.",
+      "El ambiente en Tenerife es maduro, discreto y con nivel. Exactamente como nos gusta.",
+    ],
+    pasos: [
+      {
+        titulo: "Crea tu perfil gratuito",
+        texto: "El registro es sencillo y completamente gratuito. Elige tu tipo de perfil, añade tus gustos e intereses y selecciona Tenerife como tu isla. En menos de dos minutos estás dentro.",
+      },
+      {
+        titulo: "Explora perfiles de Tenerife",
+        texto: "Usa el buscador para filtrar por isla y encuentra perfiles activos de Tenerife. Nuestra IA analiza tus gustos y te recomienda las personas con más afinidad contigo.",
+      },
+      {
+        titulo: "Conecta de forma discreta",
+        texto: "Escribe directamente a quien te interese, comparte fotos de forma controlada y decide tú quién te ve y quién no. La discreción es nuestra prioridad.",
+      },
+    ],
+    faq: [
+      {
+        pregunta: "¿Hay ambiente liberal activo en Tenerife?",
+        respuesta:
+          "Sí. Tenerife concentra una de las comunidades liberales más activas de Canarias, especialmente en el sur de la isla — Adeje, Los Cristianos y Las Américas — y en Santa Cruz y La Laguna. Contactos Liberales Canarias tiene perfiles activos de toda la isla.",
+      },
+      {
+        pregunta: "¿Es discreto y seguro usar la plataforma?",
+        respuesta:
+          "Completamente. Solo los usuarios registrados y verificados pueden ver los perfiles. Tus fotos no se pueden descargar ni compartir, y nadie fuera de la comunidad verá tu actividad. Además puedes marcar tus fotos como privadas en cualquier momento.",
+      },
+      {
+        pregunta: "¿Es gratuito registrarse?",
+        respuesta: "Sí, el registro es completamente gratuito y lo seguirá siendo. Sin suscripciones, sin funciones bloqueadas, sin sorpresas.",
+      },
+      {
+        pregunta: "¿Qué tipo de perfiles hay en Tenerife?",
+        respuesta:
+          "Encontrarás parejas heterosexuales y bisexuales, chicas y chicos con distintas orientaciones, personas interesadas en BDSM, naturismo, intercambio de parejas y mucho más. La comunidad tinerfeña es diversa y abierta.",
+      },
+      {
+        pregunta: "¿Cómo protegen mi privacidad?",
+        respuesta:
+          "Tus datos nunca se comparten con terceros. Las fotos están protegidas contra descarga. El acceso está restringido a mayores de 18 años verificados. Cumplimos el RGPD con consentimiento explícito para datos de vida sexual (art. 9.2.a).",
+      },
+    ],
+    ctaTitulo: "Tu próxima conexión en Tenerife empieza aquí. Únete gratis y descubre quién está cerca de ti.",
+    ctaBoton: "Crear mi perfil en Tenerife",
   },
   {
     slug: "lanzarote",

@@ -1,16 +1,33 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Heart } from "lucide-react";
 import { ReportButton } from "../../components/ReportButton";
 import { avatarSrc } from "@/lib/constants";
+import { FotoLightbox } from "./FotoLightbox";
 
-function FotoItem({ usuarioId, foto, esPropio, destacada }) {
+// Un solo click abre el lightbox, pero hay que darle tiempo a que llegue un
+// segundo click (double-click = dar like) antes de comprometerse a abrirlo:
+// si no fuera así, el primer click de todo doble click dispararía siempre
+// la apertura del lightbox antes de que el navegador pueda detectar el
+// segundo.
+const RETRASO_CLICK_MS = 250;
+
+function FotoItem({ usuarioId, foto, esPropio, destacada, onAbrir }) {
   const [meGusta, setMeGusta] = useState(foto.meGusta);
   const [likesCount, setLikesCount] = useState(foto.likesCount);
   const [cargando, setCargando] = useState(false);
   const [mostrarCorazon, setMostrarCorazon] = useState(false);
+  const clickTimeoutRef = useRef(null);
+
+  function onClickFoto() {
+    if (clickTimeoutRef.current) return;
+    clickTimeoutRef.current = setTimeout(() => {
+      clickTimeoutRef.current = null;
+      onAbrir();
+    }, RETRASO_CLICK_MS);
+  }
 
   async function toggleLike(e) {
     e.stopPropagation();
@@ -34,6 +51,10 @@ function FotoItem({ usuarioId, foto, esPropio, destacada }) {
   // animación — evita el efecto sorpresa de "me quitó el like sin querer").
   async function darLikeDobleClick(e) {
     e.stopPropagation();
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+      clickTimeoutRef.current = null;
+    }
     if (meGusta || cargando) return;
     setCargando(true);
     const res = await fetch("/api/likes/foto", {
@@ -55,8 +76,10 @@ function FotoItem({ usuarioId, foto, esPropio, destacada }) {
     <div id={`foto-${foto.id}`}>
       <div
         className={destacada ? "group foto-destacada" : "group"}
+        onClick={onClickFoto}
         onDoubleClick={darLikeDobleClick}
         style={{
+          cursor: "pointer",
           position: "relative",
           aspectRatio: "1 / 1",
           overflow: "hidden",
@@ -121,19 +144,21 @@ function FotoItem({ usuarioId, foto, esPropio, destacada }) {
               <Heart size={15} fill={meGusta ? "var(--gold)" : "none"} />
             </button>
 
-            <ReportButton
-              reportedUserId={usuarioId}
-              label="Denunciar"
-              className="foto-overlay-btn"
-              style={{
-                width: "auto",
-                alignSelf: "stretch",
-                borderColor: "rgba(154,58,58,0.5)",
-                color: "#e07a7a",
-                background: "rgba(14,10,11,0.75)",
-                padding: "6px 12px",
-              }}
-            />
+            <div onClick={(e) => e.stopPropagation()}>
+              <ReportButton
+                reportedUserId={usuarioId}
+                label="Denunciar"
+                className="foto-overlay-btn"
+                style={{
+                  width: "auto",
+                  alignSelf: "stretch",
+                  borderColor: "rgba(154,58,58,0.5)",
+                  color: "#e07a7a",
+                  background: "rgba(14,10,11,0.75)",
+                  padding: "6px 12px",
+                }}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -159,6 +184,7 @@ function FotoItem({ usuarioId, foto, esPropio, destacada }) {
 
 export function FotosGridPublico({ usuarioId, fotos, esPropio }) {
   const [fotoDestacadaId, setFotoDestacadaId] = useState(null);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
 
   // Deep link desde una notificación de like ("/perfil/nick#foto-123"): hace
   // scroll hasta la foto y la resalta un instante para que quede claro cuál
@@ -174,15 +200,25 @@ export function FotosGridPublico({ usuarioId, fotos, esPropio }) {
 
   return (
     <div className="fotos-grid-2a">
-      {fotos.map((foto) => (
+      {fotos.map((foto, i) => (
         <FotoItem
           key={foto.id}
           usuarioId={usuarioId}
           foto={foto}
           esPropio={esPropio}
           destacada={foto.id === fotoDestacadaId}
+          onAbrir={() => setLightboxIndex(i)}
         />
       ))}
+
+      {lightboxIndex !== null && (
+        <FotoLightbox
+          usuarioId={usuarioId}
+          fotos={fotos}
+          indiceInicial={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+        />
+      )}
     </div>
   );
 }

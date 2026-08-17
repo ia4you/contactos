@@ -1,4 +1,7 @@
 import { cookies } from "next/headers";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/lib/auth";
 import { GateScreen } from "./components/GateScreen";
 import { Landing } from "./components/Landing";
 
@@ -20,7 +23,13 @@ const orgSchema = {
   areaServed: "Canarias, España",
 };
 
-export default function Home() {
+export default async function Home() {
+  // Un usuario con sesión activa ya pasó por el registro/login en su
+  // momento: mostrarle de nuevo la landing con "Iniciar sesión"/"Crear
+  // perfil" no tiene sentido, así que va directo al feed.
+  const session = await getServerSession(authOptions);
+  if (session) redirect("/feed");
+
   const gateOk = cookies().get("edad_confirmada")?.value === "1";
 
   if (!gateOk) {

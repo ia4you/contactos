@@ -23,6 +23,7 @@ export async function middleware(req) {
     pathname.startsWith("/icons") ||
     pathname.startsWith("/images") ||
     pathname.startsWith("/uploads") ||
+    pathname.startsWith("/downloads") ||
     pathname === "/manifest.json" ||
     pathname === "/sw.js" ||
     pathname === "/favicon.ico";

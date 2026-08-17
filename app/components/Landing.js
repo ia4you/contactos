@@ -277,6 +277,22 @@ export function Landing() {
           </div>
         </div>
       </section>
+
+      {/* Sección 5 — Descarga de la app (solo landing sin sesión: esta
+          página nunca se renderiza si hay sesión activa, ver app/page.js) */}
+      <section style={{ padding: "56px 24px", textAlign: "center" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
+          ¿Prefieres la versión móvil?
+        </p>
+        <div style={{ marginTop: 16 }}>
+          <Link href="/downloads/contactos.apk" className="btn-outline-gold">
+            📱 Descargar app para Android
+          </Link>
+        </div>
+        <p style={{ marginTop: 12, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
+          Instala nuestra app directamente en tu Android. Activa &quot;Fuentes desconocidas&quot; en ajustes si es necesario.
+        </p>
+      </section>
     </main>
   );
 }

@@ -96,7 +96,7 @@ Considera complementarios: Dominante/Sumiso, Voyeur/Exhibicionista, Hotwife/Cuck
 
 async function llamarGroqConTimeout(prompt, ms) {
   const llamada = groq.chat.completions.create({
-    model: "llama-3.1-8b-instant",
+    model: "openai/gpt-oss-20b",
     temperature: 0.3,
     max_tokens: 1000,
     response_format: { type: "json_object" },

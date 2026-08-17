@@ -69,7 +69,7 @@ Gustos complementarios: ${complementarios.map(([a, b]) => `${a}/${b}`).join(", "
     const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 5000));
     const respuesta = await Promise.race([
       groq.chat.completions.create({
-        model: "llama-3.1-8b-instant",
+        model: "openai/gpt-oss-20b",
         temperature: 0.3,
         max_tokens: 150,
         messages: [{ role: "user", content: prompt }],

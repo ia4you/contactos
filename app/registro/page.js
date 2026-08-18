@@ -32,6 +32,7 @@ const ESTADO_INICIAL = {
   lookingFor: [],
   acceptTerms: false,
   acceptGdpr: false,
+  acceptCapturas: false,
 };
 
 export default function Registro() {
@@ -310,6 +311,30 @@ export default function Registro() {
             <span>
               Consiento expresamente el tratamiento de mis datos relativos a la
               vida sexual conforme al art. 9.2.a del RGPD.
+            </span>
+          </label>
+          <label style={{ display: "flex", gap: 8, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
+            <input
+              type="checkbox"
+              required
+              checked={form.acceptCapturas}
+              onChange={(e) => actualizar("acceptCapturas", e.target.checked)}
+              className="checkbox-gold"
+              style={{ marginTop: 2 }}
+            />
+            <span>
+              Me comprometo a no realizar capturas de pantalla, fotografías ni
+              cualquier otra forma de reproducción del contenido de otros
+              usuarios (fotos, mensajes, comentarios, datos de perfil) sin su
+              consentimiento expreso. Entiendo que la difusión no consentida
+              de imágenes o datos personales de terceros puede constituir una
+              infracción de la normativa de protección de datos (RGPD) y, en
+              determinados casos, un delito conforme al Código Penal español
+              (arts. 197 y siguientes), pudiendo acarrear consecuencias
+              legales para quien lo realice. Acepto que el incumplimiento de
+              esta norma puede conllevar la suspensión o cancelación
+              inmediata de mi cuenta, sin perjuicio de las acciones legales
+              que pudieran corresponder a los afectados.
             </span>
           </label>
         </div>

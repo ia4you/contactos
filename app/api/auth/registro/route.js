@@ -49,6 +49,7 @@ export async function POST(req) {
     lookingFor,
     acceptTerms,
     acceptGdpr,
+    acceptCapturas,
   } = body;
 
   if (!PROFILE_TYPE_VALUES.includes(profileType)) {
@@ -73,9 +74,9 @@ export async function POST(req) {
   if (!validarMultiSelect(rol, ROL_OPTIONS, ROL_MAX)) {
     return NextResponse.json({ error: `Selecciona como máximo ${ROL_MAX} opciones de rol.` }, { status: 400 });
   }
-  if (acceptTerms !== true || acceptGdpr !== true) {
+  if (acceptTerms !== true || acceptGdpr !== true || acceptCapturas !== true) {
     return NextResponse.json(
-      { error: "Debes aceptar los términos y el consentimiento de datos." },
+      { error: "Debes aceptar los términos, el consentimiento de datos y el compromiso sobre capturas de contenido ajeno." },
       { status: 400 }
     );
   }
@@ -120,8 +121,8 @@ export async function POST(req) {
     const { rows } = await query(
       `INSERT INTO users
          (email, password_hash, nick, profile_type, island, her_birthdate, his_birthdate,
-          looking_for, genero, orientacion, rol, gdpr_consent_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, now())
+          looking_for, genero, orientacion, rol, gdpr_consent_at, acepto_terminos_captura)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, now(), now())
        RETURNING id`,
       [
         emailLimpio,

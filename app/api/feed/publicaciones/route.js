@@ -8,10 +8,13 @@ import { v4 as uuidv4 } from "uuid";
 import { authOptions } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { directorioSubidasUsuario, MIME_A_EXTENSION, MAX_TAMANO_FOTO } from "@/lib/uploads";
+import { contieneVulgaridad } from "@/lib/filtroVulgar";
+import { moderarConGroqEnSegundoPlano } from "@/lib/moderacionIA";
 
 export const runtime = "nodejs";
 
 const LIMITE = 20;
+const MENSAJE_TONO = "Este contenido no encaja con el tono de nuestra comunidad. ¿Puedes reformularlo?";
 
 export async function GET(req) {
   const session = await getServerSession(authOptions);
@@ -199,13 +202,28 @@ export async function POST(req) {
         { status: 400 }
       );
     }
+    if (contieneVulgaridad(contenidoBruto)) {
+      return NextResponse.json({ error: MENSAJE_TONO }, { status: 400 });
+    }
 
     const { rows } = await query(
       `INSERT INTO publicaciones (user_id, tipo, contenido) VALUES ($1, 'texto', $2)
        RETURNING id, tipo, contenido, created_at`,
       [userId, contenidoBruto]
     );
-    return NextResponse.json({ publicacion: rows[0] });
+    const publicacion = rows[0];
+
+    // Fire-and-forget: la publicación ya quedó guardada; si Groq la marca
+    // como no aceptable, se oculta después vía revision_pendiente.
+    moderarConGroqEnSegundoPlano({
+      texto: contenidoBruto,
+      tabla: "publicaciones",
+      id: publicacion.id,
+      endpoint: "/api/feed/publicaciones:texto",
+      userId,
+    }).catch((err) => console.error("Error en moderarConGroqEnSegundoPlano:", err));
+
+    return NextResponse.json({ publicacion });
   }
 
   // tipo === "foto"
@@ -231,6 +249,11 @@ export async function POST(req) {
     return NextResponse.json({ error: "El pie de foto no puede superar los 500 caracteres." }, { status: 400 });
   }
 
+  if (contieneVulgaridad(contenidoBruto)) {
+    await fs.unlink(archivo.filepath).catch(() => {});
+    return NextResponse.json({ error: MENSAJE_TONO }, { status: 400 });
+  }
+
   const extension = MIME_A_EXTENSION[archivo.mimetype];
   const nombreFinal = `${uuidv4()}.${extension}`;
   const rutaFinal = path.join(uploadDir, nombreFinal);
@@ -252,6 +275,18 @@ export async function POST(req) {
      RETURNING id, tipo, contenido, created_at`,
     [userId, contenidoBruto || null, foto.id]
   );
+  const publicacion = rows[0];
 
-  return NextResponse.json({ publicacion: { ...rows[0], photo_filename: foto.filename } });
+  if (contenidoBruto) {
+    // Fire-and-forget: solo tiene sentido moderar si hay pie de foto.
+    moderarConGroqEnSegundoPlano({
+      texto: contenidoBruto,
+      tabla: "publicaciones",
+      id: publicacion.id,
+      endpoint: "/api/feed/publicaciones:foto",
+      userId,
+    }).catch((err) => console.error("Error en moderarConGroqEnSegundoPlano:", err));
+  }
+
+  return NextResponse.json({ publicacion: { ...publicacion, photo_filename: foto.filename } });
 }

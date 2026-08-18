@@ -4,6 +4,9 @@ import { authOptions } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { crearNotificacion } from "@/lib/notificaciones";
 import { generarRespuestaDemo } from "@/lib/demoReply";
+import { contieneVulgaridad } from "@/lib/filtroVulgar";
+
+const MENSAJE_TONO = "Este contenido no encaja con el tono de nuestra comunidad. ¿Puedes reformularlo?";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -43,6 +46,12 @@ export async function POST(req) {
 
   if (!Number.isInteger(toUserId) || toUserId === meId || !texto || texto.length > 2000) {
     return NextResponse.json({ error: "Mensaje inválido." }, { status: 400 });
+  }
+
+  // Solo filtro local: los mensajes privados no pasan por moderación IA
+  // (lib/moderacionIA.js), por privacidad y para no añadir latencia.
+  if (contieneVulgaridad(texto)) {
+    return NextResponse.json({ error: MENSAJE_TONO }, { status: 400 });
   }
 
   const { rows: bloqueoRows } = await query(

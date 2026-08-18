@@ -3,6 +3,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { crearNotificacion } from "@/lib/notificaciones";
+import { contieneVulgaridad } from "@/lib/filtroVulgar";
+import { moderarConGroqEnSegundoPlano } from "@/lib/moderacionIA";
+
+const MENSAJE_TONO = "Este contenido no encaja con el tono de nuestra comunidad. ¿Puedes reformularlo?";
 
 export async function POST(req) {
   const session = await getServerSession(authOptions);
@@ -16,6 +20,9 @@ export async function POST(req) {
 
   if (!Number.isInteger(publicacionId) || !texto || texto.length > 500) {
     return NextResponse.json({ error: "Comentario inválido." }, { status: 400 });
+  }
+  if (contieneVulgaridad(texto)) {
+    return NextResponse.json({ error: MENSAJE_TONO }, { status: 400 });
   }
 
   const { rows: existe } = await query(
@@ -36,6 +43,15 @@ export async function POST(req) {
   if (Number(publicacion.user_id) !== Number(session.user.id)) {
     await crearNotificacion(publicacion.user_id, "comentario", session.user.id, publicacionId);
   }
+
+  // Fire-and-forget: el comentario ya quedó guardado.
+  moderarConGroqEnSegundoPlano({
+    texto,
+    tabla: "comentarios",
+    id: rows[0].id,
+    endpoint: "/api/feed/comentarios",
+    userId: session.user.id,
+  }).catch((err) => console.error("Error en moderarConGroqEnSegundoPlano:", err));
 
   return NextResponse.json({
     comentario: {

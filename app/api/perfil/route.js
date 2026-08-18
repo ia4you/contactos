@@ -12,6 +12,10 @@ import {
   ROL_OPTIONS,
   ROL_MAX,
 } from "@/lib/constants";
+import { contieneVulgaridad } from "@/lib/filtroVulgar";
+import { moderarConGroqEnSegundoPlano } from "@/lib/moderacionIA";
+
+const MENSAJE_TONO = "Este contenido no encaja con el tono de nuestra comunidad. ¿Puedes reformularlo?";
 
 const ISLAND_VALUES = ISLANDS.map((i) => i.value);
 const LOOKING_FOR_VALUES = LOOKING_FOR_OPTIONS.map((l) => l.value);
@@ -69,9 +73,19 @@ export async function PATCH(req) {
 
   const limpiarTexto = (v, max = 2000) => (typeof v === "string" ? v.slice(0, max) : null);
 
-  if ("bio" in body) set("bio", limpiarTexto(body.bio));
-  if ("herBio" in body) set("her_bio", limpiarTexto(body.herBio));
-  if ("hisBio" in body) set("his_bio", limpiarTexto(body.hisBio));
+  // Textos de bio a moderar con Groq tras el guardado (fire-and-forget),
+  // solo los campos que realmente vengan en este PATCH y no queden vacíos.
+  const biosParaModerar = [];
+
+  for (const [campoBody, columna] of [["bio", "bio"], ["herBio", "her_bio"], ["hisBio", "his_bio"]]) {
+    if (!(campoBody in body)) continue;
+    const texto = limpiarTexto(body[campoBody]);
+    if (texto && contieneVulgaridad(texto)) {
+      return NextResponse.json({ error: MENSAJE_TONO }, { status: 400 });
+    }
+    set(columna, texto);
+    if (texto) biosParaModerar.push(texto);
+  }
 
   if ("island" in body) {
     if (!ISLAND_VALUES.includes(body.island)) {
@@ -156,6 +170,18 @@ export async function PATCH(req) {
     `UPDATE users SET ${columnas.join(", ")} WHERE id = $${valores.length}`,
     valores
   );
+
+  if (biosParaModerar.length > 0) {
+    // Fire-and-forget: la bio ya quedó guardada; se juntan en una sola
+    // llamada a Groq en vez de una por campo.
+    moderarConGroqEnSegundoPlano({
+      texto: biosParaModerar.join("\n\n"),
+      tabla: "users",
+      id: session.user.id,
+      endpoint: "/api/perfil:bio",
+      userId: session.user.id,
+    }).catch((err) => console.error("Error en moderarConGroqEnSegundoPlano:", err));
+  }
 
   return NextResponse.json({ ok: true });
 }

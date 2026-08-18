@@ -10,6 +10,7 @@ import { mostrarPuntoOnline } from "@/lib/online";
 import { EmptyState } from "../components/EmptyState";
 import { PuntoOnline } from "../components/PuntoOnline";
 import { UsuarioBadge } from "../components/UsuarioBadge";
+import { AvisoSeguridadBanner, AvisoSeguridadModal } from "../components/AvisoSeguridadMensajes";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 
@@ -150,7 +151,10 @@ export function MensajesShell({ usuarioId }) {
   );
 
   return (
-    <div className={`mensajes-layout ${otro ? "chat-abierto" : ""}`}>
+    <div className="mensajes-page">
+      <AvisoSeguridadModal usuarioId={usuarioId} />
+      <AvisoSeguridadBanner />
+      <div className={`mensajes-layout ${otro ? "chat-abierto" : ""}`}>
       <aside className="mensajes-sidebar" style={{ background: "#150f10", borderRight: "1px solid rgba(201,161,90,0.18)", overflowY: "auto" }}>
         <div style={{ padding: "20px 20px 12px" }}>
           <p className="kicker">Mensajes</p>
@@ -429,6 +433,7 @@ export function MensajesShell({ usuarioId }) {
           </>
         )}
       </section>
+      </div>
     </div>
   );
 }

@@ -630,15 +630,26 @@ body {
   }
 }
 
+.mensajes-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 89px);
+}
+@media (max-width: 768px) {
+  .mensajes-page {
+    height: calc(100vh - 73px);
+  }
+}
+
 .mensajes-layout {
   display: grid;
   grid-template-columns: 300px 1fr;
-  height: calc(100vh - 89px);
+  flex: 1;
+  min-height: 0;
 }
 @media (max-width: 768px) {
   .mensajes-layout {
     grid-template-columns: 1fr;
-    height: calc(100vh - 73px);
   }
   .mensajes-layout .mensajes-sidebar {
     display: flex;

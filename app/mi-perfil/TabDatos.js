@@ -24,6 +24,7 @@ export function TabDatos({ usuario }) {
   const [rol, setRol] = useState(usuario.rol || []);
   const [guardando, setGuardando] = useState(false);
   const [guardado, setGuardado] = useState(false);
+  const [error, setError] = useState("");
 
   function toggleLookingFor(valor) {
     setLookingFor((lf) => (lf.includes(valor) ? lf.filter((v) => v !== valor) : [...lf, valor]));
@@ -33,13 +34,19 @@ export function TabDatos({ usuario }) {
     e.preventDefault();
     setGuardando(true);
     setGuardado(false);
+    setError("");
     const res = await fetch("/api/perfil", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ bio, herBio, hisBio, island, lookingFor, genero, orientacion, rol }),
     });
+    const data = await res.json().catch(() => null);
     setGuardando(false);
-    if (res.ok) setGuardado(true);
+    if (res.ok) {
+      setGuardado(true);
+      return;
+    }
+    setError(data?.error || "No se pudieron guardar los cambios.");
   }
 
   return (
@@ -142,6 +149,7 @@ export function TabDatos({ usuario }) {
         </button>
         {guardado && <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)" }}>Guardado.</span>}
       </div>
+      {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
     </form>
   );
 }

@@ -15,7 +15,7 @@ export async function GET(req, { params }) {
   }
 
   const { rows } = await query(
-    `SELECT c.id, c.texto, c.created_at, u.id AS user_id, u.nick,
+    `SELECT c.id, c.texto, c.created_at, u.id AS user_id, u.nick, u.profile_type,
             (SELECT filename FROM photos WHERE user_id = u.id AND is_avatar = true AND status = 'approved' LIMIT 1) AS avatar_filename
        FROM comentarios c
        JOIN users u ON u.id = c.user_id

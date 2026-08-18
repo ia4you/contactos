@@ -8,13 +8,12 @@ import { v4 as uuidv4 } from "uuid";
 import { authOptions } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { directorioSubidasUsuario, MIME_A_EXTENSION, MAX_TAMANO_FOTO } from "@/lib/uploads";
-import { contieneVulgaridad } from "@/lib/filtroVulgar";
+import { contieneVulgaridad, MENSAJE_RECHAZO } from "@/lib/filtroVulgar";
 import { moderarConGroqEnSegundoPlano } from "@/lib/moderacionIA";
 
 export const runtime = "nodejs";
 
 const LIMITE = 20;
-const MENSAJE_TONO = "Este contenido no encaja con el tono de nuestra comunidad. ¿Puedes reformularlo?";
 
 export async function GET(req) {
   const session = await getServerSession(authOptions);
@@ -203,7 +202,7 @@ export async function POST(req) {
       );
     }
     if (contieneVulgaridad(contenidoBruto)) {
-      return NextResponse.json({ error: MENSAJE_TONO }, { status: 400 });
+      return NextResponse.json({ error: MENSAJE_RECHAZO }, { status: 400 });
     }
 
     const { rows } = await query(
@@ -251,7 +250,7 @@ export async function POST(req) {
 
   if (contieneVulgaridad(contenidoBruto)) {
     await fs.unlink(archivo.filepath).catch(() => {});
-    return NextResponse.json({ error: MENSAJE_TONO }, { status: 400 });
+    return NextResponse.json({ error: MENSAJE_RECHAZO }, { status: 400 });
   }
 
   const extension = MIME_A_EXTENSION[archivo.mimetype];

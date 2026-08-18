@@ -12,10 +12,8 @@ import {
   ROL_OPTIONS,
   ROL_MAX,
 } from "@/lib/constants";
-import { contieneVulgaridad } from "@/lib/filtroVulgar";
+import { contieneVulgaridad, MENSAJE_RECHAZO } from "@/lib/filtroVulgar";
 import { moderarConGroqEnSegundoPlano } from "@/lib/moderacionIA";
-
-const MENSAJE_TONO = "Este contenido no encaja con el tono de nuestra comunidad. ¿Puedes reformularlo?";
 
 const ISLAND_VALUES = ISLANDS.map((i) => i.value);
 const LOOKING_FOR_VALUES = LOOKING_FOR_OPTIONS.map((l) => l.value);
@@ -81,7 +79,7 @@ export async function PATCH(req) {
     if (!(campoBody in body)) continue;
     const texto = limpiarTexto(body[campoBody]);
     if (texto && contieneVulgaridad(texto)) {
-      return NextResponse.json({ error: MENSAJE_TONO }, { status: 400 });
+      return NextResponse.json({ error: MENSAJE_RECHAZO }, { status: 400 });
     }
     set(columna, texto);
     if (texto) biosParaModerar.push(texto);

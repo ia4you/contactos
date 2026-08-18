@@ -3,10 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { crearNotificacion } from "@/lib/notificaciones";
-import { contieneVulgaridad } from "@/lib/filtroVulgar";
+import { contieneVulgaridad, MENSAJE_RECHAZO } from "@/lib/filtroVulgar";
 import { moderarConGroqEnSegundoPlano } from "@/lib/moderacionIA";
-
-const MENSAJE_TONO = "Este contenido no encaja con el tono de nuestra comunidad. ¿Puedes reformularlo?";
 
 export async function POST(req) {
   const session = await getServerSession(authOptions);
@@ -22,7 +20,7 @@ export async function POST(req) {
     return NextResponse.json({ error: "Comentario inválido." }, { status: 400 });
   }
   if (contieneVulgaridad(texto)) {
-    return NextResponse.json({ error: MENSAJE_TONO }, { status: 400 });
+    return NextResponse.json({ error: MENSAJE_RECHAZO }, { status: 400 });
   }
 
   const { rows: existe } = await query(
@@ -44,6 +42,15 @@ export async function POST(req) {
     await crearNotificacion(publicacion.user_id, "comentario", session.user.id, publicacionId);
   }
 
+  // El avatar no viaja en el JWT (quedaría obsoleto si el usuario lo
+  // cambia sin volver a iniciar sesión, ver GET /api/perfil), así que se
+  // consulta aquí para que el comentario recién publicado muestre el
+  // avatar real sin esperar a recargar la página.
+  const { rows: avatarRows } = await query(
+    `SELECT filename FROM photos WHERE user_id = $1 AND is_avatar = true AND status = 'approved' LIMIT 1`,
+    [session.user.id]
+  );
+
   // Fire-and-forget: el comentario ya quedó guardado.
   moderarConGroqEnSegundoPlano({
     texto,
@@ -58,6 +65,8 @@ export async function POST(req) {
       ...rows[0],
       user_id: Number(session.user.id),
       nick: session.user.nick,
+      profile_type: session.user.profileType,
+      avatar_filename: avatarRows[0]?.filename ?? null,
     },
   });
 }

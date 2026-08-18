@@ -302,6 +302,7 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
   const [comentariosCount, setComentariosCount] = useState(p.comentarios_count);
   const [nuevoComentario, setNuevoComentario] = useState("");
   const [enviandoComentario, setEnviandoComentario] = useState(false);
+  const [errorComentario, setErrorComentario] = useState("");
   const [eliminada, setEliminada] = useState(false);
 
   const esPropia = String(p.user_id) === String(usuarioActualId);
@@ -329,6 +330,7 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
   async function enviarComentario() {
     const texto = nuevoComentario.trim();
     if (!texto || enviandoComentario) return;
+    setErrorComentario("");
     setEnviandoComentario(true);
     const res = await fetch("/api/feed/comentarios", {
       method: "POST",
@@ -338,10 +340,12 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
     const data = await res.json().catch(() => null);
     setEnviandoComentario(false);
     if (res.ok && data) {
-      setComentarios((c) => [...(c || []), { ...data.comentario, avatar_filename: null }]);
+      setComentarios((c) => [...(c || []), data.comentario]);
       setComentariosCount((n) => n + 1);
       setNuevoComentario("");
+      return;
     }
+    setErrorComentario(data?.error || "No se pudo enviar el comentario.");
   }
 
   async function eliminar() {
@@ -464,19 +468,25 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {comentarios.map((c) => (
                 <div key={c.id} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                  <div style={{ position: "relative", width: 28, height: 28, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
+                  <Link
+                    href={`/perfil/${c.nick}`}
+                    style={{ position: "relative", width: 28, height: 28, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}
+                  >
                     <Image
-                      src={avatarSrc(c.user_id, c.avatar_filename, "chica")}
+                      src={avatarSrc(c.user_id, c.avatar_filename, c.profile_type)}
                       alt=""
                       fill
                       unoptimized={false}
                       style={{ objectFit: "cover" }}
                     />
-                  </div>
+                  </Link>
                   <div>
-                    <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text)", fontWeight: 500 }}>
+                    <Link
+                      href={`/perfil/${c.nick}`}
+                      style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text)", fontWeight: 500, textDecoration: "none" }}
+                    >
                       {c.nick}
-                    </span>{" "}
+                    </Link>{" "}
                     <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
                       {c.texto}
                     </span>
@@ -509,6 +519,9 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
               Enviar
             </button>
           </div>
+          {errorComentario && (
+            <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 12.5, color: "#e07a7a" }}>{errorComentario}</p>
+          )}
         </div>
       )}
     </div>

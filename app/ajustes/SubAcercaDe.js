@@ -8,19 +8,26 @@ export function SubAcercaDe({ usuario }) {
   const [hisBio, setHisBio] = useState(usuario.his_bio || "");
   const [guardando, setGuardando] = useState(false);
   const [guardado, setGuardado] = useState(false);
+  const [error, setError] = useState("");
 
   async function guardar(e) {
     e.preventDefault();
     setGuardando(true);
     setGuardado(false);
+    setError("");
     const body = usuario.profile_type === "pareja" ? { herBio, hisBio } : { bio };
     const res = await fetch("/api/perfil", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
+    const data = await res.json().catch(() => null);
     setGuardando(false);
-    if (res.ok) setGuardado(true);
+    if (res.ok) {
+      setGuardado(true);
+      return;
+    }
+    setError(data?.error || "No se pudieron guardar los cambios.");
   }
 
   return (
@@ -74,6 +81,7 @@ export function SubAcercaDe({ usuario }) {
         </button>
         {guardado && <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)" }}>Guardado.</span>}
       </div>
+      {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
     </form>
   );
 }

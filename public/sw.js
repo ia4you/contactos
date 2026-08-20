@@ -9,7 +9,7 @@ const CACHE_NAME = "contactos-turel-v1";
 // sesión/administración sensibles o payloads de React Server Components
 // que suelen venir en streaming — clonar un Response en pleno streaming
 // puede fallar si el body ya se ha empezado a consumir.
-const RUTAS_EXCLUIDAS = ["/admin", "/api/", "/uploads/", "/feed", "/mensajes"];
+const RUTAS_EXCLUIDAS = ["/admin", "/api/", "/uploads/", "/feed", "/mensajes", "/mi-perfil", "/ajustes"];
 
 // Chrome exige que el evento install cachee al menos un recurso para
 // considerar la PWA instalable (si no, el banner de instalación nunca
@@ -52,6 +52,13 @@ self.addEventListener("fetch", (event) => {
         }
         return response;
       })
-      .catch(() => caches.match(request))
+      .catch(() =>
+        // Si la red falla (offline, petición abortada, etc.) y la URL nunca
+        // se cacheó, caches.match() resuelve undefined — y respondWith()
+        // nunca puede recibir undefined, solo un Response. Response.error()
+        // cubre ese hueco con un error de red "normal", el mismo resultado
+        // que si el service worker no hubiera interceptado la petición.
+        caches.match(request).then((cached) => cached || Response.error())
+      )
   );
 });

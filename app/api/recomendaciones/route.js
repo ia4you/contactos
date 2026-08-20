@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { query } from "@/lib/db";
 import groq from "@/lib/groq";
 import { registrarUsoGroq } from "@/lib/groqUsage";
-import { COMPLETITUD_SQL } from "@/lib/completitud";
+import { COMPLETITUD_SQL, UMBRAL_BUSQUEDA } from "@/lib/completitud";
 
 const CACHE_TTL_MS = 10 * 60 * 1000;
 const cache = new Map();
@@ -35,7 +35,7 @@ async function obtenerCandidatos(meId, island) {
         AND u.deleted_at IS NULL
         AND u.email_verified_at IS NOT NULL
         AND EXISTS (SELECT 1 FROM photos WHERE user_id = u.id AND status = 'approved')
-        AND ${COMPLETITUD_SQL} >= 50
+        AND ${COMPLETITUD_SQL} >= ${UMBRAL_BUSQUEDA}
         AND NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))
         AND NOT EXISTS (SELECT 1 FROM matches m WHERE m.user1_id = LEAST($1, u.id) AND m.user2_id = GREATEST($1, u.id))
       ORDER BY u.last_active DESC NULLS LAST

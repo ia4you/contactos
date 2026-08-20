@@ -1,6 +1,6 @@
 "use client";
 
-import { calcularCompletitud } from "@/lib/completitud";
+import { calcularCompletitud, UMBRAL_BUSQUEDA } from "@/lib/completitud";
 
 export function BarraCompletitud({ usuario, fotos, gustosCount }) {
   const { pct, siguientePaso } = calcularCompletitud(usuario, fotos, gustosCount);
@@ -17,9 +17,9 @@ export function BarraCompletitud({ usuario, fotos, gustosCount }) {
         <div style={{ width: `${pct}%`, height: "100%", background: "var(--gold)", transition: "width 0.3s ease" }} />
       </div>
 
-      {pct < 50 && (
+      {pct < UMBRAL_BUSQUEDA && (
         <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 12, color: "#e07a7a" }}>
-          Tu perfil no aparece en búsquedas hasta completar al menos el 50%
+          Tu perfil no aparece en búsquedas hasta subir tu foto de avatar
         </p>
       )}
     </div>

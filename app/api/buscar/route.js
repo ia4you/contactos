@@ -8,7 +8,7 @@ import {
   LOOKING_FOR_OPTIONS,
   ORIENTACION_OPTIONS,
 } from "@/lib/constants";
-import { COMPLETITUD_SQL } from "@/lib/completitud";
+import { COMPLETITUD_SQL, UMBRAL_BUSQUEDA } from "@/lib/completitud";
 
 const PROFILE_TYPE_VALUES = PROFILE_TYPES.map((p) => p.value);
 const ISLAND_VALUES = ISLANDS.map((i) => i.value);
@@ -51,9 +51,9 @@ export async function GET(req) {
     // Bloqueo en cualquier dirección: si yo he bloqueado a alguien, o me ha
     // bloqueado a mí, no debe aparecer en mis resultados.
     "NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))",
-    // Barra de completitud (Sprint 5): perfiles con menos del 50% no
+    // Barra de completitud (Sprint 5): perfiles por debajo del umbral no
     // aparecen en búsquedas.
-    `${COMPLETITUD_SQL} >= 50`,
+    `${COMPLETITUD_SQL} >= ${UMBRAL_BUSQUEDA}`,
   ];
   const valores = [session.user.id];
 

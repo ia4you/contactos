@@ -59,17 +59,21 @@ export default async function ArticuloBlog({ params }) {
         </Link>
       </section>
 
-      {post.foto && <ArticuloFoto foto={post.foto} alt="" />}
+      {post.foto ? (
+        <ArticuloFoto foto={post.foto} alt="" titulo={post.titulo} fecha={formatearFecha(post.publicado_at)} />
+      ) : (
+        <section style={{ maxWidth: 780, margin: "24px auto 0", padding: "0 24px" }}>
+          <p className="kicker">Blog</p>
+          <h1 className="heading" style={{ marginTop: 12, fontFamily: "var(--font-display)", fontSize: 36, color: "var(--text)" }}>
+            {post.titulo}
+          </h1>
+          <p style={{ marginTop: 12, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>
+            {formatearFecha(post.publicado_at)}
+          </p>
+        </section>
+      )}
 
       <article style={{ maxWidth: 780, margin: "0 auto", padding: "40px 24px 0" }}>
-        <p className="kicker">Blog</p>
-        <h1 className="heading" style={{ marginTop: 12, fontFamily: "var(--font-display)", fontSize: 36, color: "var(--text)" }}>
-          {post.titulo}
-        </h1>
-        <p style={{ marginTop: 12, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>
-          {formatearFecha(post.publicado_at)}
-        </p>
-
         <div
           style={{
             marginTop: 32,

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { query } from "@/lib/db";
 import { Footer } from "../../components/Footer";
+import { RegistroCTA } from "../../components/RegistroCTA";
 import { ArticuloFoto } from "./ArticuloFoto";
 
 async function obtenerPost(slug) {
@@ -93,9 +94,9 @@ export default async function ArticuloBlog({ params }) {
           Únete a la comunidad liberal de Canarias
         </h2>
         <div style={{ marginTop: 20 }}>
-          <Link href="/registro" className="btn-gold">
+          <RegistroCTA location="blog_article" className="btn-gold">
             Crear mi perfil
-          </Link>
+          </RegistroCTA>
         </div>
       </section>
 

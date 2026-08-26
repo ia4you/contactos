@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { RegistroCTA } from "./RegistroCTA";
 
 export function AuthLayout({ activo, children }) {
   return (
@@ -70,8 +71,8 @@ export function AuthLayout({ activo, children }) {
             >
               Acceder
             </Link>
-            <Link
-              href="/registro"
+            <RegistroCTA
+              location="auth_tab"
               style={{
                 flex: 1,
                 textAlign: "center",
@@ -87,7 +88,7 @@ export function AuthLayout({ activo, children }) {
               }}
             >
               Crear perfil
-            </Link>
+            </RegistroCTA>
           </div>
 
           {children}

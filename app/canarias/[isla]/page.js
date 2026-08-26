@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Footer } from "../../components/Footer";
+import { RegistroCTA } from "../../components/RegistroCTA";
 import { ISLANDS_SEO, obtenerIsla } from "../islasData";
 
 export async function generateStaticParams() {
@@ -103,9 +104,9 @@ export default function IslaPage({ params }) {
         ))}
 
         <div style={{ marginTop: 32 }}>
-          <Link href="/registro" className="btn-gold">
+          <RegistroCTA location="canarias_isla_intro" className="btn-gold">
             Ver perfiles en {isla.label}
-          </Link>
+          </RegistroCTA>
         </div>
       </section>
 
@@ -232,9 +233,9 @@ export default function IslaPage({ params }) {
           {isla.ctaTitulo || `Tu comunidad liberal en ${isla.label} te espera.`}
         </h2>
         <div style={{ marginTop: 32 }}>
-          <Link href="/registro" className="btn-gold">
+          <RegistroCTA location="canarias_isla_cta_final" className="btn-gold">
             {isla.ctaBoton || `Ver perfiles en ${isla.label}`}
-          </Link>
+          </RegistroCTA>
         </div>
       </section>
 

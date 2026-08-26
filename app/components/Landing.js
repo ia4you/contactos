@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ISLANDS_SEO } from "../canarias/islasData";
+import { RegistroCTA } from "./RegistroCTA";
 
 export function Landing() {
   const [videoError, setVideoError] = useState(false);
@@ -102,9 +103,9 @@ export function Landing() {
           </p>
 
           <div style={{ marginTop: 36, display: "flex", flexWrap: "wrap", gap: 16, justifyContent: "center" }}>
-            <Link href="/registro" className="btn-gold">
+            <RegistroCTA location="landing_hero" className="btn-gold">
               Crear mi perfil
-            </Link>
+            </RegistroCTA>
             <Link href="/login" className="btn-outline-light">
               Ya soy miembro
             </Link>
@@ -271,9 +272,9 @@ export function Landing() {
             Tu próxima conexión empieza aquí.
           </h2>
           <div style={{ marginTop: 32 }}>
-            <Link href="/registro" className="btn-gold">
+            <RegistroCTA location="landing_cta_final" className="btn-gold">
               Crear mi perfil
-            </Link>
+            </RegistroCTA>
           </div>
         </div>
       </section>

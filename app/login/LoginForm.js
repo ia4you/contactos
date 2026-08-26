@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { sendGAEvent } from "@next/third-parties/google";
 import { AuthLayout } from "../components/AuthLayout";
 
 export function LoginForm() {
@@ -14,6 +15,15 @@ export function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [enviando, setEnviando] = useState(false);
+
+  // El registro no se da por completado hasta que se verifica el email
+  // (paso previo: sign_up_start en /registro), así que esto es lo más
+  // cercano a un evento de conversión "sign_up" completo.
+  useEffect(() => {
+    if (verificado === "1") {
+      sendGAEvent("event", "sign_up", { method: "email" });
+    }
+  }, [verificado]);
 
   async function onSubmit(e) {
     e.preventDefault();

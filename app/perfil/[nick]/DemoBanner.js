@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { RegistroCTA } from "../../components/RegistroCTA";
 
 export function DemoBanner() {
   return (
@@ -19,9 +19,9 @@ export function DemoBanner() {
         Este es un perfil de demostración. Las respuestas están generadas por IA. ¡Regístrate
         para conectar con personas reales!
       </p>
-      <Link href="/registro" className="btn-gold" style={{ padding: "8px 18px", fontSize: 12, flexShrink: 0 }}>
+      <RegistroCTA location="perfil_demo_banner" className="btn-gold" style={{ padding: "8px 18px", fontSize: 12, flexShrink: 0 }}>
         Crear mi perfil gratis
-      </Link>
+      </RegistroCTA>
     </div>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { sendGAEvent } from "@next/third-parties/google";
 import {
   ISLANDS,
   PROFILE_TYPES,
@@ -40,6 +41,13 @@ export default function Registro() {
   const [error, setError] = useState("");
   const [enviando, setEnviando] = useState(false);
   const [exito, setExito] = useState(false);
+
+  // El formulario de registro no tiene un paso previo separado: llegar aquí
+  // es el inicio real del proceso de alta, así que se dispara una sola vez
+  // al montar (no en cada re-render por cambios del formulario).
+  useEffect(() => {
+    sendGAEvent("event", "sign_up_start");
+  }, []);
 
   function actualizar(campo, valor) {
     setForm((f) => ({ ...f, [campo]: valor }));

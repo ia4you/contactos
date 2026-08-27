@@ -5,12 +5,14 @@ import { AdminDashboard } from "./AdminDashboard";
 import { AdminUsuarios } from "./AdminUsuarios";
 import { AdminDenuncias } from "./AdminDenuncias";
 import { AdminBlog } from "./AdminBlog";
+import { AdminVerificacionEmail } from "./AdminVerificacionEmail";
 
 const TABS = [
   { id: "dashboard", label: "Dashboard" },
   { id: "usuarios", label: "Usuarios" },
   { id: "denuncias", label: "Denuncias" },
   { id: "blog", label: "Blog" },
+  { id: "verificacion", label: "Verificación email" },
 ];
 
 export function AdminShell() {
@@ -41,6 +43,7 @@ export function AdminShell() {
         {tab === "usuarios" && <AdminUsuarios />}
         {tab === "denuncias" && <AdminDenuncias />}
         {tab === "blog" && <AdminBlog />}
+        {tab === "verificacion" && <AdminVerificacionEmail />}
       </div>
     </div>
   );

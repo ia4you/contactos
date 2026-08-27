@@ -236,6 +236,26 @@ export default function Registro() {
           />
         </label>
 
+        <p
+          style={{
+            margin: 0,
+            padding: "10px 12px",
+            background: "rgba(201, 161, 90, 0.08)",
+            border: "1px solid rgba(201, 161, 90, 0.25)",
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            lineHeight: 1.5,
+            color: "var(--text-secondary)",
+          }}
+        >
+          ⚠️ Actualmente hay una incidencia temporal con la entrega de emails a
+          direcciones de Hotmail/Outlook/Live. Si usas uno de estos
+          proveedores, es posible que el email de verificación no te llegue.
+          Recomendamos usar Gmail u otro proveedor mientras se resuelve, o
+          contactar con nosotros si ya te has registrado y no puedes verificar
+          tu cuenta.
+        </p>
+
         <label>
           <span className="label-field">Contraseña</span>
           <input

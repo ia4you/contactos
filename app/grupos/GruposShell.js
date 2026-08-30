@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ISLANDS } from "@/lib/constants";
-import { Users } from "lucide-react";
+import { Users, Plus } from "lucide-react";
+import { CrearGrupoModal } from "@/app/feed/CrearGrupoModal";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 
@@ -12,6 +13,7 @@ export function GruposShell() {
   const router = useRouter();
   const [grupos, setGrupos] = useState(null);
   const [uniendose, setUniendose] = useState(null);
+  const [modalAbierto, setModalAbierto] = useState(false);
 
   useEffect(() => {
     fetch("/api/grupos")
@@ -27,12 +29,32 @@ export function GruposShell() {
     if (res.ok) router.push(`/grupos/${id}`);
   }
 
+  function onCreado(grupo) {
+    setModalAbierto(false);
+    setGrupos((prev) => [{ ...grupo, miembros_count: 1, soy_miembro: true }, ...(prev || [])]);
+  }
+
   return (
     <div style={{ maxWidth: 800, margin: "0 auto", padding: "40px 24px 80px" }}>
-      <p className="kicker">Comunidad</p>
-      <h1 className="heading" style={{ fontSize: 32, color: "var(--text)", marginTop: 6 }}>
-        Grupos
-      </h1>
+      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
+        <div>
+          <p className="kicker">Comunidad</p>
+          <h1 className="heading" style={{ fontSize: 32, color: "var(--text)", marginTop: 6 }}>
+            Grupos
+          </h1>
+        </div>
+        <button
+          type="button"
+          onClick={() => setModalAbierto(true)}
+          className="btn-gold"
+          style={{ fontSize: 11, padding: "10px 18px", display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}
+        >
+          <Plus size={14} />
+          Crear grupo
+        </button>
+      </div>
+
+      {modalAbierto && <CrearGrupoModal onClose={() => setModalAbierto(false)} onCreado={onCreado} />}
 
       <div style={{ marginTop: 32 }}>
         {grupos === null ? (

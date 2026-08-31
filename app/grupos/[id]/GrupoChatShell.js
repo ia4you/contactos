@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Send } from "lucide-react";
@@ -8,11 +9,13 @@ import { avatarSrc } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
 
 export function GrupoChatShell({ grupoId, usuarioId }) {
+  const router = useRouter();
   const [grupo, setGrupo] = useState(null);
   const [miembros, setMiembros] = useState([]);
   const [mensajes, setMensajes] = useState(null);
   const [texto, setTexto] = useState("");
   const [enviando, setEnviando] = useState(false);
+  const [eliminando, setEliminando] = useState(false);
   const scrollRef = useRef(null);
 
   useEffect(() => {
@@ -60,6 +63,17 @@ export function GrupoChatShell({ grupoId, usuarioId }) {
     }
   }
 
+  async function eliminarGrupo() {
+    if (!window.confirm("¿Eliminar este grupo? Se borrarán también sus mensajes y la lista de miembros. Esta acción no se puede deshacer.")) return;
+    setEliminando(true);
+    const res = await fetch(`/api/grupos/${grupoId}`, { method: "DELETE" });
+    if (res.ok) {
+      router.push("/grupos");
+      return;
+    }
+    setEliminando(false);
+  }
+
   if (!grupo) {
     return (
       <div style={{ maxWidth: 900, margin: "0 auto", padding: "40px 24px" }}>
@@ -71,11 +85,33 @@ export function GrupoChatShell({ grupoId, usuarioId }) {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "1fr 240px", gap: 0, maxWidth: 1000, margin: "0 auto" }} className="grupo-layout">
       <section style={{ display: "flex", flexDirection: "column", height: "calc(100vh - 89px)", borderRight: "1px solid rgba(201,161,90,0.15)" }}>
-        <div style={{ padding: "18px 24px", borderBottom: "1px solid rgba(201,161,90,0.18)" }}>
-          <h1 className="heading" style={{ fontSize: 20, color: "var(--text)" }}>{grupo.nombre}</h1>
-          <p style={{ marginTop: 3, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
-            {grupo.miembros_count} miembros
-          </p>
+        <div
+          style={{
+            padding: "18px 24px",
+            borderBottom: "1px solid rgba(201,161,90,0.18)",
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            gap: 16,
+          }}
+        >
+          <div>
+            <h1 className="heading" style={{ fontSize: 20, color: "var(--text)" }}>{grupo.nombre}</h1>
+            <p style={{ marginTop: 3, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
+              {grupo.miembros_count} miembros
+            </p>
+          </div>
+          {String(grupo.creador_id) === String(usuarioId) && (
+            <button
+              type="button"
+              onClick={eliminarGrupo}
+              disabled={eliminando}
+              className="btn-outline-gold"
+              style={{ borderColor: "rgba(154,58,58,0.5)", color: "#e07a7a", fontSize: 11, padding: "8px 14px", flexShrink: 0 }}
+            >
+              {eliminando ? "Eliminando…" : "Eliminar grupo"}
+            </button>
+          )}
         </div>
 
         {!grupo.soy_miembro ? (

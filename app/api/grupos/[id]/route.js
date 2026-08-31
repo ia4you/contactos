@@ -15,7 +15,7 @@ export async function GET(req, { params }) {
   }
 
   const { rows: grupoRows } = await query(
-    `SELECT g.id, g.nombre, g.descripcion, g.isla,
+    `SELECT g.id, g.nombre, g.descripcion, g.isla, g.creador_id,
             (SELECT count(*)::int FROM grupo_miembros WHERE grupo_id = g.id) AS miembros_count,
             EXISTS (SELECT 1 FROM grupo_miembros WHERE grupo_id = g.id AND user_id = $1) AS soy_miembro
        FROM grupos g WHERE g.id = $2`,
@@ -50,4 +50,32 @@ export async function GET(req, { params }) {
   );
 
   return NextResponse.json({ grupo, miembros });
+}
+
+export async function DELETE(req, { params }) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: "No autorizado." }, { status: 401 });
+  }
+  const meId = Number(session.user.id);
+  const id = Number(params.id);
+  if (!Number.isInteger(id)) {
+    return NextResponse.json({ error: "Id inválido." }, { status: 400 });
+  }
+
+  const { rows } = await query(`SELECT creador_id FROM grupos WHERE id = $1`, [id]);
+  const grupo = rows[0];
+  if (!grupo) {
+    return NextResponse.json({ error: "Grupo no encontrado." }, { status: 404 });
+  }
+  if (grupo.creador_id !== meId) {
+    return NextResponse.json({ error: "Solo el creador puede eliminar el grupo." }, { status: 403 });
+  }
+
+  // El borrado es en cascada a nivel de BD (grupo_miembros, grupo_mensajes
+  // y grupo_feed_eventos referencian grupos.id con ON DELETE CASCADE), así
+  // que un solo DELETE limpia todo lo asociado sin queries adicionales.
+  await query(`DELETE FROM grupos WHERE id = $1`, [id]);
+
+  return NextResponse.json({ ok: true });
 }

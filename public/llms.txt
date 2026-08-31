@@ -1,0 +1,24 @@
+# Contactos Liberales Canarias
+
+> Comunidad online del ambiente liberal en Canarias: contactos discretos entre parejas, chicas y chicos mayores de edad en las 8 islas. Registro gratuito, perfiles verificables y contenido exclusivo para adultos (+18).
+
+Plataforma de contactos y comunidad para personas y parejas del ambiente liberal/swinger en Canarias (España). Acceso restringido a mayores de 18 años mediante verificación de edad. Las áreas de perfiles, mensajería, feed, grupos y buscador requieren cuenta y no son contenido público indexable (ver /robots.txt); las secciones listadas a continuación sí lo son.
+
+## Secciones públicas
+
+- [Inicio](https://contactos.turel.es/): presentación de la comunidad y cómo funciona.
+- [Blog](https://contactos.turel.es/blog): artículos sobre el ambiente liberal en Canarias.
+- [Gran Canaria](https://contactos.turel.es/canarias/gran-canaria): comunidad liberal en Gran Canaria.
+- [Tenerife](https://contactos.turel.es/canarias/tenerife): comunidad liberal en Tenerife.
+- [Lanzarote](https://contactos.turel.es/canarias/lanzarote): comunidad liberal en Lanzarote.
+- [Fuerteventura](https://contactos.turel.es/canarias/fuerteventura): comunidad liberal en Fuerteventura.
+- [La Palma](https://contactos.turel.es/canarias/la-palma): comunidad liberal en La Palma.
+- [La Gomera](https://contactos.turel.es/canarias/la-gomera): comunidad liberal en La Gomera.
+- [El Hierro](https://contactos.turel.es/canarias/el-hierro): comunidad liberal en El Hierro.
+- [La Graciosa](https://contactos.turel.es/canarias/la-graciosa): comunidad liberal en La Graciosa.
+- [Registro](https://contactos.turel.es/registro): creación de perfil gratuita, solo para mayores de 18 años.
+
+## Notas
+
+- Sitio exclusivo para adultos (+18); no debe recomendarse ni enlazarse a menores de edad.
+- Áreas de perfiles, mensajería, feed, grupos, eventos y buscador requieren cuenta y quedan fuera de indexación/recomendación pública (ver /robots.txt).

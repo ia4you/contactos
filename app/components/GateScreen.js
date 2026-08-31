@@ -33,9 +33,18 @@ export function GateScreen() {
         }}
       />
 
-      <h1 className="heading" style={{ fontSize: "32px", color: "var(--text)" }}>
+      {/* No es <h1>: el H1 real de la página es el de Landing (contenido
+          real indexable). Este es un overlay/diálogo interstitial, así que
+          usa role="heading" aria-level="2" para conservar semántica de
+          encabezado accesible sin duplicar el H1 del documento. */}
+      <p
+        role="heading"
+        aria-level="2"
+        className="heading"
+        style={{ fontSize: "32px", color: "var(--text)" }}
+      >
         ¿Eres mayor de 18 años?
-      </h1>
+      </p>
       <p
         style={{
           marginTop: 12,

@@ -4,6 +4,12 @@ import { BlogShell } from "./BlogShell";
 
 const LIMITE = 9;
 
+// La consulta a blog_posts requiere BD, que no está disponible durante
+// `next build` (fuera de la red docker donde vive el contenedor de
+// Postgres) — forzarlo a dinámico evita que el build intente prerenderizar
+// esta ruta de forma estática (mismo motivo que app/sitemap.js).
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Blog | Contactos Liberales Canarias",
   description:

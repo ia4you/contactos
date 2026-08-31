@@ -63,6 +63,18 @@ export async function POST(req, { params }) {
     [grupoId, session.user.id, texto]
   );
 
+  // Aviso público en el feed general, como mucho uno cada 60 minutos por
+  // grupo, para no inundar el feed cuando el chat está muy activo.
+  const { rows: avisoReciente } = await query(
+    `SELECT 1 FROM grupo_feed_eventos
+      WHERE grupo_id = $1 AND tipo = 'nueva_entrada' AND created_at > now() - interval '60 minutes'
+      LIMIT 1`,
+    [grupoId]
+  );
+  if (!avisoReciente[0]) {
+    await query(`INSERT INTO grupo_feed_eventos (grupo_id, tipo) VALUES ($1, 'nueva_entrada')`, [grupoId]);
+  }
+
   return NextResponse.json({
     mensaje: { ...rows[0], user_id: Number(session.user.id), nick: session.user.nick },
   });

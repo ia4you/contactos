@@ -57,7 +57,7 @@ export async function GET(req) {
 
   const { rows } = await query(sql, [session.user.id, LIMITE + 1, offset]);
   const hasMore = rows.length > LIMITE;
-  const publicaciones = rows.slice(0, LIMITE).map((p) => ({ ...p, esAnuncio: false, esEvento: false }));
+  const publicaciones = rows.slice(0, LIMITE).map((p) => ({ ...p, esAnuncio: false, esEvento: false, esGrupoEvento: false }));
 
   // Los anuncios y eventos activos se mezclan por created_at solo en la
   // primera página: como se traen completos (sin paginar por su cuenta),
@@ -128,16 +128,32 @@ export async function GET(req) {
       LIMIT 20`
   );
 
-  if (anuncios.length === 0 && eventos.length === 0 && clubEventos.length === 0 && blogPosts.length === 0) {
+  // Avisos de grupos (creación de grupo, nueva actividad en su chat): se
+  // inyectan igual que el resto de contenido evergreen, visibles para todos
+  // aunque no seas miembro del grupo. El throttle de "nueva_entrada" ya se
+  // aplica al insertar la fila (máx. 1 cada 60 min por grupo), así que aquí
+  // solo hace falta traer los más recientes.
+  const { rows: grupoEventos } = await query(
+    `SELECT gfe.id, gfe.tipo, gfe.created_at, g.id AS grupo_id, g.nombre AS grupo_nombre, g.isla,
+            uc.nick AS creador_nick
+       FROM grupo_feed_eventos gfe
+       JOIN grupos g ON g.id = gfe.grupo_id
+       LEFT JOIN users uc ON uc.id = g.creador_id
+      ORDER BY gfe.created_at DESC
+      LIMIT 20`
+  );
+
+  if (anuncios.length === 0 && eventos.length === 0 && clubEventos.length === 0 && blogPosts.length === 0 && grupoEventos.length === 0) {
     return NextResponse.json({ publicaciones, hasMore });
   }
 
   const conPromos = [
     ...publicaciones,
-    ...anuncios.map((a) => ({ ...a, esAnuncio: true, esEvento: false, esClubEvento: false, esBlogPost: false })),
-    ...eventos.map((e) => ({ ...e, esEvento: true, esAnuncio: false, esClubEvento: false, esBlogPost: false })),
-    ...clubEventos.map((ce) => ({ ...ce, esClubEvento: true, esEvento: false, esAnuncio: false, esBlogPost: false })),
-    ...blogPosts.map((b) => ({ ...b, esBlogPost: true, esClubEvento: false, esEvento: false, esAnuncio: false })),
+    ...anuncios.map((a) => ({ ...a, esAnuncio: true, esEvento: false, esClubEvento: false, esBlogPost: false, esGrupoEvento: false })),
+    ...eventos.map((e) => ({ ...e, esEvento: true, esAnuncio: false, esClubEvento: false, esBlogPost: false, esGrupoEvento: false })),
+    ...clubEventos.map((ce) => ({ ...ce, esClubEvento: true, esEvento: false, esAnuncio: false, esBlogPost: false, esGrupoEvento: false })),
+    ...blogPosts.map((b) => ({ ...b, esBlogPost: true, esClubEvento: false, esEvento: false, esAnuncio: false, esGrupoEvento: false })),
+    ...grupoEventos.map((g) => ({ ...g, esGrupoEvento: true, esBlogPost: false, esClubEvento: false, esEvento: false, esAnuncio: false })),
   ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
   return NextResponse.json({ publicaciones: conPromos, hasMore });

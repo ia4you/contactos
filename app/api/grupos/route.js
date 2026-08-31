@@ -58,5 +58,8 @@ export async function POST(req) {
     [grupo.id, session.user.id]
   );
 
+  // Aviso público en el feed general (visible para todos, no solo miembros).
+  await query(`INSERT INTO grupo_feed_eventos (grupo_id, tipo) VALUES ($1, 'creado')`, [grupo.id]);
+
   return NextResponse.json({ grupo: { ...grupo, miembros_count: 1, soy_miembro: true } });
 }

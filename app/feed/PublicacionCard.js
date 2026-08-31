@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, MessageCircle, X } from "lucide-react";
+import { Heart, MessageCircle, X, Users } from "lucide-react";
 import { ISLANDS, PROFILE_TYPES, avatarSrc } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
 import { mostrarPuntoOnline } from "@/lib/online";
@@ -288,6 +288,67 @@ export function BlogPostCardFeed({ post }) {
             Leer artículo
           </Link>
         </div>
+      </div>
+    </div>
+  );
+}
+
+export function GrupoEventoCardFeed({ evento }) {
+  const texto =
+    evento.tipo === "creado" ? (
+      <>
+        <strong style={{ color: "var(--text)" }}>{evento.creador_nick}</strong> ha creado el grupo{" "}
+        <strong style={{ color: "var(--text)" }}>{evento.grupo_nombre}</strong>
+      </>
+    ) : (
+      <>
+        Hay una nueva entrada en el grupo <strong style={{ color: "var(--text)" }}>{evento.grupo_nombre}</strong>
+      </>
+    );
+
+  return (
+    <div style={{ position: "relative", background: "#141414", border: "1px solid #2a2a2a", padding: 20, marginBottom: 16 }}>
+      <span
+        style={{
+          position: "absolute",
+          right: 0,
+          top: 0,
+          fontFamily: "var(--font-body)",
+          fontSize: 10,
+          textTransform: "uppercase",
+          letterSpacing: 1.5,
+          padding: "5px 12px",
+          background: "var(--gold-light)",
+          color: "var(--bg)",
+        }}
+      >
+        Grupo
+      </span>
+
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div
+          style={{
+            width: 40,
+            height: 40,
+            flexShrink: 0,
+            borderRadius: "50%",
+            background: "var(--surface)",
+            border: "1px solid var(--border-gold)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "var(--gold)",
+          }}
+        >
+          <Users size={18} />
+        </div>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>{texto}</p>
+      </div>
+
+      <div style={{ marginTop: 16, display: "flex", justifyContent: "flex-end" }}>
+        <Link href={`/grupos/${evento.grupo_id}`} className="btn-outline-gold">
+          Ver grupo
+        </Link>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Composer } from "./Composer";
-import { PublicacionCard, AnuncioCardFeed, EventoCardFeed, ClubEventoCardFeed, BlogPostCardFeed } from "./PublicacionCard";
+import { PublicacionCard, AnuncioCardFeed, EventoCardFeed, ClubEventoCardFeed, BlogPostCardFeed, GrupoEventoCardFeed } from "./PublicacionCard";
 import { JuegosBanner } from "./JuegosBanner";
 import { ActivosIslaWidget } from "./ActivosIslaWidget";
 import { FotosTopWidget } from "./FotosTopWidget";
@@ -124,6 +124,8 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
                 <ClubEventoCardFeed key={`club-evento-${p.id}`} evento={p} />
               ) : p.esBlogPost ? (
                 <BlogPostCardFeed key={`blog-${p.id}`} post={p} />
+              ) : p.esGrupoEvento ? (
+                <GrupoEventoCardFeed key={`grupo-evento-${p.id}`} evento={p} />
               ) : (
                 <PublicacionCard key={p.id} publicacion={p} usuarioActualId={usuario.id} onEliminar={onEliminar} />
               )

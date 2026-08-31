@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { query } from "@/lib/db";
-import { Footer } from "../components/Footer";
 import { BlogShell } from "./BlogShell";
 
 const LIMITE = 9;
@@ -55,8 +54,6 @@ export default async function Blog() {
           <BlogShell postsIniciales={posts} hasMoreInicial={hasMore} />
         )}
       </section>
-
-      <Footer />
     </main>
   );
 }

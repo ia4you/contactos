@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Footer } from "../../components/Footer";
 import { RegistroCTA } from "../../components/RegistroCTA";
 import { ISLANDS_SEO, obtenerIsla } from "../islasData";
 
@@ -238,8 +237,6 @@ export default function IslaPage({ params }) {
           </RegistroCTA>
         </div>
       </section>
-
-      <Footer />
     </main>
   );
 }

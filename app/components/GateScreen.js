@@ -4,7 +4,9 @@ export function GateScreen() {
   return (
     <main
       style={{
-        minHeight: "100vh",
+        position: "fixed",
+        inset: 0,
+        zIndex: 1000,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -12,6 +14,7 @@ export function GateScreen() {
         textAlign: "center",
         background: "var(--bg)",
         padding: "24px",
+        overflowY: "auto",
       }}
     >
       <p

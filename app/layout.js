@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import { Cormorant_Garamond, Jost } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
@@ -82,10 +81,11 @@ export const viewport = {
 };
 
 export default function RootLayout({ children }) {
-  // Antes de confirmar la puerta de edad no debe verse nada más del sitio,
-  // así que ni el navbar ni el footer se renderizan hasta pasar por ella.
-  const gateOk = cookies().get("edad_confirmada")?.value === "1";
-
+  // Navbar y Footer se renderizan siempre en el HTML (necesarios para que
+  // /blog y /canarias/[isla] sean indexables con navegación real). La puerta
+  // de edad sigue bloqueando visualmente todo el sitio: en "/" se superpone
+  // como overlay a pantalla completa (ver GateScreen/page.js) y el resto de
+  // rutas protegidas ya redirigen a "/" en middleware.js si falta la cookie.
   return (
     <html lang="es">
       <body
@@ -93,9 +93,9 @@ export default function RootLayout({ children }) {
         style={{ background: "var(--bg)", color: "var(--text)", fontFamily: "var(--font-body)" }}
       >
         <Providers>
-          {gateOk && <Navbar />}
+          <Navbar />
           <div style={{ flex: 1 }}>{children}</div>
-          {gateOk && <Footer />}
+          <Footer />
         </Providers>
         <GoogleAnalytics gaId="G-Y5GCHELG2S" />
       </body>

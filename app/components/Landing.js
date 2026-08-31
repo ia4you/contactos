@@ -240,6 +240,15 @@ export function Landing() {
             </Link>
           ))}
         </div>
+
+        <p style={{ marginTop: 40 }}>
+          <Link
+            href="/blog"
+            style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)", textDecoration: "none" }}
+          >
+            Lee nuestro blog sobre el ambiente liberal en Canarias →
+          </Link>
+        </p>
       </section>
 
       {/* Sección 4 — CTA banner */}

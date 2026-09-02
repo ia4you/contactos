@@ -1,0 +1,7 @@
+node_modules
+.next
+.git
+backup-images-20260818
+public/uploads/*
+!public/uploads/.gitkeep
+npm-debug.log*

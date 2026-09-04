@@ -15,9 +15,10 @@ export async function GET(req, { params }) {
   }
 
   const { rows: grupoRows } = await query(
-    `SELECT g.id, g.nombre, g.descripcion, g.isla, g.creador_id,
+    `SELECT g.id, g.nombre, g.descripcion, g.normas, g.isla, g.creador_id,
             (SELECT count(*)::int FROM grupo_miembros WHERE grupo_id = g.id) AS miembros_count,
-            EXISTS (SELECT 1 FROM grupo_miembros WHERE grupo_id = g.id AND user_id = $1) AS soy_miembro
+            EXISTS (SELECT 1 FROM grupo_miembros WHERE grupo_id = g.id AND user_id = $1) AS soy_miembro,
+            COALESCE((SELECT rol FROM grupo_miembros WHERE grupo_id = g.id AND user_id = $1), null) AS mi_rol
        FROM grupos g WHERE g.id = $2`,
     [meId, id]
   );
@@ -35,6 +36,7 @@ export async function GET(req, { params }) {
         [id, meId]
       );
       grupo.soy_miembro = true;
+      grupo.mi_rol = "miembro";
       grupo.miembros_count += 1;
     }
   }
@@ -78,4 +80,50 @@ export async function DELETE(req, { params }) {
   await query(`DELETE FROM grupos WHERE id = $1`, [id]);
 
   return NextResponse.json({ ok: true });
+}
+
+export async function PATCH(req, { params }) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: "No autorizado." }, { status: 401 });
+  }
+  const meId = Number(session.user.id);
+  const id = Number(params.id);
+  if (!Number.isInteger(id)) {
+    return NextResponse.json({ error: "Id inválido." }, { status: 400 });
+  }
+
+  const { rows: rolRows } = await query(
+    `SELECT rol FROM grupo_miembros WHERE grupo_id = $1 AND user_id = $2`,
+    [id, meId]
+  );
+  if (rolRows[0]?.rol !== "admin") {
+    return NextResponse.json({ error: "Solo los administradores pueden editar el grupo." }, { status: 403 });
+  }
+
+  const body = await req.json().catch(() => null);
+  const nombre = typeof body?.nombre === "string" ? body.nombre.trim() : "";
+  const descripcion = typeof body?.descripcion === "string" ? body.descripcion.trim() : "";
+  const normas = typeof body?.normas === "string" ? body.normas.trim() : "";
+
+  if (!nombre || nombre.length > 50) {
+    return NextResponse.json({ error: "El nombre debe tener entre 1 y 50 caracteres." }, { status: 400 });
+  }
+  if (descripcion.length > 200) {
+    return NextResponse.json({ error: "La descripción no puede superar los 200 caracteres." }, { status: 400 });
+  }
+  if (normas.length > 2000) {
+    return NextResponse.json({ error: "Las normas no pueden superar los 2000 caracteres." }, { status: 400 });
+  }
+
+  const { rows } = await query(
+    `UPDATE grupos SET nombre = $1, descripcion = $2, normas = $3 WHERE id = $4
+     RETURNING id, nombre, descripcion, normas, isla, creador_id`,
+    [nombre, descripcion || null, normas || null, id]
+  );
+  if (!rows[0]) {
+    return NextResponse.json({ error: "Grupo no encontrado." }, { status: 404 });
+  }
+
+  return NextResponse.json({ grupo: rows[0] });
 }

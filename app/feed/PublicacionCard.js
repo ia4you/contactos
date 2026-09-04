@@ -449,6 +449,11 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
       </div>
 
       <div style={{ marginTop: 16 }}>
+        {p.titulo && (
+          <h3 className="heading" style={{ fontSize: 17, color: "var(--gold)", marginBottom: 8 }}>
+            {p.titulo}
+          </h3>
+        )}
         {p.tipo === "texto" ? (
           <p style={{ fontFamily: "var(--font-body)", fontSize: 15, color: "var(--text)", whiteSpace: "pre-wrap" }}>
             {p.contenido}

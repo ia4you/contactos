@@ -262,7 +262,7 @@ export function Landing() {
       >
         <Image
           src="/images/canarias-aerea.png"
-          alt=""
+          alt="Vista aérea de las islas Canarias"
           fill
           unoptimized={false}
           style={{ objectFit: "cover", width: "100%", height: "100%" }}

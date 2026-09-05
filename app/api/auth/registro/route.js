@@ -85,6 +85,9 @@ export async function POST(req) {
   if (nickLimpio.length < 3 || nickLimpio.length > 24) {
     return NextResponse.json({ error: "El nick debe tener entre 3 y 24 caracteres." }, { status: 400 });
   }
+  if (!/^[a-zA-Z0-9_-]+$/.test(nickLimpio)) {
+    return NextResponse.json({ error: "El nick solo puede contener letras, números, guiones y guion bajo (sin espacios)." }, { status: 400 });
+  }
 
   const emailLimpio = typeof email === "string" ? email.trim().toLowerCase() : "";
   if (!EMAIL_RE.test(emailLimpio)) {

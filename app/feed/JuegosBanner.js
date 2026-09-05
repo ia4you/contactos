@@ -2,11 +2,6 @@ import { Gamepad2 } from "lucide-react";
 
 const JUEGOS = [
   {
-    titulo: "¿Nos conocemos?",
-    texto: "El juego de parejas más divertido de Canarias",
-    href: "https://parejas.turel.es",
-  },
-  {
     titulo: "Desátate",
     texto: "Descubre tus límites con tu pareja",
     href: "https://desatate.turel.es",

@@ -141,10 +141,15 @@ export default function Registro() {
             required
             minLength={3}
             maxLength={24}
+            pattern="[a-zA-Z0-9_-]+"
+            title="Solo letras, números, guiones y guion bajo (sin espacios)"
             value={form.nick}
-            onChange={(e) => actualizar("nick", e.target.value)}
+            onChange={(e) => actualizar("nick", e.target.value.replace(/[^a-zA-Z0-9_-]/g, ""))}
             className="input-field"
           />
+          <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>
+            Solo letras, números, guiones y guion bajo. Sin espacios.
+          </div>
         </label>
 
         {/* 3. Género */}

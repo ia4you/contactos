@@ -624,9 +624,20 @@ body {
     gap: 12px !important;
   }
 }
-@media (max-width: 380px) {
+/* 480px y no 380px: con los 7 iconos + logo + padding, el contenido de la
+   navbar necesita ~442px de ancho mínimo (7×36px de iconos + 6 gaps de 16px
+   + ~54px de logo + 40px de padding lateral). Casi todo el parque de móviles
+   real (iPhone 390-430px, Android 360-412px) cae por debajo de eso, así que
+   el umbral debe cubrir ese rango completo o los iconos de la derecha
+   (notificaciones/avatar) quedan cortados fuera de pantalla. */
+@media (max-width: 480px) {
   .navbar-icono-opcional {
     display: none !important;
+  }
+}
+@media (max-width: 340px) {
+  .navbar-acciones {
+    gap: 8px !important;
   }
 }
 

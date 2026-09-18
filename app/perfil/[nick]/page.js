@@ -119,13 +119,23 @@ export default async function PerfilPublico({ params }) {
   const { rows: fotosRows } = await query(
     `SELECT p.id, p.filename,
             (SELECT count(*)::int FROM foto_likes fl WHERE fl.photo_id = p.id) AS likes_count,
-            ${session ? "EXISTS (SELECT 1 FROM foto_likes fl2 WHERE fl2.photo_id = p.id AND fl2.user_id = $2)" : "false"} AS me_gusta
+            ${session ? "EXISTS (SELECT 1 FROM foto_likes fl2 WHERE fl2.photo_id = p.id AND fl2.user_id = $2)" : "false"} AS me_gusta,
+            pub.id AS publicacion_id,
+            (SELECT count(*)::int FROM comentarios c WHERE c.publicacion_id = pub.id AND c.deleted_at IS NULL) AS comentarios_count
        FROM photos p
+       LEFT JOIN publicaciones pub ON pub.photo_id = p.id AND pub.tipo = 'foto' AND pub.deleted_at IS NULL
       WHERE p.user_id = $1 AND p.status = 'approved' AND p.is_private = false
       ORDER BY p.created_at DESC`,
     session ? [usuario.id, session.user.id] : [usuario.id]
   );
-  const fotos = fotosRows.map((f) => ({ id: f.id, filename: f.filename, likesCount: f.likes_count, meGusta: f.me_gusta }));
+  const fotos = fotosRows.map((f) => ({
+    id: f.id,
+    filename: f.filename,
+    likesCount: f.likes_count,
+    meGusta: f.me_gusta,
+    publicacionId: f.publicacion_id,
+    comentariosCount: f.comentarios_count,
+  }));
 
   const { rows: gustosRows } = await query(
     `SELECT f.nombre, f.categoria FROM user_fetiches uf

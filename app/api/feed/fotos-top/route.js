@@ -6,6 +6,15 @@ import { query } from "@/lib/db";
 // El bloqueo entre usuarios es distinto para cada visitante, así que el
 // resultado se cachea por usuario (igual que /api/recomendaciones), no de
 // forma global.
+//
+// TODO: este ranking cuenta likes solo desde foto_likes. Las fotos que
+// también están publicadas en el feed (tienen fila en `publicaciones`)
+// acumulan sus likes en `publicacion_likes` en su lugar (ver
+// POST /api/likes/foto y la query de fotos en app/perfil/[nick]/page.js),
+// así que esas fotos quedan subestimadas aquí — antes solo les faltaban
+// los likes dados desde el feed, ahora también los dados desde el perfil.
+// Si se quiere corregir, esta query necesita un UNION/LEFT JOIN a
+// publicacion_likes vía publicaciones.photo_id, igual que en page.js.
 const CACHE_TTL_MS = 10 * 60 * 1000;
 const cache = new Map();
 

@@ -17,29 +17,49 @@ export async function POST(req) {
     return NextResponse.json({ error: "Foto inválida." }, { status: 400 });
   }
 
-  const { rows: fotoRows } = await query(`SELECT user_id FROM photos WHERE id = $1`, [photoId]);
+  const { rows: fotoRows } = await query(
+    `SELECT p.user_id, pub.id AS publicacion_id
+       FROM photos p
+       LEFT JOIN publicaciones pub ON pub.photo_id = p.id AND pub.tipo = 'foto' AND pub.deleted_at IS NULL
+      WHERE p.id = $1`,
+    [photoId]
+  );
   const foto = fotoRows[0];
   if (!foto) {
     return NextResponse.json({ error: "Foto no encontrada." }, { status: 404 });
   }
 
+  // Si la foto está también publicada en el feed, el like cuenta en
+  // publicacion_likes (la misma tabla que usa el feed) en vez de en
+  // foto_likes, para que el contador sea idéntico se mire desde donde se
+  // mire. `tabla`/`columna` solo pueden tomar uno de estos dos valores
+  // fijos definidos aquí mismo, nunca algo que venga del body — no hay
+  // inyección SQL posible al interpolarlos.
+  const enFeed = foto.publicacion_id != null;
+  const tabla = enFeed ? "publicacion_likes" : "foto_likes";
+  const columna = enFeed ? "publicacion_id" : "photo_id";
+  const idObjetivo = enFeed ? foto.publicacion_id : photoId;
+
   const { rowCount: existia } = await query(
-    `DELETE FROM foto_likes WHERE user_id = $1 AND photo_id = $2`,
-    [meId, photoId]
+    `DELETE FROM ${tabla} WHERE user_id = $1 AND ${columna} = $2`,
+    [meId, idObjetivo]
   );
 
   let meGusta;
   if (existia) {
     meGusta = false;
   } else {
-    await query(`INSERT INTO foto_likes (user_id, photo_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`, [meId, photoId]);
+    await query(`INSERT INTO ${tabla} (user_id, ${columna}) VALUES ($1, $2) ON CONFLICT DO NOTHING`, [meId, idObjetivo]);
     meGusta = true;
     if (foto.user_id !== meId) {
+      // Se notifica siempre como "like a tu foto" (independientemente de en
+      // qué tabla se contabilice el like): desde la vista de perfil el
+      // usuario sigue dando like a "la foto", no a "la publicación".
       await crearNotificacion(foto.user_id, "like_foto", meId, photoId);
     }
   }
 
-  const { rows } = await query(`SELECT count(*)::int AS likes_count FROM foto_likes WHERE photo_id = $1`, [photoId]);
+  const { rows } = await query(`SELECT count(*)::int AS likes_count FROM ${tabla} WHERE ${columna} = $1`, [idObjetivo]);
 
   return NextResponse.json({ meGusta, likesCount: rows[0].likes_count });
 }

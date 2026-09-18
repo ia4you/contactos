@@ -118,8 +118,21 @@ export default async function PerfilPublico({ params }) {
 
   const { rows: fotosRows } = await query(
     `SELECT p.id, p.filename,
-            (SELECT count(*)::int FROM foto_likes fl WHERE fl.photo_id = p.id) AS likes_count,
-            ${session ? "EXISTS (SELECT 1 FROM foto_likes fl2 WHERE fl2.photo_id = p.id AND fl2.user_id = $2)" : "false"} AS me_gusta,
+            -- Si la foto está publicada en el feed, el like se cuenta en
+            -- publicacion_likes (misma tabla que usa POST /api/likes/foto
+            -- para esos casos); si no, sigue en foto_likes como siempre.
+            (CASE WHEN pub.id IS NULL
+                  THEN (SELECT count(*)::int FROM foto_likes fl WHERE fl.photo_id = p.id)
+                  ELSE (SELECT count(*)::int FROM publicacion_likes pl WHERE pl.publicacion_id = pub.id)
+             END) AS likes_count,
+            ${
+              session
+                ? `(CASE WHEN pub.id IS NULL
+                        THEN EXISTS (SELECT 1 FROM foto_likes fl2 WHERE fl2.photo_id = p.id AND fl2.user_id = $2)
+                        ELSE EXISTS (SELECT 1 FROM publicacion_likes pl2 WHERE pl2.publicacion_id = pub.id AND pl2.user_id = $2)
+                   END)`
+                : "false"
+            } AS me_gusta,
             pub.id AS publicacion_id,
             (SELECT count(*)::int FROM comentarios c WHERE c.publicacion_id = pub.id AND c.deleted_at IS NULL) AS comentarios_count
        FROM photos p

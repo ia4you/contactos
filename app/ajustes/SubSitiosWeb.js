@@ -12,6 +12,7 @@ export function SubSitiosWeb({ usuario }) {
   const [sitios, setSitios] = useState(conTresSlots(usuario.sitios_web));
   const [guardando, setGuardando] = useState(false);
   const [guardado, setGuardado] = useState(false);
+  const [error, setError] = useState("");
 
   function actualizar(i, valor) {
     setSitios((s) => s.map((v, idx) => (idx === i ? valor : v)));
@@ -21,13 +22,19 @@ export function SubSitiosWeb({ usuario }) {
     e.preventDefault();
     setGuardando(true);
     setGuardado(false);
+    setError("");
     const res = await fetch("/api/perfil", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sitiosWeb: sitios }),
     });
+    const data = await res.json().catch(() => null);
     setGuardando(false);
-    if (res.ok) setGuardado(true);
+    if (res.ok) {
+      setGuardado(true);
+      return;
+    }
+    setError(data?.error || "No se pudieron guardar los cambios.");
   }
 
   return (
@@ -56,6 +63,7 @@ export function SubSitiosWeb({ usuario }) {
         </button>
         {guardado && <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)" }}>Guardado.</span>}
       </div>
+      {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
     </form>
   );
 }

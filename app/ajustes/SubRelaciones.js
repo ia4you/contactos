@@ -6,18 +6,25 @@ export function SubRelaciones({ usuario }) {
   const [estadoRelacion, setEstadoRelacion] = useState(usuario.estado_relacion || "");
   const [guardando, setGuardando] = useState(false);
   const [guardado, setGuardado] = useState(false);
+  const [error, setError] = useState("");
 
   async function guardar(e) {
     e.preventDefault();
     setGuardando(true);
     setGuardado(false);
+    setError("");
     const res = await fetch("/api/perfil", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ estadoRelacion }),
     });
+    const data = await res.json().catch(() => null);
     setGuardando(false);
-    if (res.ok) setGuardado(true);
+    if (res.ok) {
+      setGuardado(true);
+      return;
+    }
+    setError(data?.error || "No se pudieron guardar los cambios.");
   }
 
   return (
@@ -44,6 +51,7 @@ export function SubRelaciones({ usuario }) {
         </button>
         {guardado && <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)" }}>Guardado.</span>}
       </div>
+      {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
     </form>
   );
 }

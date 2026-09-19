@@ -177,7 +177,7 @@ export function FotoLightbox({ usuarioId, fotos, indiceInicial, onClose }) {
           }}
         >
           <MessageCircle size={16} />
-          {comentariosCount > 0 && comentariosCount}
+          Comentarios{comentariosCount > 0 && ` · ${comentariosCount}`}
         </button>
       )}
 

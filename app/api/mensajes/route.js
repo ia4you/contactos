@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { crearNotificacion } from "@/lib/notificaciones";
-import { generarRespuestaDemo } from "@/lib/demoReply";
 import { contieneVulgaridad, MENSAJE_RECHAZO } from "@/lib/filtroVulgar";
 
 export async function GET() {
@@ -81,17 +80,15 @@ export async function POST(req) {
   await query(`UPDATE conversaciones SET last_message_at = now() WHERE id = $1`, [conversacionId]);
   await crearNotificacion(toUserId, "mensaje", meId, mensaje.id);
 
-  const { rows: demoRows } = await query(
-    `SELECT id, nick, profile_type, island, bio, her_bio, his_bio, orientacion, rol
-       FROM users WHERE id = $1 AND is_demo = true`,
-    [toUserId]
-  );
-  if (demoRows[0]) {
-    // Fire-and-forget: no se espera a que termine para responder al usuario.
-    generarRespuestaDemo(demoRows[0], conversacionId, meId, texto).catch((err) => {
-      console.error("Error en generarRespuestaDemo:", err);
-    });
-  }
+  // Auto-reply de perfiles demo DESACTIVADO PERMANENTEMENTE (2026-09-19):
+  // el bot (lib/demoReply.js, vía Groq) coordinaba encuentros reales
+  // ("¿qué día les viene bien para planearlo?") pese a que su propio
+  // prompt se lo prohibía, y estaba instruido para negar ser una IA si se
+  // le preguntaba directamente en el chat. Incidente real: conversación
+  // id=25 (IslasParejas ↔ Dostfsur, 2026-09-02). Para reactivar esto haría
+  // falta añadir explícitamente la llamada a generarRespuestaDemo() aquí
+  // de nuevo, con salvaguardas de contenido que hoy no existen — no borrar
+  // este comentario ni la lógica sin más.
 
   return NextResponse.json({ conversacionId, mensaje });
 }

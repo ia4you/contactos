@@ -15,6 +15,7 @@ export function FotoLightbox({ usuarioId, fotos, indiceInicial, onClose }) {
 
   const [comentariosAbiertos, setComentariosAbiertos] = useState(false);
   const [comentarios, setComentarios] = useState(null);
+  const [cargandoComentarios, setCargandoComentarios] = useState(false);
   const [comentariosCount, setComentariosCount] = useState(fotos[indiceInicial]?.comentariosCount ?? 0);
   const [nuevoComentario, setNuevoComentario] = useState("");
   const [enviandoComentario, setEnviandoComentario] = useState(false);
@@ -26,6 +27,7 @@ export function FotoLightbox({ usuarioId, fotos, indiceInicial, onClose }) {
   useEffect(() => {
     setComentariosAbiertos(false);
     setComentarios(null);
+    setCargandoComentarios(false);
     setComentariosCount(fotos[indice]?.comentariosCount ?? 0);
     setNuevoComentario("");
     setErrorComentario("");
@@ -76,12 +78,18 @@ export function FotoLightbox({ usuarioId, fotos, indiceInicial, onClose }) {
 
   async function toggleComentarios(e) {
     e.stopPropagation();
-    setComentariosAbiertos((v) => !v);
-    if (!comentarios) {
-      const res = await fetch(`/api/feed/publicaciones/${foto.publicacionId}/comentarios`);
-      const data = await res.json().catch(() => null);
-      setComentarios(data?.comentarios || []);
-    }
+    const seVaAAbrir = !comentariosAbiertos;
+    setComentariosAbiertos(seVaAAbrir);
+    // Al cerrar no hace falta pedir nada; al abrir, siempre se vuelve a
+    // pedir al servidor (no solo la primera vez): el panel puede reabrirse
+    // con comentarios nuevos de otros usuarios que la instancia actual del
+    // componente nunca llegó a ver.
+    if (!seVaAAbrir) return;
+    setCargandoComentarios(true);
+    const res = await fetch(`/api/feed/publicaciones/${foto.publicacionId}/comentarios`);
+    const data = await res.json().catch(() => null);
+    setCargandoComentarios(false);
+    setComentarios(data?.comentarios || []);
   }
 
   async function enviarComentario() {
@@ -271,7 +279,13 @@ export function FotoLightbox({ usuarioId, fotos, indiceInicial, onClose }) {
             <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(255,255,255,0.6)" }}>Cargando…</p>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {comentarios.length === 0 && (
+              {/* Ya hay comentarios en pantalla (de una apertura anterior):
+                  se mantienen visibles mientras llega el refetch, en vez de
+                  vaciar la lista, para que no "parpadee" a blanco. */}
+              {cargandoComentarios && (
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(255,255,255,0.5)" }}>Actualizando…</p>
+              )}
+              {comentarios.length === 0 && !cargandoComentarios && (
                 <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(255,255,255,0.6)" }}>
                   Todavía no hay comentarios.
                 </p>

@@ -6,15 +6,6 @@ import { query } from "@/lib/db";
 // El bloqueo entre usuarios es distinto para cada visitante, así que el
 // resultado se cachea por usuario (igual que /api/recomendaciones), no de
 // forma global.
-//
-// TODO: este ranking cuenta likes solo desde foto_likes. Las fotos que
-// también están publicadas en el feed (tienen fila en `publicaciones`)
-// acumulan sus likes en `publicacion_likes` en su lugar (ver
-// POST /api/likes/foto y la query de fotos en app/perfil/[nick]/page.js),
-// así que esas fotos quedan subestimadas aquí — antes solo les faltaban
-// los likes dados desde el feed, ahora también los dados desde el perfil.
-// Si se quiere corregir, esta query necesita un UNION/LEFT JOIN a
-// publicacion_likes vía publicaciones.photo_id, igual que en page.js.
 const CACHE_TTL_MS = 10 * 60 * 1000;
 const cache = new Map();
 
@@ -31,19 +22,31 @@ export async function GET() {
   }
 
   const { rows } = await query(
-    `SELECT p.id, p.filename, u.id AS user_id, u.nick,
-            count(fl.user_id)::int AS likes_count
-       FROM foto_likes fl
-       JOIN photos p ON p.id = fl.photo_id
-       JOIN users u ON u.id = p.user_id
-      WHERE fl.created_at > now() - interval '24 hours'
-        AND p.status = 'approved'
-        AND p.is_private = false
-        AND u.deleted_at IS NULL
-        AND NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))
-      GROUP BY p.id, p.filename, u.id, u.nick
-      ORDER BY likes_count DESC
-      LIMIT 3`,
+    `SELECT * FROM (
+       SELECT p.id, p.filename, u.id AS user_id, u.nick,
+              -- Una foto cuenta sus likes en foto_likes o en
+              -- publicacion_likes, nunca en ambas a la vez (ver
+              -- POST /api/likes/foto): si tiene wrapper en publicaciones,
+              -- ese es el origen autoritativo, aunque foto_likes conserve
+              -- alguna fila histórica de antes de unificar los likes (DIFF
+              -- 2) — sumar las dos tablas duplicaría esos likes antiguos.
+              (CASE WHEN pub.id IS NULL
+                    THEN (SELECT count(*)::int FROM foto_likes fl
+                           WHERE fl.photo_id = p.id AND fl.created_at > now() - interval '24 hours')
+                    ELSE (SELECT count(*)::int FROM publicacion_likes pl
+                           WHERE pl.publicacion_id = pub.id AND pl.created_at > now() - interval '24 hours')
+               END) AS likes_count
+         FROM photos p
+         JOIN users u ON u.id = p.user_id
+         LEFT JOIN publicaciones pub ON pub.photo_id = p.id AND pub.tipo = 'foto' AND pub.deleted_at IS NULL
+        WHERE p.status = 'approved'
+          AND p.is_private = false
+          AND u.deleted_at IS NULL
+          AND NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))
+     ) sub
+     WHERE likes_count > 0
+     ORDER BY likes_count DESC
+     LIMIT 3`,
     [meId]
   );
 

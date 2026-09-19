@@ -167,7 +167,7 @@ export default async function PerfilPublico({ params }) {
     `SELECT p.id, p.tipo, p.contenido, p.created_at, ph.filename AS photo_filename
        FROM publicaciones p
        LEFT JOIN photos ph ON ph.id = p.photo_id
-      WHERE p.user_id = $1 AND p.deleted_at IS NULL
+      WHERE p.user_id = $1 AND p.deleted_at IS NULL AND p.visible_en_feed = true
       ORDER BY p.created_at DESC
       LIMIT $2`,
     [usuario.id, PUBLICACIONES_PERFIL_LIMITE + 1]

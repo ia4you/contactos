@@ -107,6 +107,15 @@ export async function POST(req) {
     [userId, nombreFinal, caption || null]
   );
 
+  // Wrapper oculto en `publicaciones` (visible_en_feed = false): así la foto
+  // siempre tiene un publicacion_id y puede comentarse/dar like con el mismo
+  // sistema unificado que las fotos publicadas en el feed, sin aparecer ahí.
+  await query(
+    `INSERT INTO publicaciones (user_id, tipo, contenido, photo_id, visible_en_feed)
+     VALUES ($1, 'foto', $2, $3, false)`,
+    [userId, caption || null, rows[0].id]
+  );
+
   return NextResponse.json({ foto: rows[0] });
 }
 
@@ -128,6 +137,20 @@ export async function PATCH(req) {
   );
   if (!rowCount) {
     return NextResponse.json({ error: "Foto no encontrada." }, { status: 404 });
+  }
+
+  // Al hacer una foto privada, su wrapper OCULTO deja de ser alcanzable
+  // (soft-delete) para que no quede comentable/likeable por quien ya tuviera
+  // el publicacion_id. Solo toca wrappers ocultos (visible_en_feed = false):
+  // si la foto además es un post real y visible del feed, ese post no se
+  // toca aquí — es una inconsistencia ya existente hoy (la foto se puede
+  // marcar privada sin retirarla del feed) y queda fuera de este cambio.
+  if (isPrivate) {
+    await query(
+      `UPDATE publicaciones SET deleted_at = now()
+        WHERE photo_id = $1 AND visible_en_feed = false AND deleted_at IS NULL`,
+      [photoId]
+    );
   }
 
   return NextResponse.json({ ok: true });

@@ -27,6 +27,7 @@ export async function GET(req) {
 
   const condiciones = [
     "p.deleted_at IS NULL",
+    "p.visible_en_feed = true",
     "u.deleted_at IS NULL",
     "NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))",
   ];

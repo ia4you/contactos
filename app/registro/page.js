@@ -34,13 +34,26 @@ const ESTADO_INICIAL = {
   acceptTerms: false,
   acceptGdpr: false,
   acceptCapturas: false,
+  certificoFoto: false,
 };
+
+const MAX_FOTO_MB = 5;
+const TIPOS_FOTO = ["image/jpeg", "image/png"];
 
 export default function Registro() {
   const [form, setForm] = useState(ESTADO_INICIAL);
   const [error, setError] = useState("");
   const [enviando, setEnviando] = useState(false);
   const [exito, setExito] = useState(false);
+  const [foto, setFoto] = useState(null);
+  const [fotoPreview, setFotoPreview] = useState("");
+  const [errorFoto, setErrorFoto] = useState("");
+
+  useEffect(() => {
+    return () => {
+      if (fotoPreview) URL.revokeObjectURL(fotoPreview);
+    };
+  }, [fotoPreview]);
 
   // El formulario de registro no tiene un paso previo separado: llegar aquí
   // es el inicio real del proceso de alta, así que se dispara una sola vez
@@ -62,16 +75,45 @@ export default function Registro() {
     }));
   }
 
+  // Validación en cliente solo por comodidad: el servidor vuelve a
+  // comprobar presencia, tipo y tamaño de la foto.
+  function elegirFoto(e) {
+    const archivo = e.target.files?.[0] ?? null;
+    setErrorFoto("");
+    if (archivo && !TIPOS_FOTO.includes(archivo.type)) {
+      setErrorFoto("La foto debe ser una imagen JPG o PNG.");
+      e.target.value = "";
+      setFoto(null);
+      setFotoPreview("");
+      return;
+    }
+    if (archivo && archivo.size > MAX_FOTO_MB * 1024 * 1024) {
+      setErrorFoto(`La foto no puede superar ${MAX_FOTO_MB} MB.`);
+      e.target.value = "";
+      setFoto(null);
+      setFotoPreview("");
+      return;
+    }
+    setFoto(archivo);
+    setFotoPreview(archivo ? URL.createObjectURL(archivo) : "");
+  }
+
   async function onSubmit(e) {
     e.preventDefault();
     setError("");
+    if (!foto) {
+      setError("Debes subir una foto de perfil para registrarte.");
+      return;
+    }
     setEnviando(true);
 
     try {
+      const datos = new FormData();
+      datos.append("datos", JSON.stringify(form));
+      datos.append("foto", foto);
       const res = await fetch("/api/auth/registro", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: datos,
       });
       const data = await res.json();
       if (!res.ok) {
@@ -151,6 +193,54 @@ export default function Registro() {
             Solo letras, números, guiones y guion bajo. Sin espacios.
           </div>
         </label>
+
+        {/* Foto de perfil (obligatoria) */}
+        <div>
+          <span className="label-field">Foto de perfil</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <div
+              style={{
+                width: 72,
+                height: 72,
+                flexShrink: 0,
+                borderRadius: "50%",
+                overflow: "hidden",
+                border: "1px solid rgba(201,161,90,0.35)",
+                background: "rgba(201,161,90,0.06)",
+              }}
+            >
+              {fotoPreview && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={fotoPreview} alt="Vista previa" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              )}
+            </div>
+            <input
+              type="file"
+              required
+              accept="image/jpeg,image/png"
+              onChange={elegirFoto}
+              style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "var(--text-secondary)", minWidth: 0 }}
+            />
+          </div>
+          <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>
+            Obligatoria. JPG o PNG, máximo {MAX_FOTO_MB} MB.
+          </div>
+          {errorFoto && <div style={{ fontSize: 12, color: "#e07a7a", marginTop: 4 }}>{errorFoto}</div>}
+          <label style={{ display: "flex", gap: 8, marginTop: 10, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
+            <input
+              type="checkbox"
+              required
+              checked={form.certificoFoto}
+              onChange={(e) => actualizar("certificoFoto", e.target.checked)}
+              className="checkbox-gold"
+              style={{ marginTop: 2 }}
+            />
+            <span>
+              Certifico que todas las personas que aparecen en la foto son
+              mayores de edad y han consentido su publicación.
+            </span>
+          </label>
+        </div>
 
         {/* 3. Género */}
         <MultiSelectChips

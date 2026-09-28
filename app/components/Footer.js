@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { COOKIE_SETTINGS_EVENT } from "./CookieConsent";
 
 export function Footer() {
   return (
@@ -48,6 +51,20 @@ export function Footer() {
         <Link href="/legal/cookies" style={{ color: "inherit", textDecoration: "none" }}>
           Cookies
         </Link>
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new Event(COOKIE_SETTINGS_EVENT))}
+          style={{
+            color: "inherit",
+            background: "none",
+            border: "none",
+            padding: 0,
+            font: "inherit",
+            cursor: "pointer",
+          }}
+        >
+          Configurar cookies
+        </button>
       </nav>
     </footer>
   );

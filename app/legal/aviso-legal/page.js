@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { LegalPage } from "../../components/LegalPage";
 
 export const metadata = { title: "Aviso legal — contactos.turel.es" };
@@ -41,6 +42,16 @@ export default function AvisoLegal() {
         uso que los usuarios hagan de la información publicada por otros
         usuarios, ni del contenido de los perfiles, más allá de las medidas
         de moderación descritas en la Política de Privacidad.
+      </p>
+      <p>
+        <strong>Tecnología y proveedores:</strong> Para el funcionamiento del
+        sitio empleamos infraestructura de terceros (alojamiento y base de
+        datos) y, para las funciones de recomendación y afinidad entre
+        perfiles, un servicio de inteligencia artificial (API de Groq).
+        Estos proveedores actúan como encargados del tratamiento y tratan
+        los datos conforme a sus propios términos y política de privacidad.
+        Más detalles sobre qué datos se comparten y con qué finalidad en la{" "}
+        <Link href="/legal/privacidad">Política de Privacidad</Link>.
       </p>
       <p>
         <strong>Legislación aplicable:</strong> Las presentes condiciones se

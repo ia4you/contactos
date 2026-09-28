@@ -87,8 +87,8 @@ export default function Privacidad() {
       <p>
         <strong>Destinatarios:</strong> tus datos no se ceden a terceros
         salvo obligación legal. Los proveedores de infraestructura (hosting,
-        correo) actúan como encargados del tratamiento conforme al art. 28
-        RGPD.
+        base de datos, correo) actúan como encargados del tratamiento
+        conforme al art. 28 RGPD.
       </p>
 
       <p>
@@ -99,7 +99,14 @@ export default function Privacidad() {
         intereses declarados. Este procesamiento se realiza sobre datos que
         el propio usuario ha proporcionado voluntariamente en su perfil. No
         se toman decisiones automatizadas con efectos jurídicos sobre el
-        usuario conforme al art. 22 RGPD.
+        usuario conforme al art. 22 RGPD. Para generar estas recomendaciones
+        compartimos con Groq Inc. (proveedor del modelo de IA), radicado en
+        Estados Unidos, los datos de perfil necesarios (tipo de perfil,
+        isla, orientación, rol y gustos declarados), lo que puede implicar
+        una transferencia internacional de datos fuera del Espacio
+        Económico Europeo. Groq trata estos datos conforme a sus propios
+        términos y política de privacidad, y no los conserva para entrenar
+        sus modelos.
       </p>
     </LegalPage>
   );

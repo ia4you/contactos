@@ -25,7 +25,7 @@ const orgSchema = {
   areaServed: "Canarias, España",
 };
 
-export default async function Home() {
+export default async function Home({ searchParams }) {
   // Un usuario con sesión activa ya pasó por el registro/login en su
   // momento: mostrarle de nuevo la landing con "Iniciar sesión"/"Crear
   // perfil" no tiene sentido, así que va directo al feed.
@@ -44,7 +44,7 @@ export default async function Home() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
       <Landing />
-      {!gateOk && <GateScreen />}
+      {!gateOk && <GateScreen error={searchParams?.edad === "no"} />}
     </>
   );
 }

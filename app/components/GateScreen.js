@@ -1,6 +1,6 @@
 import { confirmarEdad } from "../actions/gate";
 
-export function GateScreen() {
+export function GateScreen({ error }) {
   return (
     <main
       style={{
@@ -56,13 +56,32 @@ export function GateScreen() {
         }}
       >
         Este sitio contiene contenido dirigido exclusivamente a un público
-        adulto. Confirma tu edad para continuar.
+        adulto. Indica tu fecha de nacimiento para continuar.
       </p>
 
       <div style={{ marginTop: 40, width: "100%", maxWidth: 320 }}>
         <form action={confirmarEdad}>
+          {error && (
+            <p
+              style={{
+                marginBottom: 12,
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                color: "var(--text)",
+              }}
+            >
+              Debes ser mayor de 18 años para acceder a este sitio.
+            </p>
+          )}
+          <input
+            type="date"
+            name="fecha_nacimiento"
+            required
+            className="input-field"
+            style={{ width: "100%", marginBottom: 16 }}
+          />
           <button type="submit" className="btn-gold" style={{ width: "100%" }}>
-            Sí, tengo más de 18 años
+            Continuar
           </button>
         </form>
         <a

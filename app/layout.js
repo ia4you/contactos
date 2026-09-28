@@ -1,10 +1,10 @@
 import { Cormorant_Garamond, Jost } from "next/font/google";
-import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import "./theme.css";
 import { Providers } from "./providers";
 import { Footer } from "./components/Footer";
 import { Navbar } from "./components/Navbar";
+import { CookieConsent } from "./components/CookieConsent";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -97,7 +97,7 @@ export default function RootLayout({ children }) {
           <div style={{ flex: 1 }}>{children}</div>
           <Footer />
         </Providers>
-        <GoogleAnalytics gaId="G-Y5GCHELG2S" />
+        <CookieConsent />
       </body>
     </html>
   );

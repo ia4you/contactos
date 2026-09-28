@@ -8,8 +8,20 @@ export default function Cookies() {
       {/* REVISAR LEGALMENTE */}
       <p>
         contactos.turel.es utiliza cookies técnicas y de sesión estrictamente
-        necesarias para el funcionamiento del sitio. No utilizamos cookies de
-        publicidad ni de seguimiento de terceros.
+        necesarias para el funcionamiento del sitio, y, solo si das tu
+        consentimiento, cookies de analítica. No utilizamos cookies de
+        publicidad ni compartimos tu actividad con terceros con fines
+        publicitarios.
+      </p>
+
+      <p>
+        <strong>Cookies de analítica (Google Analytics)</strong>: si aceptas
+        el banner de cookies, utilizamos Google Analytics para medir el uso
+        agregado del sitio (páginas vistas, procedencia del tráfico). Estas
+        cookies no son técnicas y solo se instalan tras tu consentimiento
+        expreso, conforme al artículo 22.2 LSSI. Puedes retirar tu
+        consentimiento en cualquier momento desde &ldquo;Configurar
+        cookies&rdquo; en el pie de página.
       </p>
 
       <p>

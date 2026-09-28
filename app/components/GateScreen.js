@@ -1,5 +1,13 @@
 import { confirmarEdad } from "../actions/gate";
 
+const DIAS = Array.from({ length: 31 }, (_, i) => i + 1);
+const MESES = [
+  "enero", "febrero", "marzo", "abril", "mayo", "junio",
+  "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
+];
+const ANIO_ACTUAL = new Date().getFullYear();
+const ANIOS = Array.from({ length: 100 }, (_, i) => ANIO_ACTUAL - i);
+
 export function GateScreen({ error }) {
   return (
     <main
@@ -73,13 +81,26 @@ export function GateScreen({ error }) {
               Debes ser mayor de 18 años para acceder a este sitio.
             </p>
           )}
-          <input
-            type="date"
-            name="fecha_nacimiento"
-            required
-            className="input-field"
-            style={{ width: "100%", marginBottom: 16 }}
-          />
+          <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+            <select name="dia" required defaultValue="" className="input-field" style={{ flex: 1 }}>
+              <option value="" disabled>Día</option>
+              {DIAS.map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
+            </select>
+            <select name="mes" required defaultValue="" className="input-field" style={{ flex: 1.4 }}>
+              <option value="" disabled>Mes</option>
+              {MESES.map((m, i) => (
+                <option key={m} value={i + 1}>{m}</option>
+              ))}
+            </select>
+            <select name="anio" required defaultValue="" className="input-field" style={{ flex: 1 }}>
+              <option value="" disabled>Año</option>
+              {ANIOS.map((a) => (
+                <option key={a} value={a}>{a}</option>
+              ))}
+            </select>
+          </div>
           <button type="submit" className="btn-gold" style={{ width: "100%" }}>
             Continuar
           </button>

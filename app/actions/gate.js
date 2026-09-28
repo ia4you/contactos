@@ -3,9 +3,13 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-function tieneAlMenos18(fechaNacimiento) {
-  const nacimiento = new Date(fechaNacimiento);
-  if (Number.isNaN(nacimiento.getTime())) return false;
+function tieneAlMenos18(dia, mes, anio) {
+  const nacimiento = new Date(anio, mes - 1, dia);
+  const esFechaValida =
+    nacimiento.getFullYear() === anio &&
+    nacimiento.getMonth() === mes - 1 &&
+    nacimiento.getDate() === dia;
+  if (!esFechaValida) return false;
 
   const hoy = new Date();
   let edad = hoy.getFullYear() - nacimiento.getFullYear();
@@ -18,9 +22,11 @@ function tieneAlMenos18(fechaNacimiento) {
 }
 
 export async function confirmarEdad(formData) {
-  const fechaNacimiento = formData.get("fecha_nacimiento");
+  const dia = Number(formData.get("dia"));
+  const mes = Number(formData.get("mes"));
+  const anio = Number(formData.get("anio"));
 
-  if (!fechaNacimiento || !tieneAlMenos18(fechaNacimiento)) {
+  if (!dia || !mes || !anio || !tieneAlMenos18(dia, mes, anio)) {
     redirect("/?edad=no");
   }
 

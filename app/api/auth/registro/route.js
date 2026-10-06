@@ -9,6 +9,7 @@ import sharp from "sharp";
 import { v4 as uuidv4 } from "uuid";
 import { pool } from "@/lib/db";
 import { directorioSubidasUsuario, MAX_TAMANO_FOTO } from "@/lib/uploads";
+import { auditarFoto } from "@/lib/auditoria";
 import { mailer } from "@/lib/mailer";
 import { crearTokenVerificacionEmail } from "@/lib/tokens";
 import {
@@ -91,13 +92,13 @@ export async function POST(req) {
 
   const archivo = Array.isArray(files.foto) ? files.foto[0] : files.foto;
   try {
-    return await registrar(fields, archivo);
+    return await registrar(req, fields, archivo);
   } finally {
     if (archivo) await fs.unlink(archivo.filepath).catch(() => {});
   }
 }
 
-async function registrar(fields, archivo) {
+async function registrar(req, fields, archivo) {
   const datos = Array.isArray(fields.datos) ? fields.datos[0] : fields.datos;
   let body = null;
   try {
@@ -293,6 +294,8 @@ async function registrar(fields, archivo) {
   } finally {
     client.release();
   }
+
+  auditarFoto(req, { userId, accion: "alta_avatar" });
 
   const token = await crearTokenVerificacionEmail(userId);
   const verifyUrl = `${process.env.NEXTAUTH_URL}/api/auth/verificar?token=${token}`;

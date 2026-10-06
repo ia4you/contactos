@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { pool } from "@/lib/db";
+import { query } from "@/lib/db";
+import { auditarFoto } from "@/lib/auditoria";
+import { fijarAvatar } from "@/lib/fotosPerfil";
 
 export async function POST(req) {
   const session = await getServerSession(authOptions);
@@ -10,31 +12,20 @@ export async function POST(req) {
   }
 
   const body = await req.json().catch(() => null);
-  const photoId = body?.photoId;
-  if (!photoId) {
+  if (!body?.photoId) {
     return NextResponse.json({ error: "Falta el id de la foto." }, { status: 400 });
   }
 
-  const client = await pool.connect();
-  try {
-    await client.query("BEGIN");
-    const { rows } = await client.query(
-      `SELECT id FROM photos WHERE id = $1 AND user_id = $2`,
-      [photoId, session.user.id]
-    );
-    if (!rows[0]) {
-      await client.query("ROLLBACK");
-      return NextResponse.json({ error: "Foto no encontrada." }, { status: 404 });
-    }
-
-    await client.query(`UPDATE photos SET is_avatar = false WHERE user_id = $1`, [session.user.id]);
-    await client.query(`UPDATE photos SET is_avatar = true WHERE id = $1`, [photoId]);
-    await client.query("COMMIT");
-  } catch (err) {
-    await client.query("ROLLBACK");
-    throw err;
-  } finally {
-    client.release();
+  // El user_id sale de la sesión, nunca del cliente; solo fotos approved.
+  const ok = await fijarAvatar({ query }, session.user.id, body.photoId);
+  auditarFoto(req, {
+    userId: session.user.id,
+    photoId: body.photoId,
+    accion: "cambiar_avatar",
+    resultado: ok ? "ok" : "denegado",
+  });
+  if (!ok) {
+    return NextResponse.json({ error: "Foto no encontrada." }, { status: 404 });
   }
 
   return NextResponse.json({ ok: true });

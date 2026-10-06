@@ -72,6 +72,7 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
     formData.append("file", archivoPendiente);
     formData.append("caption", caption);
     formData.append("certifico", "true");
+    if (usarComoAvatar) formData.append("avatar", "true");
 
     const res = await fetch("/api/perfil/fotos", { method: "POST", body: formData });
     const data = await res.json();
@@ -82,25 +83,20 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
       return;
     }
 
-    let foto = data.foto;
-    if (usarComoAvatar) {
-      await fetch("/api/perfil/avatar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ photoId: foto.id }),
-      });
-      foto = { ...foto, is_avatar: true };
-      setFotos((f) => [foto, ...f.map((x) => ({ ...x, is_avatar: false }))]);
-    } else {
-      setFotos((f) => [foto, ...f]);
-    }
+    const foto = data.foto;
+    setFotos((f) => [foto, ...(foto.is_avatar ? f.map((x) => ({ ...x, is_avatar: false })) : f)]);
 
     cancelarSubida();
   }
 
   async function borrarFoto(id) {
+    const res = await fetch(`/api/perfil/fotos?id=${id}`, { method: "DELETE" });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      setErrorFoto(data.error || "No se pudo eliminar la foto.");
+      return;
+    }
     setFotos((f) => f.filter((foto) => foto.id !== id));
-    await fetch(`/api/perfil/fotos?id=${id}`, { method: "DELETE" });
   }
 
   async function marcarAvatar(id) {
@@ -257,14 +253,16 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
                   <button type="button" onClick={() => togglePrivada(foto.id, foto.is_private)} className="foto-overlay-btn">
                     {foto.is_private ? "Pública" : "Privada"}
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => borrarFoto(foto.id)}
-                    className="foto-overlay-btn"
-                    style={{ borderColor: "rgba(154,58,58,0.5)", color: "#e07a7a" }}
-                  >
-                    Eliminar
-                  </button>
+                  {!foto.is_avatar && (
+                    <button
+                      type="button"
+                      onClick={() => borrarFoto(foto.id)}
+                      className="foto-overlay-btn"
+                      style={{ borderColor: "rgba(154,58,58,0.5)", color: "#e07a7a" }}
+                    >
+                      Eliminar
+                    </button>
+                  )}
                 </div>
               </div>
             );

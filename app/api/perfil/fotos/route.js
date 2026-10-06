@@ -7,7 +7,9 @@ import formidable from "formidable";
 import sharp from "sharp";
 import { v4 as uuidv4 } from "uuid";
 import { authOptions } from "@/lib/auth";
-import { query } from "@/lib/db";
+import { query, pool } from "@/lib/db";
+import { auditarFoto } from "@/lib/auditoria";
+import { borrarFoto, fijarAvatar } from "@/lib/fotosPerfil";
 import { directorioSubidasUsuario, MIME_A_EXTENSION, MAX_TAMANO_FOTO } from "@/lib/uploads";
 
 export const runtime = "nodejs";
@@ -101,22 +103,43 @@ export async function POST(req) {
   // La certificación anterior traslada la responsabilidad legal a quien
   // sube la foto; "rechazada" sigue existiendo para que un admin pueda
   // retirarla a posteriori si hace falta.
-  const { rows } = await query(
-    `INSERT INTO photos (user_id, filename, caption, status) VALUES ($1, $2, $3, 'approved')
-     RETURNING id, filename, caption, is_private, is_avatar, status, created_at`,
-    [userId, nombreFinal, caption || null]
-  );
+  // Foto + wrapper oculto en `publicaciones` (visible_en_feed = false, para
+  // que pueda comentarse/dar like sin aparecer en el feed) + cambio de avatar
+  // opcional, todo en una transacción: si algo falla, el avatar anterior
+  // sigue intacto. La foto anterior pasa a ser una foto normal (no se borra).
+  const comoAvatar = campo("avatar") === "true";
+  let foto;
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const { rows } = await client.query(
+      `INSERT INTO photos (user_id, filename, caption, status) VALUES ($1, $2, $3, 'approved')
+       RETURNING id, filename, caption, is_private, is_avatar, status, created_at`,
+      [userId, nombreFinal, caption || null]
+    );
+    foto = rows[0];
+    await client.query(
+      `INSERT INTO publicaciones (user_id, tipo, contenido, photo_id, visible_en_feed)
+       VALUES ($1, 'foto', $2, $3, false)`,
+      [userId, caption || null, foto.id]
+    );
+    if (comoAvatar) {
+      if (!(await fijarAvatar(client, userId, foto.id))) throw new Error("avatar no fijado");
+      foto.is_avatar = true;
+    }
+    await client.query("COMMIT");
+  } catch (err) {
+    await client.query("ROLLBACK").catch(() => {});
+    await fs.unlink(rutaFinal).catch(() => {});
+    auditarFoto(req, { userId, accion: comoAvatar ? "subir_avatar" : "subir", resultado: "error" });
+    console.error("Error al guardar la foto:", err);
+    return NextResponse.json({ error: "No se pudo guardar la foto." }, { status: 500 });
+  } finally {
+    client.release();
+  }
 
-  // Wrapper oculto en `publicaciones` (visible_en_feed = false): así la foto
-  // siempre tiene un publicacion_id y puede comentarse/dar like con el mismo
-  // sistema unificado que las fotos publicadas en el feed, sin aparecer ahí.
-  await query(
-    `INSERT INTO publicaciones (user_id, tipo, contenido, photo_id, visible_en_feed)
-     VALUES ($1, 'foto', $2, $3, false)`,
-    [userId, caption || null, rows[0].id]
-  );
-
-  return NextResponse.json({ foto: rows[0] });
+  auditarFoto(req, { userId, photoId: foto.id, accion: comoAvatar ? "subir_avatar" : "subir" });
+  return NextResponse.json({ foto });
 }
 
 export async function PATCH(req) {
@@ -167,18 +190,14 @@ export async function DELETE(req) {
     return NextResponse.json({ error: "Falta el id de la foto." }, { status: 400 });
   }
 
-  const { rows } = await query(
-    `SELECT filename FROM photos WHERE id = $1 AND user_id = $2`,
-    [id, session.user.id]
-  );
-  const foto = rows[0];
-  if (!foto) {
-    return NextResponse.json({ error: "Foto no encontrada." }, { status: 404 });
+  const res = await borrarFoto({ query }, session.user.id, id);
+  if (res.error) {
+    auditarFoto(req, { userId: session.user.id, photoId: id, accion: "borrar", resultado: `denegado_${res.status}` });
+    return NextResponse.json({ error: res.error }, { status: res.status });
   }
+  auditarFoto(req, { userId: session.user.id, photoId: id, accion: "borrar" });
 
-  await query(`DELETE FROM photos WHERE id = $1 AND user_id = $2`, [id, session.user.id]);
-
-  const ruta = path.join(directorioSubidasUsuario(session.user.id), foto.filename);
+  const ruta = path.join(directorioSubidasUsuario(session.user.id), res.filename);
   await fs.unlink(ruta).catch(() => {});
 
   return NextResponse.json({ ok: true });

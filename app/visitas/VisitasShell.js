@@ -79,7 +79,7 @@ export function VisitasShell() {
                 >
                   <div style={{ position: "relative", width: 44, height: 44, flexShrink: 0 }}>
                     <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
-                      <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+                      <Image sizes="44px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
                     </div>
                     {mostrarPuntoOnline(v) && <PuntoOnline />}
                     <UsuarioBadge badgeEspecial={v.badge_especial} isDemo={v.is_demo} />

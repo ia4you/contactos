@@ -192,7 +192,7 @@ export function AdminBlog() {
 
           {(previewUrl || form.foto) && (
             <div style={{ position: "relative", width: 240, aspectRatio: "16 / 9", overflow: "hidden", border: "1px solid #2a2a2a" }}>
-              <Image src={previewUrl || `/uploads/blog/${form.foto}`} alt="" fill unoptimized style={{ objectFit: "cover" }} />
+              <Image sizes="240px" src={previewUrl || `/uploads/blog/${form.foto}`} alt="" fill unoptimized style={{ objectFit: "cover" }} />
             </div>
           )}
 

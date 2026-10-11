@@ -221,7 +221,7 @@ export function PerfilCabecera({
                 border: "2px solid var(--gold)",
               }}
             >
-              <Image src={avatarSrc} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+              <Image sizes="100px" src={avatarSrc} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
             </div>
             {online && <PuntoOnline size={16} />}
             <UsuarioBadge badgeEspecial={usuario.badge_especial} isDemo={usuario.is_demo} />

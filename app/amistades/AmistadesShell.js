@@ -23,7 +23,7 @@ function FilaUsuario({ u, children }) {
     <div className="fila-amistad">
       <Link href={`/perfil/${u.nick}`} style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}>
         <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
-          <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+          <Image sizes="40px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
         </div>
         {mostrarPuntoOnline(u) && <PuntoOnline />}
       </Link>

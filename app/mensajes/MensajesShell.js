@@ -218,7 +218,7 @@ export function MensajesShell({ usuarioId }) {
                   style={{ position: "relative", width: 44, height: 44, flexShrink: 0 }}
                 >
                   <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
-                    <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+                    <Image sizes="44px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
                   </div>
                   {mostrarPuntoOnline(c) && <PuntoOnline />}
                   <UsuarioBadge badgeEspecial={c.badge_especial} isDemo={c.is_demo} style={{ fontSize: 6, padding: "1px 3px", bottom: -1, right: -1 }} />
@@ -319,7 +319,7 @@ export function MensajesShell({ usuarioId }) {
               </button>
               <div style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}>
                 <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
-                  <Image
+                  <Image sizes="40px"
                     src={avatarSrc(otro.id, otro.avatar_filename, otro.profile_type)}
                     alt=""
                     fill

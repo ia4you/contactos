@@ -20,7 +20,7 @@ export function AnuncioCard({ anuncio, esPropio, onEditar, onEliminar }) {
     <div style={{ background: "#141414", border: "1px solid #2a2a2a", padding: 20 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         <div style={{ position: "relative", width: 36, height: 36, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
-          <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+          <Image sizes="36px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>

@@ -119,7 +119,7 @@ export function NotificacionesShell() {
                 >
                   <div style={{ position: "relative", width: 44, height: 44, flexShrink: 0 }}>
                     <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
-                      <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+                      <Image sizes="44px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
                     </div>
                     {n.from_id && mostrarPuntoOnline({ last_active: n.last_active, show_last_seen: n.show_last_seen }) && <PuntoOnline />}
                     <UsuarioBadge badgeEspecial={n.badge_especial} isDemo={n.is_demo} />

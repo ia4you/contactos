@@ -56,7 +56,7 @@ export function FotosShell() {
                   href={`/perfil/${f.nick}`}
                   style={{ position: "relative", display: "block", aspectRatio: "1 / 1", overflow: "hidden" }}
                 >
-                  <Image
+                  <Image sizes="(max-width: 767px) 50vw, 33vw"
                     src={src}
                     alt=""
                     fill
@@ -80,7 +80,7 @@ export function FotosShell() {
                     }}
                   >
                     <div style={{ position: "relative", width: 22, height: 22, flexShrink: 0, borderRadius: "50%", overflow: "hidden", border: "1px solid rgba(255,255,255,0.5)" }}>
-                      <Image src={avatar} alt="" fill unoptimized={false} draggable={false} style={{ objectFit: "cover" }} />
+                      <Image sizes="22px" src={avatar} alt="" fill unoptimized={false} draggable={false} style={{ objectFit: "cover" }} />
                     </div>
                     <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       {f.nick}

@@ -25,7 +25,7 @@ export function ActivosIslaWidget({ usuarios, isla }) {
             >
               <div style={{ position: "relative", width: 52, height: 52 }}>
                 <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", border: "1px solid var(--border-gold)" }}>
-                  <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+                  <Image sizes="52px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
                 </div>
                 {mostrarPuntoOnline(u) && <PuntoOnline />}
               </div>

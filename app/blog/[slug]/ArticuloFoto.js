@@ -14,7 +14,7 @@ export function ArticuloFoto({ foto, alt, titulo, fecha }) {
         overflow: "hidden",
       }}
     >
-      <Image
+      <Image sizes="(max-width: 860px) 100vw, 860px"
         src={`/uploads/blog/${foto}`}
         alt={alt}
         fill

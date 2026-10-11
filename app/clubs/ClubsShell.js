@@ -60,7 +60,7 @@ function TarjetaDestacada({ club }) {
         border: "1px solid var(--border-gold)",
       }}
     >
-      <Image src={club.foto1} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+      <Image sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw" src={club.foto1} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(14,10,11,0.1) 0%, rgba(14,10,11,0.92) 100%)" }} />
 
       <div style={{ position: "relative" }}>

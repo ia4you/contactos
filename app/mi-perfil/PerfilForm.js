@@ -67,7 +67,7 @@ export function PerfilForm({ usuario, fotosIniciales, fetichesCountInicial }) {
                 flexShrink: 0,
               }}
             >
-              <Image src={avatarSrc} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+              <Image sizes="100px" src={avatarSrc} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
             </div>
 
             <div style={{ maxWidth: 480 }}>

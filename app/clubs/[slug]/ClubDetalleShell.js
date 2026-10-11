@@ -51,7 +51,7 @@ function TarjetaEvento({ evento, clubId, onApuntado }) {
     <div style={{ background: "#1c1416", border: "1px solid rgba(201,161,90,0.2)", marginTop: 20, overflow: "hidden" }}>
       {evento.foto && (
         <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9" }}>
-          <Image src={evento.foto} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} onContextMenu={(e) => e.preventDefault()} />
+          <Image sizes="(max-width: 900px) 100vw, 700px" src={evento.foto} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} onContextMenu={(e) => e.preventDefault()} />
         </div>
       )}
       <div style={{ padding: 20 }}>
@@ -140,7 +140,7 @@ export function ClubDetalleShell({ slug }) {
       <div className="club-detalle-layout" style={{ display: "flex", gap: 40, alignItems: "flex-start" }}>
         <div className="club-detalle-galeria" style={{ width: 400, flexShrink: 0 }}>
           <div style={{ position: "relative", width: "100%", aspectRatio: "4 / 3", border: "1px solid rgba(201,161,90,0.2)", overflow: "hidden" }}>
-            <Image src={principal} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} onContextMenu={preventContextMenu} />
+            <Image sizes="(max-width: 900px) 100vw, 400px" src={principal} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} onContextMenu={preventContextMenu} />
           </div>
           {miniaturas.length > 0 && (
             <div style={{ marginTop: 10, display: "flex", gap: 10 }}>
@@ -162,7 +162,7 @@ export function ClubDetalleShell({ slug }) {
                       background: "none",
                     }}
                   >
-                    <Image src={foto} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} onContextMenu={preventContextMenu} />
+                    <Image sizes="(max-width: 900px) 33vw, 133px" src={foto} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} onContextMenu={preventContextMenu} />
                   </button>
                 );
               })}

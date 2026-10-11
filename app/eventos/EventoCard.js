@@ -21,7 +21,7 @@ export function EventoCard({ evento, onAsistir, esPasado, esPropio, onEditar, on
     <div style={{ background: "#141414", border: "1px solid #2a2a2a", display: "flex", flexDirection: "column" }}>
       {evento.foto && (
         <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden" }}>
-          <Image src={`/uploads/eventos/${evento.foto}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+          <Image sizes="(max-width: 719px) 100vw, 50vw" src={`/uploads/eventos/${evento.foto}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
         </div>
       )}
       <div style={{ padding: 20, display: "flex", flexDirection: "column", gap: 10 }}>

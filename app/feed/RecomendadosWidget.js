@@ -47,7 +47,7 @@ function TarjetaRecomendacion({ r }) {
     >
       <div style={{ position: "relative", width: 64, height: 64 }}>
         <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
-          <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+          <Image sizes="64px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
         </div>
         {mostrarPuntoOnline(r) && <PuntoOnline />}
       </div>
@@ -83,7 +83,7 @@ function FilaRecomendacionCompacta({ r }) {
     <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid rgba(201,161,90,0.1)" }}>
       <div style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}>
         <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
-          <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+          <Image sizes="40px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
         </div>
         {mostrarPuntoOnline(r) && <PuntoOnline />}
       </div>

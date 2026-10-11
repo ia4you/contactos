@@ -198,7 +198,7 @@ export default async function PerfilPublico({ params }) {
         {fotos.length === 0 ? (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "40px 0", textAlign: "center" }}>
             <div style={{ position: "relative", width: 220, height: 220, opacity: 0.6 }}>
-              <Image src={AVATAR_PLACEHOLDER[usuario.profile_type]} alt="" fill unoptimized={false} style={{ objectFit: "contain" }} />
+              <Image sizes="220px" src={AVATAR_PLACEHOLDER[usuario.profile_type]} alt="" fill unoptimized={false} style={{ objectFit: "contain" }} />
             </div>
             <p style={{ marginTop: 16, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
               Este perfil aún no tiene fotos públicas.

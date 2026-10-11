@@ -13,7 +13,7 @@ export function AuthLayout({ activo, children }) {
       className="auth-layout"
     >
       <div style={{ position: "relative", overflow: "hidden" }} className="auth-layout__imagen">
-        <Image
+        <Image sizes="50vw"
           src="/images/salon-lujo.png"
           alt=""
           fill

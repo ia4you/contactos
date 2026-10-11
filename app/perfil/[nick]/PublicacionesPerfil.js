@@ -16,7 +16,7 @@ function CabeceraTarjeta({ usuario, avatarFilename, tiempo }) {
     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
       <div style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}>
         <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
-          <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+          <Image sizes="40px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
         </div>
         {online && <PuntoOnline />}
       </div>
@@ -49,7 +49,7 @@ function TarjetaPublicacion({ publicacion, usuario, avatarFilename }) {
         ) : (
           <>
             <div style={{ position: "relative", width: "100%", aspectRatio: "4 / 3", overflow: "hidden" }}>
-              <Image
+              <Image sizes="(max-width: 720px) 100vw, 680px"
                 src={`/uploads/${usuario.id}/${p.photo_filename}`}
                 alt=""
                 fill

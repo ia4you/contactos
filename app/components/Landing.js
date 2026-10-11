@@ -37,7 +37,7 @@ export function Landing() {
             muted
             loop
             playsInline
-            onError={() => setVideoError(true)}
+            poster="/_next/image?url=%2Fimages%2Fsiluetas-pareja.png&w=1200&q=75"
             style={{
               position: "absolute",
               inset: 0,
@@ -47,7 +47,7 @@ export function Landing() {
               zIndex: 0,
             }}
           >
-            <source src="/videos/hero.mp4" type="video/mp4" />
+            <source src="/videos/hero.mp4" type="video/mp4" onError={() => setVideoError(true)} />
           </video>
         )}
         <div

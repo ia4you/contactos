@@ -24,7 +24,7 @@ export function GrupoMiembrosTab({ miembros }) {
             style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, textDecoration: "none", padding: 12 }}
           >
             <div style={{ position: "relative", width: 64, height: 64, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
-              <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+              <Image sizes="64px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
             </div>
             <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text)", textAlign: "center" }}>{m.nick}</span>
             {m.rol === "admin" && (

@@ -54,7 +54,7 @@ export function AhoraOnlineCarrusel() {
             >
               <div style={{ position: "relative", width: 56, height: 56 }}>
                 <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", border: "1px solid var(--border-gold)" }}>
-                  <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+                  <Image sizes="56px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
                 </div>
                 <PuntoOnline />
               </div>

@@ -248,7 +248,7 @@ export function FotoLightbox({ usuarioId, fotos, indiceInicial, onClose }) {
           height: "90vh",
         }}
       >
-        <Image
+        <Image sizes="90vw"
           src={avatarSrc(usuarioId, foto.filename, null)}
           alt=""
           fill
@@ -296,7 +296,7 @@ export function FotoLightbox({ usuarioId, fotos, indiceInicial, onClose }) {
                     href={`/perfil/${c.nick}`}
                     style={{ position: "relative", width: 28, height: 28, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}
                   >
-                    <Image
+                    <Image sizes="28px"
                       src={avatarSrc(c.user_id, c.avatar_filename, c.profile_type)}
                       alt=""
                       fill

@@ -324,7 +324,7 @@ function TarjetaPerfil({ perfil }) {
         textDecoration: "none",
       }}
     >
-      <Image
+      <Image sizes="(max-width: 639px) 50vw, (max-width: 999px) 33vw, 25vw"
         src={src}
         alt=""
         fill

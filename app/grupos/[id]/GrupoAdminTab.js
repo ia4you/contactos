@@ -39,7 +39,7 @@ export function GrupoAdminTab({ grupoId, usuarioId, miembros, onMiembroExpulsado
             >
               <Link href={`/perfil/${m.nick}`} style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
                 <div style={{ position: "relative", width: 34, height: 34, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
-                  <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+                  <Image sizes="34px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
                 </div>
                 <span style={{ fontFamily: "var(--font-body)", fontSize: 13.5, color: "var(--text)" }}>{m.nick}</span>
                 {m.rol === "admin" && (

@@ -15,7 +15,7 @@ function TarjetaBlog({ post }) {
     <article style={{ background: "#141414", border: "1px solid #2a2a2a" }}>
       <Link href={`/blog/${post.slug}`} style={{ display: "block", position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden" }}>
         {post.foto ? (
-          <Image
+          <Image sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
             src={`/uploads/blog/${post.foto}`}
             alt=""
             fill

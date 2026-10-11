@@ -189,7 +189,7 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
                   border: "1px solid rgba(201,161,90,0.2)",
                 }}
               >
-                <Image
+                <Image sizes="(max-width: 559px) 50vw, 33vw"
                   src={`/uploads/${usuarioId}/${foto.filename}`}
                   alt=""
                   fill

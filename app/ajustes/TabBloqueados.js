@@ -49,7 +49,7 @@ export function TabBloqueados() {
                 }}
               >
                 <div style={{ position: "relative", width: 40, height: 40, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
-                  <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+                  <Image sizes="40px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
                 </div>
                 <span style={{ flex: 1, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text)" }}>
                   {u.nick}

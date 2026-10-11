@@ -89,7 +89,7 @@ export function HistoriasFranja({ usuario, avatarUrl }) {
           >
             {miGrupo ? (
               <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
-                <Image
+                <Image sizes="52px"
                   src={avatarUrl || AVATAR_PLACEHOLDER[usuario.profile_type]}
                   alt=""
                   fill
@@ -148,7 +148,7 @@ export function HistoriasFranja({ usuario, avatarUrl }) {
                 }}
               >
                 <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
-                  <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+                  <Image sizes="52px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
                 </div>
               </div>
               <span

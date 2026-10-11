@@ -19,7 +19,7 @@ function CabeceraUsuario({ userId, nick, profileType, island, avatarFilename, ti
     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
       <div style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}>
         <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
-          <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+          <Image sizes="40px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
         </div>
         {online && <PuntoOnline />}
       </div>
@@ -157,7 +157,7 @@ export function EventoCardFeed({ evento, usuarioActualId, onEliminar }) {
 
       {evento.foto && (
         <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden" }}>
-          <Image src={`/uploads/eventos/${evento.foto}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+          <Image sizes="(max-width: 720px) 100vw, 680px" src={`/uploads/eventos/${evento.foto}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
         </div>
       )}
 
@@ -219,7 +219,7 @@ export function ClubEventoCardFeed({ evento }) {
 
       {evento.foto && (
         <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden" }}>
-          <Image src={evento.foto} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+          <Image sizes="(max-width: 720px) 100vw, 680px" src={evento.foto} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
         </div>
       )}
 
@@ -269,7 +269,7 @@ export function BlogPostCardFeed({ post }) {
 
       {post.foto && (
         <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden" }}>
-          <Image src={`/uploads/blog/${post.foto}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+          <Image sizes="(max-width: 720px) 100vw, 680px" src={`/uploads/blog/${post.foto}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
         </div>
       )}
 
@@ -468,7 +468,7 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
         ) : (
           <>
             <div style={{ position: "relative", width: "100%", aspectRatio: "4 / 3", overflow: "hidden" }}>
-              <Image
+              <Image sizes="(max-width: 720px) 100vw, 680px"
                 src={`/uploads/${p.user_id}/${p.photo_filename}`}
                 alt=""
                 fill
@@ -551,7 +551,7 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
                     href={`/perfil/${c.nick}`}
                     style={{ position: "relative", width: 28, height: 28, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}
                   >
-                    <Image
+                    <Image sizes="28px"
                       src={avatarSrc(c.user_id, c.avatar_filename, c.profile_type)}
                       alt=""
                       fill

@@ -69,7 +69,7 @@ function TabLikesPerfil() {
           >
             <div style={{ position: "relative", width: 44, height: 44, flexShrink: 0 }}>
               <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
-                <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+                <Image sizes="44px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
               </div>
               {mostrarPuntoOnline(l) && <PuntoOnline />}
               <UsuarioBadge badgeEspecial={l.badge_especial} isDemo={l.is_demo} />
@@ -132,7 +132,7 @@ function TabLikesFotos({ usuarioId }) {
       {fotos.map((f) => (
         <Link key={f.id} href={`/mi-perfil?tab=fotos#foto-${f.id}`} style={{ display: "block" }}>
           <div style={{ position: "relative", aspectRatio: "1 / 1", overflow: "hidden", border: "1px solid rgba(201,161,90,0.2)" }}>
-            <Image src={`/uploads/${usuarioId}/${f.filename}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+            <Image sizes="(max-width: 559px) 50vw, 33vw" src={`/uploads/${usuarioId}/${f.filename}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
           </div>
           <p style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 5, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
             <Heart size={11} fill="var(--gold)" color="var(--gold)" />

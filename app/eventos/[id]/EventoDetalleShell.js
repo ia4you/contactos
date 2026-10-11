@@ -72,7 +72,7 @@ export function EventoDetalleShell({ eventoId }) {
 
       {evento.foto && (
         <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden", marginTop: 20, border: "1px solid #2a2a2a" }}>
-          <Image src={`/uploads/eventos/${evento.foto}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+          <Image sizes="(max-width: 700px) 100vw, 700px" src={`/uploads/eventos/${evento.foto}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
         </div>
       )}
 
@@ -142,7 +142,7 @@ export function EventoDetalleShell({ eventoId }) {
               return (
                 <Link key={a.id} href={`/perfil/${a.nick}`} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 60, textDecoration: "none" }}>
                   <div style={{ position: "relative", width: 44, height: 44, borderRadius: "50%", overflow: "hidden", border: a.status === "apuntado" ? "2px solid var(--gold)" : "2px solid rgba(244,234,217,0.2)" }}>
-                    <Image src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+                    <Image sizes="44px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
                   </div>
                   <span style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "var(--text-secondary)", textAlign: "center", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "100%" }}>
                     {a.nick}

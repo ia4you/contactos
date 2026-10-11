@@ -4,6 +4,7 @@ import { Readable } from "node:stream";
 import fs from "node:fs/promises";
 import path from "node:path";
 import formidable from "formidable";
+import sharp from "sharp";
 import { v4 as uuidv4 } from "uuid";
 import { authOptions } from "@/lib/auth";
 import { query } from "@/lib/db";
@@ -270,10 +271,23 @@ export async function POST(req) {
     return NextResponse.json({ error: MENSAJE_RECHAZO }, { status: 400 });
   }
 
-  const extension = MIME_A_EXTENSION[archivo.mimetype];
-  const nombreFinal = `${uuidv4()}.${extension}`;
+  // Igual que en /api/perfil/fotos: se recomprime siempre a WebP (máx.
+  // 1200px, calidad 80). Además de aligerar la foto, sharp descarta los
+  // metadatos EXIF (incluida la posible ubicación GPS del móvil).
+  const nombreFinal = `${uuidv4()}.webp`;
   const rutaFinal = path.join(uploadDir, nombreFinal);
-  await fs.rename(archivo.filepath, rutaFinal);
+  try {
+    await sharp(archivo.filepath)
+      .rotate()
+      .resize({ width: 1200, withoutEnlargement: true })
+      .webp({ quality: 80 })
+      .toFile(rutaFinal);
+  } catch (err) {
+    console.error("Error al procesar la imagen con sharp:", err);
+    return NextResponse.json({ error: "No se pudo procesar la imagen." }, { status: 400 });
+  } finally {
+    await fs.unlink(archivo.filepath).catch(() => {});
+  }
 
   // Sin moderación previa, igual que en /mi-perfil: la certificación
   // traslada la responsabilidad legal a quien sube la foto. La foto queda

@@ -89,7 +89,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="es">
       <body
-        className={`${cormorant.variable} ${jost.variable} antialiased flex min-h-screen flex-col`}
+        className={`${cormorant.variable} ${jost.variable}`}
         style={{ background: "var(--bg)", color: "var(--text)", fontFamily: "var(--font-body)" }}
       >
         <Providers>

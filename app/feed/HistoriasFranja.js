@@ -27,6 +27,27 @@ function agrupar(historias, meId) {
   return { miGrupo, otros };
 }
 
+const estiloBoton = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: 8,
+  width: 76,
+  background: "none",
+  border: "none",
+  padding: 0,
+  cursor: "pointer",
+};
+
+const estiloNombre = {
+  fontSize: 12,
+  color: "var(--text-secondary)",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  maxWidth: "100%",
+};
+
 export function HistoriasFranja({ usuario, avatarUrl }) {
   const [historias, setHistorias] = useState(null);
   const [modalCrearAbierto, setModalCrearAbierto] = useState(false);
@@ -60,114 +81,68 @@ export function HistoriasFranja({ usuario, avatarUrl }) {
   }
 
   return (
-    <div style={{ marginBottom: 24 }}>
-      <div style={{ display: "flex", gap: 16, overflowX: "auto", paddingBottom: 4 }}>
-        <button
-          type="button"
-          onClick={() => (miGrupo ? abrirGrupo(0) : setModalCrearAbierto(true))}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 6,
-            width: 68,
-            flexShrink: 0,
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          <div
-            style={{
-              position: "relative",
-              width: 56,
-              height: 56,
-              borderRadius: "50%",
-              border: miGrupo ? "2px solid var(--gold)" : "2px dashed var(--rule-strong)",
-              padding: 2,
-            }}
+    <div style={{ marginBottom: 28 }}>
+      <ul aria-label="Historias" className="scroll-sin-barra" style={{ display: "flex", gap: 14, overflowX: "auto", paddingBottom: 4 }}>
+        <li>
+          <button
+            type="button"
+            onClick={() => (miGrupo ? abrirGrupo(0) : setModalCrearAbierto(true))}
+            aria-label={miGrupo ? "Ver tu historia" : "Crear una historia"}
+            style={estiloBoton}
           >
-            {miGrupo ? (
-              <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
-                <Image sizes="52px"
-                  src={avatarUrl || AVATAR_PLACEHOLDER[usuario.profile_type]}
-                  alt=""
-                  fill
-                  unoptimized={false}
-                  style={{ objectFit: "cover" }}
-                />
-              </div>
-            ) : (
-              <div
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: "50%",
-                  background: "var(--surface)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "var(--gold)",
-                }}
-              >
-                <Plus size={22} />
-              </div>
-            )}
-          </div>
-          <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-secondary)" }}>Tu historia</span>
-        </button>
+            <div className={`historia-marco ${miGrupo ? "historia-marco--nueva" : "historia-marco--crear"}`}>
+              {miGrupo ? (
+                <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden" }}>
+                  <Image sizes="64px"
+                    src={avatarUrl || AVATAR_PLACEHOLDER[usuario.profile_type]}
+                    alt=""
+                    fill
+                    unoptimized={false}
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
+              ) : (
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    background: "var(--surface)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "var(--gold)",
+                  }}
+                >
+                  <Plus size={22} aria-hidden="true" />
+                </div>
+              )}
+            </div>
+            <span style={estiloNombre}>Tu historia</span>
+          </button>
+        </li>
 
         {otros.map((g, i) => {
           const src = avatarSrc(g.userId, g.avatarFilename, g.profileType);
           const noVistas = g.historias.some((h) => !h.vista);
           return (
-            <button
-              key={g.userId}
-              type="button"
-              onClick={() => abrirGrupo(miGrupo ? i + 1 : i)}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 6,
-                width: 68,
-                flexShrink: 0,
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
-              <div
-                style={{
-                  position: "relative",
-                  width: 56,
-                  height: 56,
-                  borderRadius: "50%",
-                  border: noVistas ? "2px solid var(--gold)" : "2px solid rgba(246,231,225,0.2)",
-                  padding: 2,
-                }}
+            <li key={g.userId}>
+              <button
+                type="button"
+                onClick={() => abrirGrupo(miGrupo ? i + 1 : i)}
+                aria-label={`Ver historia de ${g.nick}${noVistas ? " (sin ver)" : ""}`}
+                style={estiloBoton}
               >
-                <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
-                  <Image sizes="52px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+                <div className={`historia-marco${noVistas ? " historia-marco--nueva" : ""}`}>
+                  <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden" }}>
+                    <Image sizes="64px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+                  </div>
                 </div>
-              </div>
-              <span
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 12,
-                  color: "var(--text-secondary)",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  maxWidth: "100%",
-                }}
-              >
-                {g.nick}
-              </span>
-            </button>
+                <span style={estiloNombre}>{g.nick}</span>
+              </button>
+            </li>
           );
         })}
-      </div>
+      </ul>
 
       {modalCrearAbierto && (
         <CrearHistoriaModal onClose={() => setModalCrearAbierto(false)} onCreada={onHistoriaCreada} />

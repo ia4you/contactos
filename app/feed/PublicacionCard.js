@@ -8,63 +8,122 @@ import { ISLANDS, PROFILE_TYPES, avatarSrc } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
 import { mostrarPuntoOnline } from "@/lib/online";
 import { PuntoOnline } from "../components/PuntoOnline";
+import { useConfirmar } from "../components/Confirmar";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
+const TIPO_EVENTO_LABEL = { quedada: "Quedada", fiesta: "Fiesta", club: "Club", otro: "Otro" };
+
+// Base de todas las tarjetas del feed: sin caja, separadas por una regla
+// inferior (estilo listado de revista) y con una etiqueta opcional.
+function TarjetaFeed({ etiqueta, children }) {
+  return (
+    <article className="tarjeta-feed">
+      {etiqueta && <span className="etiqueta-tarjeta tarjeta-feed__etiqueta">{etiqueta}</span>}
+      {children}
+    </article>
+  );
+}
+
+function Acciones({ children }) {
+  return <div className="tarjeta-feed__acciones">{children}</div>;
+}
+
+function BotonEliminar({ onClick }) {
+  return (
+    <button type="button" onClick={onClick} className="btn-outline-gold btn-peligro">
+      Eliminar
+    </button>
+  );
+}
+
+// `protegida`: fotos de usuarios, clubs y blog llevan la anticopia
+// (sin menú contextual ni arrastre).
+function ImagenFeed({ src, aspecto = "16 / 9", protegida, onDoubleClick, children }) {
+  return (
+    <div className="tarjeta-feed__media" style={{ aspectRatio: aspecto }} onDoubleClick={onDoubleClick}>
+      <Image
+        sizes="(max-width: 720px) 100vw, 680px"
+        src={src}
+        alt=""
+        fill
+        unoptimized={false}
+        draggable={protegida ? false : undefined}
+        onContextMenu={protegida ? (e) => e.preventDefault() : undefined}
+        style={{ objectFit: "cover" }}
+      />
+      {children}
+    </div>
+  );
+}
 
 function CabeceraUsuario({ userId, nick, profileType, island, avatarFilename, tiempo, lastActive, showLastSeen }) {
   const src = avatarSrc(userId, avatarFilename, profileType);
   const online = mostrarPuntoOnline({ last_active: lastActive, show_last_seen: showLastSeen });
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-      <div style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 0 }}>
+      <Link href={`/perfil/${nick}`} tabIndex={-1} aria-hidden="true" style={{ position: "relative", width: 44, height: 44, flexShrink: 0 }}>
         <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
-          <Image sizes="40px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
+          <Image sizes="44px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
         </div>
         {online && <PuntoOnline />}
-      </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <Link href={`/perfil/${nick}`} className="heading" style={{ fontSize: 16, color: "var(--text)", textDecoration: "none" }}>
-            {nick}
-          </Link>
-          <span className="badge-gold" style={{ fontSize: 12, padding: "2px 7px" }}>{ISLAND_LABEL[island]}</span>
-        </div>
-        {tiempo && (
-          <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>{tiempo}</span>
-        )}
+      </Link>
+      <div style={{ minWidth: 0 }}>
+        <Link href={`/perfil/${nick}`} className="tarjeta-feed__nick">
+          {nick}
+        </Link>
+        <p className="meta" style={{ marginTop: 2 }}>
+          {ISLAND_LABEL[island]}
+          {tiempo && ` · ${tiempo}`}
+          {online && <span className="sr-only"> · en línea</span>}
+        </p>
       </div>
     </div>
   );
 }
 
+// Fecha grande en Cormorant itálica dorada + día de la semana y mes cortos
+// (SÁB · OCT), separada del contenido por una regla vertical.
+function FechaEvento({ iso }) {
+  const d = new Date(iso);
+  const dia = d.toLocaleDateString("es-ES", { day: "numeric" });
+  const mes = d.toLocaleDateString("es-ES", { month: "short" }).replace(".", "");
+  const semana = d.toLocaleDateString("es-ES", { weekday: "short" }).replace(".", "");
+  return (
+    <time dateTime={iso} className="evento-fecha">
+      <span className="numeral evento-fecha__dia">{dia}</span>
+      <span className="evento-fecha__mes">
+        {semana} · {mes}
+      </span>
+    </time>
+  );
+}
+
+function horaEvento(iso) {
+  return new Date(iso).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+}
+
+function CuerpoEvento({ iso, children }) {
+  return (
+    <div className="evento-fila" style={{ marginTop: 16 }}>
+      <FechaEvento iso={iso} />
+      <div style={{ minWidth: 0 }}>{children}</div>
+    </div>
+  );
+}
+
 export function AnuncioCardFeed({ anuncio, usuarioActualId, onEliminar }) {
+  const confirmar = useConfirmar();
   const esPropio = String(anuncio.user_id) === String(usuarioActualId);
 
   async function eliminar() {
-    if (!window.confirm("¿Eliminar tu anuncio?")) return;
+    if (!(await confirmar({ mensaje: "¿Eliminar tu anuncio?", accion: "Eliminar" }))) return;
     onEliminar(anuncio.id);
     await fetch(`/api/anuncios/${anuncio.id}`, { method: "DELETE" });
   }
 
   return (
-    <div style={{ position: "relative", background: "var(--surface)", border: "1px solid var(--rule)", padding: 20, marginBottom: 16 }}>
-      <span
-        style={{
-          position: "absolute",
-          right: 0,
-          top: 0,
-          fontFamily: "var(--font-body)",
-          fontSize: 12,
-          letterSpacing: "0.04em",
-          padding: "5px 12px",
-          background: "var(--gold-light)",
-          color: "var(--bg)",
-        }}
-      >
-        Anuncio
-      </span>
-
+    <TarjetaFeed etiqueta={`Anuncio · ${PROFILE_TYPE_LABEL[anuncio.profile_type]}`}>
       <CabeceraUsuario
         userId={anuncio.user_id}
         nick={anuncio.nick}
@@ -72,19 +131,13 @@ export function AnuncioCardFeed({ anuncio, usuarioActualId, onEliminar }) {
         island={anuncio.island}
         avatarFilename={anuncio.avatar_filename}
       />
-
-      <span className="badge-gold" style={{ marginTop: 12, display: "inline-block" }}>
-        {PROFILE_TYPE_LABEL[anuncio.profile_type]}
-      </span>
-
-      <h3 className="heading" style={{ marginTop: 10, fontSize: 18, color: "var(--text)" }}>
+      <h3 className="tarjeta-feed__titulo" style={{ marginTop: 16 }}>
         {anuncio.titulo}
       </h3>
       <p
         style={{
           marginTop: 6,
-          fontFamily: "var(--font-body)",
-          fontSize: 14,
+          fontSize: 16,
           color: "var(--text-secondary)",
           display: "-webkit-box",
           WebkitLineClamp: 3,
@@ -94,198 +147,80 @@ export function AnuncioCardFeed({ anuncio, usuarioActualId, onEliminar }) {
       >
         {anuncio.descripcion}
       </p>
-
-      <div style={{ marginTop: 16, display: "flex", justifyContent: "flex-end", gap: 8 }}>
-        {esPropio && (
-          <button
-            type="button"
-            onClick={eliminar}
-            className="btn-outline-gold"
-            style={{ borderColor: "var(--danger-border)", color: "var(--danger)" }}
-          >
-            Eliminar
-          </button>
-        )}
+      <Acciones>
+        {esPropio && <BotonEliminar onClick={eliminar} />}
         <Link href={`/perfil/${anuncio.nick}`} className="btn-outline-gold">
           Ver perfil
         </Link>
-      </div>
-    </div>
-  );
-}
-
-const TIPO_EVENTO_LABEL = { quedada: "Quedada", fiesta: "Fiesta", club: "Club", otro: "Otro" };
-
-function formatearFechaEvento(iso) {
-  const d = new Date(iso);
-  return (
-    d.toLocaleDateString("es-ES", { day: "2-digit", month: "short", year: "numeric" }) +
-    " · " +
-    d.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })
+      </Acciones>
+    </TarjetaFeed>
   );
 }
 
 export function EventoCardFeed({ evento, usuarioActualId, onEliminar }) {
+  const confirmar = useConfirmar();
   const esPropio = String(evento.user_id) === String(usuarioActualId);
 
   async function eliminar() {
-    if (!window.confirm("¿Eliminar este evento?")) return;
+    if (!(await confirmar({ mensaje: "¿Eliminar este evento?", accion: "Eliminar" }))) return;
     onEliminar(evento.id);
     await fetch(`/api/eventos/${evento.id}`, { method: "DELETE" });
   }
 
   return (
-    <div style={{ position: "relative", background: "var(--surface)", border: "1px solid var(--rule)", marginBottom: 16, overflow: "hidden" }}>
-      <span
-        style={{
-          position: "absolute",
-          right: 0,
-          top: 0,
-          zIndex: 1,
-          fontFamily: "var(--font-body)",
-          fontSize: 12,
-          letterSpacing: "0.04em",
-          padding: "5px 12px",
-          background: "var(--gold-light)",
-          color: "var(--bg)",
-        }}
-      >
-        Evento
-      </span>
-
-      {evento.foto && (
-        <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden" }}>
-          <Image sizes="(max-width: 720px) 100vw, 680px" src={`/uploads/eventos/${evento.foto}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
-        </div>
-      )}
-
-      <div style={{ padding: 20 }}>
-        <span className="badge-gold" style={{ fontSize: 12 }}>{TIPO_EVENTO_LABEL[evento.tipo]}</span>
-
-        <h3 className="heading" style={{ marginTop: 10, fontSize: 18, color: "var(--text)" }}>
-          {evento.titulo}
-        </h3>
-        <p style={{ marginTop: 6, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--gold)" }}>
-          {formatearFechaEvento(evento.fecha_evento)}
+    <TarjetaFeed etiqueta={`Evento · ${TIPO_EVENTO_LABEL[evento.tipo]}`}>
+      {evento.foto && <ImagenFeed src={`/uploads/eventos/${evento.foto}`} />}
+      <CuerpoEvento iso={evento.fecha_evento}>
+        <h3 className="tarjeta-feed__titulo">{evento.titulo}</h3>
+        <p className="meta" style={{ marginTop: 6 }}>
+          {horaEvento(evento.fecha_evento)}
+          {evento.lugar ? ` · ${evento.lugar}` : ""} · {ISLAND_LABEL[evento.isla]}
         </p>
-        {evento.lugar && (
-          <p style={{ marginTop: 2, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
-            {evento.lugar} · {ISLAND_LABEL[evento.isla]}
-          </p>
-        )}
-
-        <div style={{ marginTop: 16, display: "flex", justifyContent: "flex-end", gap: 8 }}>
-          {esPropio && (
-            <button
-              type="button"
-              onClick={eliminar}
-              className="btn-outline-gold"
-              style={{ borderColor: "var(--danger-border)", color: "var(--danger)" }}
-            >
-              Eliminar
-            </button>
-          )}
+        <Acciones>
+          {esPropio && <BotonEliminar onClick={eliminar} />}
           <Link href={`/eventos/${evento.id}`} className="btn-outline-gold">
             Ver evento
           </Link>
-        </div>
-      </div>
-    </div>
+        </Acciones>
+      </CuerpoEvento>
+    </TarjetaFeed>
   );
 }
 
 export function ClubEventoCardFeed({ evento }) {
   return (
-    <div style={{ position: "relative", background: "var(--surface)", border: "1px solid var(--rule)", marginBottom: 16, overflow: "hidden" }}>
-      <span
-        style={{
-          position: "absolute",
-          right: 0,
-          top: 0,
-          zIndex: 1,
-          fontFamily: "var(--font-body)",
-          fontSize: 12,
-          letterSpacing: "0.04em",
-          padding: "5px 12px",
-          background: "var(--wine)",
-          color: "#fff",
-        }}
-      >
-        Club
-      </span>
-
-      {evento.foto && (
-        <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden" }}>
-          <Image sizes="(max-width: 720px) 100vw, 680px" src={evento.foto} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
-        </div>
-      )}
-
-      <div style={{ padding: 20 }}>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--gold)" }}>
-          {evento.club_nombre} · <span style={{ color: "var(--text-muted)" }}>{ISLAND_LABEL[evento.isla]}</span>
-        </p>
-
-        <h3 className="heading" style={{ marginTop: 8, fontSize: 18, color: "var(--text)" }}>
-          {evento.titulo}
-        </h3>
-        <p style={{ marginTop: 6, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
-          {formatearFechaEvento(evento.fecha_evento)}
+    <TarjetaFeed etiqueta={`Club · ${evento.club_nombre}`}>
+      {evento.foto && <ImagenFeed src={evento.foto} protegida />}
+      <CuerpoEvento iso={evento.fecha_evento}>
+        <h3 className="tarjeta-feed__titulo">{evento.titulo}</h3>
+        <p className="meta" style={{ marginTop: 6 }}>
+          {horaEvento(evento.fecha_evento)} · {ISLAND_LABEL[evento.isla]}
           {evento.precio && ` · ${evento.precio}`}
         </p>
-
-        <div style={{ marginTop: 16, display: "flex", justifyContent: "flex-end" }}>
+        <Acciones>
           <Link href={`/clubs/${evento.club_slug}`} className="btn-outline-gold">
             Ver club
           </Link>
-        </div>
-      </div>
-    </div>
+        </Acciones>
+      </CuerpoEvento>
+    </TarjetaFeed>
   );
 }
 
 export function BlogPostCardFeed({ post }) {
   return (
-    <div style={{ position: "relative", background: "var(--surface)", border: "1px solid var(--rule)", marginBottom: 16, overflow: "hidden" }}>
-      <span
-        style={{
-          position: "absolute",
-          right: 0,
-          top: 0,
-          zIndex: 1,
-          fontFamily: "var(--font-body)",
-          fontSize: 12,
-          letterSpacing: "0.04em",
-          padding: "5px 12px",
-          background: "var(--gold-light)",
-          color: "var(--bg)",
-        }}
-      >
-        Blog
-      </span>
-
-      {post.foto && (
-        <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden" }}>
-          <Image sizes="(max-width: 720px) 100vw, 680px" src={`/uploads/blog/${post.foto}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
-        </div>
-      )}
-
-      <div style={{ padding: 20 }}>
-        <h3 className="heading" style={{ fontFamily: "var(--font-display)", fontSize: 18, color: "var(--text)" }}>
-          {post.titulo}
-        </h3>
-        {post.extracto && (
-          <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
-            {post.extracto}
-          </p>
-        )}
-
-        <div style={{ marginTop: 16, display: "flex", justifyContent: "flex-end" }}>
-          <Link href={`/blog/${post.slug}`} className="btn-outline-gold">
-            Leer artículo
-          </Link>
-        </div>
-      </div>
-    </div>
+    <TarjetaFeed etiqueta="Blog">
+      {post.foto && <ImagenFeed src={`/uploads/blog/${post.foto}`} protegida />}
+      <h3 className="tarjeta-feed__titulo" style={{ marginTop: post.foto ? 16 : 0 }}>
+        {post.titulo}
+      </h3>
+      {post.extracto && <p style={{ marginTop: 8, fontSize: 16, color: "var(--text-secondary)" }}>{post.extracto}</p>}
+      <Acciones>
+        <Link href={`/blog/${post.slug}`} className="btn-outline-gold">
+          Leer artículo
+        </Link>
+      </Acciones>
+    </TarjetaFeed>
   );
 }
 
@@ -303,32 +238,16 @@ export function GrupoEventoCardFeed({ evento }) {
     );
 
   return (
-    <div style={{ position: "relative", background: "var(--surface)", border: "1px solid var(--rule)", padding: 20, marginBottom: 16 }}>
-      <span
-        style={{
-          position: "absolute",
-          right: 0,
-          top: 0,
-          fontFamily: "var(--font-body)",
-          fontSize: 12,
-          letterSpacing: "0.04em",
-          padding: "5px 12px",
-          background: "var(--gold-light)",
-          color: "var(--bg)",
-        }}
-      >
-        Grupo
-      </span>
-
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+    <TarjetaFeed etiqueta="Grupo">
+      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
         <div
+          aria-hidden="true"
           style={{
-            width: 40,
-            height: 40,
+            width: 44,
+            height: 44,
             flexShrink: 0,
             borderRadius: "50%",
-            background: "var(--surface)",
-            border: "1px solid var(--border-gold)",
+            border: "1px solid var(--rule)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -337,22 +256,23 @@ export function GrupoEventoCardFeed({ evento }) {
         >
           <Users size={18} />
         </div>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>{texto}</p>
+        <p style={{ fontSize: 16, color: "var(--text-secondary)" }}>{texto}</p>
       </div>
-
-      <div style={{ marginTop: 16, display: "flex", justifyContent: "flex-end" }}>
+      <Acciones>
         <Link href={`/grupos/${evento.grupo_id}`} className="btn-outline-gold">
           Ver grupo
         </Link>
-      </div>
-    </div>
+      </Acciones>
+    </TarjetaFeed>
   );
 }
 
 export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
   const p = publicacion;
+  const confirmar = useConfirmar();
   const [meGusta, setMeGusta] = useState(p.me_gusta);
   const [likesCount, setLikesCount] = useState(p.likes_count);
+  const [corazon, setCorazon] = useState(0);
   const [comentariosAbiertos, setComentariosAbiertos] = useState(false);
   const [comentarios, setComentarios] = useState(null);
   const [cargandoComentarios, setCargandoComentarios] = useState(false);
@@ -373,6 +293,13 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
       setMeGusta(data.meGusta);
       setLikesCount(data.likesCount);
     }
+  }
+
+  // Doble clic sobre la foto: solo da like (nunca lo quita), como en las
+  // fotos del perfil, y muestra el corazón animado.
+  function likeDobleClick() {
+    setCorazon((n) => n + 1);
+    if (!meGusta) toggleLike();
   }
 
   async function abrirComentarios() {
@@ -412,7 +339,7 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
   }
 
   async function eliminar() {
-    if (!window.confirm("¿Eliminar esta publicación?")) return;
+    if (!(await confirmar({ mensaje: "¿Eliminar esta publicación?", accion: "Eliminar" }))) return;
     setEliminada(true);
     const res = await fetch(`/api/feed/publicaciones/${p.id}`, { method: "DELETE" });
     if (res.ok) {
@@ -424,9 +351,11 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
 
   if (eliminada) return null;
 
+  const idComentarios = `comentarios-${p.id}`;
+
   return (
-    <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", padding: 20, marginBottom: 16 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+    <TarjetaFeed>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
         <CabeceraUsuario
           userId={p.user_id}
           nick={p.nick}
@@ -438,133 +367,79 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
           showLastSeen={p.show_last_seen}
         />
         {esPropia && (
-          <button
-            type="button"
-            onClick={eliminar}
-            aria-label="Eliminar publicación"
-            className="icon-btn"
-            style={{ padding: 4 }}
-          >
-            <X size={16} />
+          <button type="button" onClick={eliminar} aria-label="Eliminar publicación" className="icon-btn">
+            <X size={18} />
           </button>
         )}
       </div>
 
-      <div style={{ marginTop: 16 }}>
-        {p.titulo && (
-          <h3 className="heading" style={{ fontSize: 18, color: "var(--gold)", marginBottom: 8 }}>
-            {p.titulo}
-          </h3>
-        )}
-        {p.tipo === "texto" ? (
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "var(--text)", whiteSpace: "pre-wrap" }}>
-            {p.contenido}
-          </p>
-        ) : (
-          <>
-            <div style={{ position: "relative", width: "100%", aspectRatio: "4 / 3", overflow: "hidden" }}>
-              <Image sizes="(max-width: 720px) 100vw, 680px"
-                src={`/uploads/${p.user_id}/${p.photo_filename}`}
-                alt=""
-                fill
-                unoptimized={false}
-                draggable={false}
-                onContextMenu={(e) => e.preventDefault()}
-                style={{ objectFit: "cover" }}
-              />
-            </div>
-            {p.contenido && (
-              <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
-                {p.contenido}
-              </p>
+      {p.titulo && (
+        <h3 className="tarjeta-feed__titulo" style={{ marginTop: 16, color: "var(--gold)" }}>
+          {p.titulo}
+        </h3>
+      )}
+      {p.tipo === "texto" ? (
+        <p style={{ marginTop: 14, fontSize: 17, lineHeight: 1.6, color: "var(--text)", whiteSpace: "pre-wrap" }}>{p.contenido}</p>
+      ) : (
+        <>
+          <ImagenFeed src={`/uploads/${p.user_id}/${p.photo_filename}`} aspecto="4 / 3" protegida onDoubleClick={likeDobleClick}>
+            {corazon > 0 && (
+              <div
+                key={corazon}
+                aria-hidden="true"
+                style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}
+              >
+                <Heart size={88} fill="var(--gold)" color="var(--gold)" className="corazon-doble-click" />
+              </div>
             )}
-          </>
-        )}
-      </div>
+          </ImagenFeed>
+          {p.contenido && <p style={{ marginTop: 12, fontSize: 16, color: "var(--text-secondary)" }}>{p.contenido}</p>}
+        </>
+      )}
 
-      <div style={{ marginTop: 16, display: "flex", borderTop: "1px solid var(--rule)", paddingTop: 12 }}>
-        <button
-          type="button"
-          onClick={toggleLike}
-          style={{
-            flex: 1,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 8,
-            background: "transparent",
-            border: "none",
-            borderRight: "1px solid var(--rule)",
-            padding: "8px 0",
-            cursor: "pointer",
-            fontFamily: "var(--font-body)",
-            fontSize: 14,
-            color: meGusta ? "var(--gold)" : "var(--text-secondary)",
-          }}
-        >
-          <Heart size={16} fill={meGusta ? "var(--gold)" : "none"} />
+      <div className="tarjeta-feed__interaccion">
+        <button type="button" onClick={toggleLike} aria-pressed={meGusta} className="tarjeta-feed__boton">
+          <Heart size={18} fill={meGusta ? "var(--gold)" : "none"} aria-hidden="true" />
           Me gusta {likesCount > 0 && `(${likesCount})`}
         </button>
         <button
           type="button"
           onClick={abrirComentarios}
-          style={{
-            flex: 1,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 8,
-            background: "transparent",
-            border: "none",
-            padding: "8px 0",
-            cursor: "pointer",
-            fontFamily: "var(--font-body)",
-            fontSize: 14,
-            color: comentariosAbiertos ? "var(--gold)" : "var(--text-secondary)",
-          }}
+          aria-expanded={comentariosAbiertos}
+          aria-controls={idComentarios}
+          className="tarjeta-feed__boton"
         >
-          <MessageCircle size={16} />
+          <MessageCircle size={18} aria-hidden="true" />
           Comentar {comentariosCount > 0 && `(${comentariosCount})`}
         </button>
       </div>
 
       {comentariosAbiertos && (
-        <div style={{ marginTop: 14, borderTop: "1px solid var(--rule)", paddingTop: 14 }}>
+        <div id={idComentarios} style={{ marginTop: 12, borderTop: "1px solid var(--rule)", paddingTop: 16 }}>
           {comentarios === null ? (
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>Cargando…</p>
+            <p className="meta">Cargando…</p>
           ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               {/* Ya hay comentarios en pantalla (de una apertura anterior):
                   se mantienen visibles mientras llega el refetch, en vez de
                   vaciar la lista, para que no "parpadee" a blanco. */}
-              {cargandoComentarios && (
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>Actualizando…</p>
-              )}
+              {cargandoComentarios && <p className="meta">Actualizando…</p>}
               {comentarios.map((c) => (
-                <div key={c.id} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                <div key={c.id} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                   <Link
                     href={`/perfil/${c.nick}`}
-                    style={{ position: "relative", width: 28, height: 28, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}
+                    tabIndex={-1}
+                    aria-hidden="true"
+                    style={{ position: "relative", width: 32, height: 32, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}
                   >
-                    <Image sizes="28px"
-                      src={avatarSrc(c.user_id, c.avatar_filename, c.profile_type)}
-                      alt=""
-                      fill
-                      unoptimized={false}
-                      style={{ objectFit: "cover" }}
-                    />
+                    <Image sizes="32px" src={avatarSrc(c.user_id, c.avatar_filename, c.profile_type)} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
                   </Link>
                   <div>
-                    <Link
-                      href={`/perfil/${c.nick}`}
-                      style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text)", fontWeight: 500, textDecoration: "none" }}
-                    >
+                    <Link href={`/perfil/${c.nick}`} style={{ fontSize: 14, color: "var(--text)", fontWeight: 500 }}>
                       {c.nick}
                     </Link>{" "}
-                    <span style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
-                      {c.texto}
-                    </span>
-                    <div style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>
+                    <span style={{ fontSize: 14, color: "var(--text-secondary)" }}>{c.texto}</span>
+                    <div className="meta" style={{ marginTop: 2, fontSize: 12 }}>
                       {tiempoRelativo(c.created_at)}
                     </div>
                   </div>
@@ -574,7 +449,11 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
           )}
 
           <div style={{ marginTop: 14, display: "flex", gap: 8 }}>
+            <label htmlFor={`nuevo-comentario-${p.id}`} className="sr-only">
+              Escribe un comentario
+            </label>
             <input
+              id={`nuevo-comentario-${p.id}`}
               type="text"
               value={nuevoComentario}
               onChange={(e) => setNuevoComentario(e.target.value)}
@@ -594,10 +473,12 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
             </button>
           </div>
           {errorComentario && (
-            <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{errorComentario}</p>
+            <p role="alert" style={{ marginTop: 8, fontSize: 14, color: "var(--danger)" }}>
+              {errorComentario}
+            </p>
           )}
         </div>
       )}
-    </div>
+    </TarjetaFeed>
   );
 }

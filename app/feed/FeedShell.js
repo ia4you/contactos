@@ -93,9 +93,11 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
 
         {tab === "parati" && <FotosTopWidget />}
 
-        <div className="tab-nav" style={{ marginBottom: 24 }}>
+        <div className="tab-nav" role="tablist" aria-label="Publicaciones" style={{ marginBottom: 8 }}>
           <button
             type="button"
+            role="tab"
+            aria-selected={tab === "parati"}
             onClick={() => cambiarTab("parati")}
             className={`tab-nav-item ${tab === "parati" ? "active" : ""}`}
           >
@@ -103,6 +105,8 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
           </button>
           <button
             type="button"
+            role="tab"
+            aria-selected={tab === "siguiendo"}
             onClick={() => cambiarTab("siguiendo")}
             className={`tab-nav-item ${tab === "siguiendo" ? "active" : ""}`}
           >

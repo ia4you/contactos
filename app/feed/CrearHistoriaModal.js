@@ -1,5 +1,6 @@
 "use client";
 
+import { Dialogo } from "../components/Dialogo";
 import { useEffect, useRef, useState } from "react";
 import { Image as ImageIcon } from "lucide-react";
 
@@ -58,15 +59,8 @@ export function CrearHistoriaModal({ onClose, onCreada }) {
   }
 
   return (
-    <div
-      style={{ position: "fixed", inset: 0, zIndex: 100, background: "var(--veil-strong)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}
-      onClick={onClose}
-    >
-      <div
-        style={{ width: "100%", maxWidth: 420, background: "var(--surface)", border: "1px solid var(--border-gold)", padding: 28 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h3 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
+    <Dialogo onCerrar={onClose} idTitulo="crear-historia-titulo">
+        <h3 id="crear-historia-titulo" className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
           Nueva historia
         </h3>
         <p style={{ marginTop: 4, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
@@ -132,7 +126,6 @@ export function CrearHistoriaModal({ onClose, onCreada }) {
             </button>
           </div>
         </div>
-      </div>
-    </div>
+    </Dialogo>
   );
 }

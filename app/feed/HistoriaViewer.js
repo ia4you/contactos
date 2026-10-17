@@ -62,7 +62,12 @@ export function HistoriaViewer({ grupos, indiceGrupoInicial, meId, onClose }) {
   const esDueno = grupo.userId === meId;
 
   return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "#000", display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Historia de ${grupo.nick}`}
+      style={{ position: "fixed", inset: 0, zIndex: 200, background: "#000", display: "flex", alignItems: "center", justifyContent: "center" }}
+    >
       <div style={{ position: "relative", width: "100%", maxWidth: 420, height: "100%", maxHeight: 760, background: "var(--bg)", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: 10, left: 10, right: 10, zIndex: 3, display: "flex", gap: 4 }}>
           {grupo.historias.map((h, i) => (
@@ -90,6 +95,7 @@ export function HistoriaViewer({ grupos, indiceGrupoInicial, meId, onClose }) {
             type="button"
             onClick={onClose}
             aria-label="Cerrar"
+            autoFocus
             style={{ marginLeft: "auto", background: "none", border: "none", color: "#fff", cursor: "pointer", padding: 4 }}
           >
             <X size={22} />

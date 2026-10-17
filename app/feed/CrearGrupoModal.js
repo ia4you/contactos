@@ -1,5 +1,6 @@
 "use client";
 
+import { Dialogo } from "../components/Dialogo";
 import { useState } from "react";
 import { ISLANDS } from "@/lib/constants";
 
@@ -34,15 +35,8 @@ export function CrearGrupoModal({ onClose, onCreado }) {
   }
 
   return (
-    <div
-      style={{ position: "fixed", inset: 0, zIndex: 100, background: "var(--veil-strong)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}
-      onClick={onClose}
-    >
-      <div
-        style={{ width: "100%", maxWidth: 420, background: "var(--surface)", border: "1px solid var(--border-gold)", padding: 28 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h3 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
+    <Dialogo onCerrar={onClose} idTitulo="crear-grupo-titulo">
+        <h3 id="crear-grupo-titulo" className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
           Crear grupo
         </h3>
 
@@ -80,7 +74,6 @@ export function CrearGrupoModal({ onClose, onCreado }) {
             {enviando ? "Creando…" : "Crear"}
           </button>
         </div>
-      </div>
-    </div>
+    </Dialogo>
   );
 }

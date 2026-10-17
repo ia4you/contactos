@@ -1344,6 +1344,11 @@ button.fetiche-chip {
   gap: 40px;
   align-items: start;
 }
+/* min-width:0: sin esto la columna 1fr crece hasta el ancho del carrusel
+   "Ahora online" y en móvil todo el feed se sale por la derecha. */
+.feed-layout > * {
+  min-width: 0;
+}
 .feed-sidebar-izq,
 .feed-sidebar-der {
   width: 100%;

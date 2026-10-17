@@ -43,6 +43,13 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
     cargar(tab, 0, false);
   }, [tab, cargar]);
 
+  // "Publicar" de la barra inferior móvil enlaza a /feed?compose=texto: si ya
+  // estamos en el feed, hay que volver a "Para ti" (donde vive el composer)
+  // y remontarlo (key) para que se abra de nuevo.
+  useEffect(() => {
+    if (compose) setTab("parati");
+  }, [compose]);
+
   function cambiarTab(nuevoTab) {
     if (nuevoTab === tab) return;
     setTab(nuevoTab);
@@ -78,7 +85,7 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
 
         {tab === "parati" && (
           <div style={{ marginBottom: 24 }}>
-            <Composer usuario={usuario} avatarUrl={avatarUrl} onPublicado={onPublicado} autoAbrir={compose} />
+            <Composer key={compose || "composer"} usuario={usuario} avatarUrl={avatarUrl} onPublicado={onPublicado} autoAbrir={compose} />
           </div>
         )}
 

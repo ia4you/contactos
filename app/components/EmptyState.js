@@ -1,23 +1,11 @@
-import Image from "next/image";
-
-export function EmptyState({ texto = "Aún no hay nada aquí", alto = 180 }) {
+// Estado vacío tipográfico: texto en Cormorant itálica y una regla dorada.
+// (Algunas llamadas aún pasan `alto`, el tamaño de la antigua ilustración:
+// ya no tiene efecto.)
+export function EmptyState({ texto = "Aún no hay nada aquí" }) {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "40px 0",
-        textAlign: "center",
-      }}
-    >
-      <div style={{ position: "relative", width: alto, height: alto, opacity: 0.5 }}>
-        <Image sizes={`px`} src="/images/rosa-burdeos.png" alt="" fill unoptimized={false} style={{ objectFit: "contain" }} />
-      </div>
-      <p style={{ marginTop: 16, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
-        {texto}
-      </p>
+    <div className="estado-vacio">
+      <p className="estado-vacio__texto">{texto}</p>
+      <hr className="estado-vacio__regla" />
     </div>
   );
 }

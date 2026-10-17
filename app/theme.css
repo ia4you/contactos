@@ -88,6 +88,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   display: flex;
   min-height: 100vh;
+  min-height: 100dvh;
   flex-direction: column;
   font-size: var(--fs-16);
   line-height: 1.6;

@@ -8,7 +8,7 @@ export function AuthLayout({ activo, children }) {
       style={{
         display: "grid",
         gridTemplateColumns: "1fr 1fr",
-        minHeight: "calc(100vh - 81px)",
+        minHeight: "calc(100dvh - var(--header-h))",
       }}
       className="auth-layout"
     >

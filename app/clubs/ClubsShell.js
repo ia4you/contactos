@@ -22,7 +22,7 @@ const FILTROS_ISLA = [
 function ModalProximamente({ club, onClose }) {
   return (
     <div
-      style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(14,10,11,0.85)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}
+      style={{ position: "fixed", inset: 0, zIndex: 100, background: "var(--veil-strong)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}
       onClick={onClose}
     >
       <div
@@ -61,7 +61,7 @@ function TarjetaDestacada({ club }) {
       }}
     >
       <Image sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw" src={club.foto1} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(14,10,11,0.1) 0%, rgba(14,10,11,0.92) 100%)" }} />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, var(--veil-soft) 0%, var(--veil-solid) 100%)" }} />
 
       <div style={{ position: "relative" }}>
         <span
@@ -70,9 +70,8 @@ function TarjetaDestacada({ club }) {
             fontFamily: "var(--font-body)",
             background: "var(--gold)",
             color: "var(--bg)",
-            fontSize: 10,
-            textTransform: "uppercase",
-            letterSpacing: 1.5,
+            fontSize: 12,
+            letterSpacing: "0.04em",
             padding: "4px 10px",
             marginBottom: 12,
           }}
@@ -80,7 +79,7 @@ function TarjetaDestacada({ club }) {
           Destacado
         </span>
 
-        <h2 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+        <h2 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
           {club.nombre}
         </h2>
 
@@ -124,7 +123,7 @@ function TarjetaClub({ club, onVerMas }) {
   const contenido = (
     <>
       <Martini size={22} color="var(--gold)" />
-      <h3 className="heading" style={{ marginTop: 12, fontSize: 20, color: "var(--gold)" }}>
+      <h3 className="heading" style={{ marginTop: 12, fontSize: 22, color: "var(--gold)" }}>
         {club.nombre}
       </h3>
       <div style={{ marginTop: 8 }}>
@@ -141,8 +140,8 @@ function TarjetaClub({ club, onVerMas }) {
 
   const estiloTarjeta = {
     display: "block",
-    background: "#1c1416",
-    border: "1px solid rgba(201,161,90,0.2)",
+    background: "var(--surface)",
+    border: "1px solid var(--rule)",
     padding: 20,
     textDecoration: "none",
     cursor: "pointer",
@@ -183,7 +182,7 @@ export function ClubsShell({ clubs, proximamenteSlug }) {
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 24px 80px" }}>
       <p className="kicker">Clubs liberales en Canarias</p>
-      <h1 className="heading" style={{ fontSize: 32, color: "var(--text)", marginTop: 6 }}>
+      <h1 className="heading" style={{ fontSize: 30, color: "var(--text)", marginTop: 6 }}>
         Espacios discretos y seguros en las 8 islas
       </h1>
 

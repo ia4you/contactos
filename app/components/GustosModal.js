@@ -61,7 +61,7 @@ export function GustosModal({ seleccionInicial, onCerrar, onGuardar }) {
           alignItems: "center",
           justifyContent: "space-between",
           padding: "20px 24px",
-          borderBottom: "1px solid rgba(201,161,90,0.18)",
+          borderBottom: "1px solid var(--rule)",
           flexShrink: 0,
         }}
       >
@@ -113,7 +113,7 @@ export function GustosModal({ seleccionInicial, onCerrar, onGuardar }) {
         ) : (
           categoriasFiltradas.map(([categoria, items]) => (
             <div key={categoria} style={{ marginTop: 32 }}>
-              <p className="kicker" style={{ letterSpacing: 3 }}>
+              <p className="kicker" style={{ letterSpacing: "0.04em" }}>
                 {categoria}
               </p>
               <div style={{ marginTop: 14, display: "flex", flexWrap: "wrap", gap: 10 }}>
@@ -136,14 +136,14 @@ export function GustosModal({ seleccionInicial, onCerrar, onGuardar }) {
       <div
         style={{
           padding: "16px 24px 20px",
-          borderTop: "1px solid rgba(201,161,90,0.18)",
+          borderTop: "1px solid var(--rule)",
           flexShrink: 0,
         }}
       >
         <p
           style={{
             fontFamily: "var(--font-body)",
-            fontSize: 13,
+            fontSize: 14,
             color: "var(--text-secondary)",
             marginBottom: 12,
           }}

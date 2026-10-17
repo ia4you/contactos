@@ -74,7 +74,7 @@ export default function IslaPage({ params }) {
 
       <section style={{ padding: "96px 24px 60px", maxWidth: 860, margin: "0 auto", textAlign: "center" }}>
         <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-          <span className="heading" style={{ fontSize: 20, letterSpacing: 4, color: "var(--text)" }}>
+          <span className="heading" style={{ fontSize: 22, letterSpacing: "0.04em", color: "var(--text)" }}>
             CONTACTOS
           </span>
         </Link>
@@ -94,7 +94,7 @@ export default function IslaPage({ params }) {
               fontSize: 16,
               fontWeight: 300,
               lineHeight: 1.7,
-              color: "#cdbdae",
+              color: "var(--text-secondary)",
               textAlign: "left",
             }}
           >
@@ -113,8 +113,8 @@ export default function IslaPage({ params }) {
         style={{
           padding: "80px 24px",
           background: "var(--bg-secondary)",
-          borderTop: "1px solid rgba(201,161,90,0.18)",
-          borderBottom: "1px solid rgba(201,161,90,0.18)",
+          borderTop: "1px solid var(--rule)",
+          borderBottom: "1px solid var(--rule)",
         }}
       >
         <div style={{ maxWidth: 760, margin: "0 auto" }}>
@@ -128,7 +128,7 @@ export default function IslaPage({ params }) {
                 style={{
                   marginTop: i === 0 ? 18 : 14,
                   fontFamily: "var(--font-body)",
-                  fontSize: 15,
+                  fontSize: 16,
                   fontWeight: 300,
                   lineHeight: 1.7,
                   color: "var(--text-secondary)",
@@ -142,7 +142,7 @@ export default function IslaPage({ params }) {
               style={{
                 marginTop: 18,
                 fontFamily: "var(--font-body)",
-                fontSize: 15,
+                fontSize: 16,
                 fontWeight: 300,
                 lineHeight: 1.7,
                 color: "var(--text-secondary)",
@@ -198,7 +198,7 @@ export default function IslaPage({ params }) {
         </div>
       </section>
 
-      <section style={{ padding: "80px 24px", background: "var(--bg-secondary)", borderTop: "1px solid rgba(201,161,90,0.18)" }}>
+      <section style={{ padding: "80px 24px", background: "var(--bg-secondary)", borderTop: "1px solid var(--rule)" }}>
         <div style={{ maxWidth: 760, margin: "0 auto" }}>
           <h2 className="heading" style={{ fontSize: 30, color: "var(--text)", textAlign: "center" }}>
             Preguntas frecuentes
@@ -228,7 +228,7 @@ export default function IslaPage({ params }) {
       </section>
 
       <section style={{ padding: "100px 24px", textAlign: "center" }}>
-        <h2 className="heading" style={{ fontSize: 34, color: "var(--text)" }}>
+        <h2 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
           {isla.ctaTitulo || `Tu comunidad liberal en ${isla.label} te espera.`}
         </h2>
         <div style={{ marginTop: 32 }}>
@@ -244,10 +244,10 @@ export default function IslaPage({ params }) {
 function PasoIsla({ numero, titulo, children }) {
   return (
     <div>
-      <span className="heading" style={{ fontSize: 40, fontStyle: "italic", color: "rgba(201,161,90,0.35)" }}>
+      <span className="heading" style={{ fontSize: 40, fontStyle: "italic", color: "rgba(217,178,107,0.35)" }}>
         {numero}
       </span>
-      <h3 className="heading" style={{ marginTop: 10, fontSize: 19, color: "var(--text)" }}>
+      <h3 className="heading" style={{ marginTop: 10, fontSize: 18, color: "var(--text)" }}>
         {titulo}
       </h3>
       <p

@@ -25,7 +25,7 @@ export function AuthLayout({ activo, children }) {
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(180deg, rgba(14,10,11,0.35) 0%, rgba(14,10,11,0.55) 60%, rgba(14,10,11,0.92) 100%)",
+              "linear-gradient(180deg, var(--veil-soft) 0%, var(--veil) 60%, var(--veil-solid) 100%)",
           }}
         />
         <p
@@ -36,7 +36,7 @@ export function AuthLayout({ activo, children }) {
             right: 48,
             bottom: 48,
             fontStyle: "italic",
-            fontSize: 24,
+            fontSize: 22,
             color: "var(--text)",
           }}
         >
@@ -49,7 +49,7 @@ export function AuthLayout({ activo, children }) {
           <div
             style={{
               display: "flex",
-              borderBottom: "1px solid rgba(201,161,90,0.18)",
+              borderBottom: "1px solid var(--rule)",
               marginBottom: 40,
             }}
           >
@@ -60,9 +60,8 @@ export function AuthLayout({ activo, children }) {
                 textAlign: "center",
                 padding: "0 0 16px",
                 fontFamily: "var(--font-body)",
-                textTransform: "uppercase",
-                fontSize: 13,
-                letterSpacing: 1.5,
+                fontSize: 14,
+                letterSpacing: "0.04em",
                 textDecoration: "none",
                 color: activo === "login" ? "var(--gold)" : "var(--text-secondary)",
                 borderBottom: activo === "login" ? "2px solid var(--gold)" : "2px solid transparent",
@@ -78,9 +77,8 @@ export function AuthLayout({ activo, children }) {
                 textAlign: "center",
                 padding: "0 0 16px",
                 fontFamily: "var(--font-body)",
-                textTransform: "uppercase",
-                fontSize: 13,
-                letterSpacing: 1.5,
+                fontSize: 14,
+                letterSpacing: "0.04em",
                 textDecoration: "none",
                 color: activo === "registro" ? "var(--gold)" : "var(--text-secondary)",
                 borderBottom: activo === "registro" ? "2px solid var(--gold)" : "2px solid transparent",

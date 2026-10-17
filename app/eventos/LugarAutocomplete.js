@@ -97,11 +97,11 @@ export function LugarAutocomplete({ value, onChange }) {
                 textAlign: "left",
                 padding: "10px 14px",
                 fontFamily: "var(--font-body)",
-                fontSize: 13,
+                fontSize: 14,
                 background: "transparent",
                 color: "var(--text)",
                 border: "none",
-                borderBottom: "1px solid rgba(201,161,90,0.1)",
+                borderBottom: "1px solid var(--rule)",
                 cursor: "pointer",
               }}
             >

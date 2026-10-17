@@ -23,7 +23,7 @@ export function MisGruposSidebar() {
 
   return (
     <div>
-      <p className="kicker" style={{ letterSpacing: 3 }}>Mis grupos</p>
+      <p className="kicker" style={{ letterSpacing: "0.04em" }}>Mis grupos</p>
 
       <div style={{ marginTop: 14 }}>
         {grupos === null ? (
@@ -31,7 +31,7 @@ export function MisGruposSidebar() {
         ) : grupos.length === 0 ? (
           <>
             <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>Únete a un grupo</p>
-            <Link href="/grupos" className="btn-outline-gold" style={{ marginTop: 10, display: "inline-block", fontSize: 11, padding: "7px 14px" }}>
+            <Link href="/grupos" className="btn-outline-gold" style={{ marginTop: 10, display: "inline-block", fontSize: 12, padding: "7px 14px" }}>
               Ver grupos
             </Link>
           </>
@@ -64,7 +64,7 @@ export function MisGruposSidebar() {
                     style={{
                       display: "block",
                       fontFamily: "var(--font-body)",
-                      fontSize: 12.5,
+                      fontSize: 14,
                       color: "var(--text)",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
@@ -73,7 +73,7 @@ export function MisGruposSidebar() {
                   >
                     {g.nombre}
                   </span>
-                  <span style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "var(--text-muted)" }}>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
                     {g.miembros_count} miembro{g.miembros_count === 1 ? "" : "s"}
                   </span>
                 </div>
@@ -84,14 +84,14 @@ export function MisGruposSidebar() {
       </div>
 
       <div style={{ marginTop: 18, display: "flex", flexDirection: "column", gap: 8 }}>
-        <Link href="/grupos" className="btn-outline-gold" style={{ fontSize: 11, padding: "7px 14px", textAlign: "center" }}>
+        <Link href="/grupos" className="btn-outline-gold" style={{ fontSize: 12, padding: "7px 14px", textAlign: "center" }}>
           Ver todos
         </Link>
         <button
           type="button"
           onClick={() => setModalAbierto(true)}
           className="btn-outline-gold"
-          style={{ fontSize: 11, padding: "7px 14px", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
+          style={{ fontSize: 12, padding: "7px 14px", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
         >
           <Plus size={13} />
           Crear grupo

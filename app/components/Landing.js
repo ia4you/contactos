@@ -57,7 +57,7 @@ export function Landing() {
             zIndex: 0,
             background:
               "radial-gradient(ellipse at 30% 20%, rgba(107,21,36,0.35), transparent 60%), " +
-              "linear-gradient(180deg, rgba(14,10,11,0.55) 0%, rgba(14,10,11,0.88) 78%, #0e0a0b 100%)",
+              "linear-gradient(180deg, var(--veil) 0%, var(--veil-solid) 78%, #0e0a0b 100%)",
           }}
         />
 
@@ -92,9 +92,9 @@ export function Landing() {
               marginTop: 24,
               maxWidth: 560,
               fontFamily: "var(--font-body)",
-              fontSize: 17,
+              fontSize: 18,
               fontWeight: 300,
-              color: "#cdbdae",
+              color: "var(--text-secondary)",
             }}
           >
             Un lugar reservado para parejas y personas del ambiente liberal en
@@ -118,7 +118,7 @@ export function Landing() {
         <p className="kicker" style={{ textAlign: "center" }}>
           Nuestra filosofía
         </p>
-        <h2 className="heading" style={{ marginTop: 16, fontSize: 42 }}>
+        <h2 className="heading" style={{ marginTop: 16, fontSize: 40 }}>
           La discreción es nuestra moneda
         </h2>
 
@@ -154,14 +154,14 @@ export function Landing() {
           padding: "100px 56px",
           textAlign: "center",
           background: "var(--bg-secondary)",
-          borderTop: "1px solid rgba(201,161,90,0.18)",
-          borderBottom: "1px solid rgba(201,161,90,0.18)",
+          borderTop: "1px solid var(--rule)",
+          borderBottom: "1px solid var(--rule)",
         }}
       >
         <p className="kicker" style={{ textAlign: "center" }}>
           El proceso
         </p>
-        <h2 className="heading" style={{ marginTop: 16, fontSize: 42 }}>
+        <h2 className="heading" style={{ marginTop: 16, fontSize: 40 }}>
           Cómo funciona
         </h2>
 
@@ -196,7 +196,7 @@ export function Landing() {
         <p className="kicker" style={{ textAlign: "center" }}>
           Toda Canarias
         </p>
-        <h2 className="heading" style={{ marginTop: 16, fontSize: 42 }}>
+        <h2 className="heading" style={{ marginTop: 16, fontSize: 40 }}>
           Elige tu isla
         </h2>
 
@@ -218,7 +218,7 @@ export function Landing() {
               style={{
                 display: "block",
                 padding: "24px 20px",
-                border: "1px solid rgba(201,161,90,0.18)",
+                border: "1px solid var(--rule)",
                 textDecoration: "none",
                 transition: "border-color 0.2s ease",
               }}
@@ -244,7 +244,7 @@ export function Landing() {
         <p style={{ marginTop: 40 }}>
           <Link
             href="/blog"
-            style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)", textDecoration: "none" }}
+            style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--gold)", textDecoration: "none" }}
           >
             Lee nuestro blog sobre el ambiente liberal en Canarias →
           </Link>
@@ -272,12 +272,12 @@ export function Landing() {
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(180deg, #0e0a0b 0%, rgba(14,10,11,0.55) 30%, rgba(14,10,11,0.75) 100%)",
+              "linear-gradient(180deg, #0e0a0b 0%, var(--veil) 30%, var(--veil-strong) 100%)",
           }}
         />
 
         <div style={{ position: "relative", zIndex: 1 }}>
-          <h2 className="heading" style={{ fontSize: 44, color: "var(--text)" }}>
+          <h2 className="heading" style={{ fontSize: 40, color: "var(--text)" }}>
             Tu próxima conexión empieza aquí.
           </h2>
           <div style={{ marginTop: 32 }}>
@@ -321,7 +321,7 @@ function Pilar({ numeral, titulo, children }) {
           justifyContent: "center",
         }}
       >
-        <span className="heading" style={{ fontSize: 20, color: "var(--gold)" }}>
+        <span className="heading" style={{ fontSize: 22, color: "var(--gold)" }}>
           {numeral}
         </span>
       </div>
@@ -349,16 +349,16 @@ function Paso({ numero, titulo, children, ultimo }) {
     <div
       style={{
         padding: "0 32px",
-        borderLeft: "1px solid rgba(201,161,90,0.18)",
-        borderRight: ultimo ? "1px solid rgba(201,161,90,0.18)" : "none",
+        borderLeft: "1px solid var(--rule)",
+        borderRight: ultimo ? "1px solid var(--rule)" : "none",
       }}
     >
       <span
         className="heading"
         style={{
-          fontSize: 56,
+          fontSize: 52,
           fontStyle: "italic",
-          color: "rgba(201,161,90,0.35)",
+          color: "rgba(217,178,107,0.35)",
         }}
       >
         {numero}

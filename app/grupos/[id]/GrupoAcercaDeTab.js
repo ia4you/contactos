@@ -68,7 +68,7 @@ export function GrupoAcercaDeTab({ grupoId, grupo, soyAdmin, onGrupoActualizado 
           <textarea rows={8} maxLength={2000} value={normas} onChange={(e) => setNormas(e.target.value)} className="input-field" />
         </label>
 
-        {error && <p style={{ marginTop: 14, fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
+        {error && <p style={{ marginTop: 14, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{error}</p>}
 
         <div style={{ marginTop: 24, display: "flex", gap: 12 }}>
           <button type="button" onClick={cancelar} disabled={guardando} className="btn-outline-gold" style={{ flex: 1 }}>
@@ -90,12 +90,12 @@ export function GrupoAcercaDeTab({ grupoId, grupo, soyAdmin, onGrupoActualizado 
         </span>
       )}
 
-      <p className="kicker" style={{ letterSpacing: 2 }}>Acerca de</p>
+      <p className="kicker" style={{ letterSpacing: "0.04em" }}>Acerca de</p>
       <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)", whiteSpace: "pre-wrap" }}>
         {grupo.descripcion || "Este grupo no tiene descripción."}
       </p>
 
-      <p className="kicker" style={{ marginTop: 28, letterSpacing: 2 }}>Normas</p>
+      <p className="kicker" style={{ marginTop: 28, letterSpacing: "0.04em" }}>Normas</p>
       <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)", whiteSpace: "pre-wrap" }}>
         {grupo.normas || "Este grupo aún no tiene normas publicadas."}
       </p>

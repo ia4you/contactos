@@ -40,7 +40,7 @@ export function FotosTopWidget() {
                 right: 0,
                 bottom: 0,
                 padding: "24px 12px 12px",
-                background: "linear-gradient(180deg, transparent 0%, rgba(14,10,11,0.85) 100%)",
+                background: "linear-gradient(180deg, transparent 0%, var(--veil-strong) 100%)",
               }}
             >
               <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--gold)" }}>
@@ -57,9 +57,8 @@ export function FotosTopWidget() {
                   border: "1px solid #fff",
                   color: "#fff",
                   fontFamily: "var(--font-body)",
-                  fontSize: 10,
-                  textTransform: "uppercase",
-                  letterSpacing: 1.5,
+                  fontSize: 12,
+                  letterSpacing: "0.04em",
                 }}
               >
                 Ver perfil

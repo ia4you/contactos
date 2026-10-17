@@ -10,7 +10,7 @@ export function ActivosIslaWidget({ usuarios, isla }) {
   if (!usuarios || usuarios.length < 2) return null;
 
   return (
-    <div style={{ background: "#1c1416", border: "1px solid rgba(201,161,90,0.18)", padding: 18, marginBottom: 24 }}>
+    <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", padding: 18, marginBottom: 24 }}>
       <h3 className="heading" style={{ fontSize: 16, color: "var(--gold)" }}>
         Activos en {ISLAND_LABEL[isla]} hoy
       </h3>
@@ -32,7 +32,7 @@ export function ActivosIslaWidget({ usuarios, isla }) {
               <span
                 style={{
                   fontFamily: "var(--font-body)",
-                  fontSize: 11,
+                  fontSize: 12,
                   color: "var(--text)",
                   textAlign: "center",
                   overflow: "hidden",

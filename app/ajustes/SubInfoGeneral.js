@@ -128,7 +128,7 @@ export function SubInfoGeneral({ usuario }) {
           {LOOKING_FOR_OPTIONS.map((o) => (
             <label
               key={o.value}
-              style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text)" }}
+              style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text)" }}
             >
               <input
                 type="checkbox"
@@ -146,9 +146,9 @@ export function SubInfoGeneral({ usuario }) {
         <button type="submit" disabled={guardando} className="btn-outline-gold">
           {guardando ? "Guardando…" : "Guardar"}
         </button>
-        {guardado && <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)" }}>Guardado.</span>}
+        {guardado && <span style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--gold)" }}>Guardado.</span>}
       </div>
-      {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
+      {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{error}</p>}
     </form>
   );
 }

@@ -47,7 +47,7 @@ export default function RestablecerContrasena() {
           padding: "24px",
         }}
       >
-        <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+        <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
           Contraseña actualizada
         </h1>
         <p style={{ marginTop: 16, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
@@ -60,7 +60,7 @@ export default function RestablecerContrasena() {
   return (
     <main style={{ minHeight: "60vh", display: "flex", justifyContent: "center", padding: "80px 24px" }}>
       <div style={{ width: "100%", maxWidth: 400 }}>
-        <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+        <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
           Nueva contraseña
         </h1>
 
@@ -77,7 +77,7 @@ export default function RestablecerContrasena() {
             />
           </label>
 
-          {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
+          {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{error}</p>}
 
           <button type="submit" disabled={enviando} className="btn-gold" style={{ width: "100%" }}>
             {enviando ? "Guardando…" : "Guardar contraseña"}

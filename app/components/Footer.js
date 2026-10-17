@@ -8,7 +8,7 @@ export function Footer() {
     <footer
       style={{
         padding: "56px",
-        borderTop: "1px solid rgba(201,161,90,0.18)",
+        borderTop: "1px solid var(--rule)",
         display: "flex",
         flexWrap: "wrap",
         gap: 24,
@@ -17,7 +17,7 @@ export function Footer() {
       }}
     >
       <div>
-        <span className="heading" style={{ fontSize: 20, letterSpacing: 4, color: "var(--text)" }}>
+        <span className="heading" style={{ fontSize: 22, letterSpacing: "0.04em", color: "var(--text)" }}>
           CONTACTOS
         </span>
         <p

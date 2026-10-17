@@ -27,7 +27,7 @@ export function GateScreen({ error }) {
     >
       <p
         className="heading"
-        style={{ fontSize: "28px", letterSpacing: "5px", color: "var(--text)" }}
+        style={{ fontSize: "30px", letterSpacing: "0.04em", color: "var(--text)" }}
       >
         CONTACTOS
       </p>
@@ -49,7 +49,7 @@ export function GateScreen({ error }) {
         role="heading"
         aria-level="2"
         className="heading"
-        style={{ fontSize: "32px", color: "var(--text)" }}
+        style={{ fontSize: "30px", color: "var(--text)" }}
       >
         ¿Eres mayor de 18 años?
       </p>
@@ -74,7 +74,7 @@ export function GateScreen({ error }) {
               style={{
                 marginBottom: 12,
                 fontFamily: "var(--font-body)",
-                fontSize: 13,
+                fontSize: 14,
                 color: "var(--text)",
               }}
             >

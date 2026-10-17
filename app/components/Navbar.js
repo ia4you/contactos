@@ -37,10 +37,10 @@ function IconoBadge({ href, icono: Icono, contador, etiqueta, opcional }) {
             minWidth: 16,
             height: 16,
             borderRadius: 8,
-            background: "#c94b4b",
+            background: "var(--gold)",
             color: "#fff",
-            fontSize: 10,
-            fontWeight: 600,
+            fontSize: 12,
+            fontWeight: 500,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -61,7 +61,7 @@ function IconoBadge({ href, icono: Icono, contador, etiqueta, opcional }) {
 // (eso ya lo cubre el composer del feed).
 function MenuMovil({ onClose }) {
   return (
-    <div className="dropdown-menu" style={{ background: "#1c1416", zIndex: 200, minWidth: 210, left: 0, right: "auto" }}>
+    <div className="dropdown-menu" style={{ background: "var(--surface)", zIndex: 200, minWidth: 210, left: 0, right: "auto" }}>
       <Link href="/grupos" onClick={onClose} className="dropdown-item">
         👥 Grupos
       </Link>
@@ -80,20 +80,20 @@ function MenuMovil({ onClose }) {
 
 function MenuAvatar({ onClose, avatarSrc, nick, island, esCeo }) {
   return (
-    <div className="dropdown-menu" style={{ background: "#1c1416", zIndex: 200, minWidth: 220 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 16px 12px", borderBottom: "1px solid rgba(201,161,90,0.18)" }}>
+    <div className="dropdown-menu" style={{ background: "var(--surface)", zIndex: 200, minWidth: 220 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 16px 12px", borderBottom: "1px solid var(--rule)" }}>
         <div style={{ position: "relative", width: 36, height: 36, flexShrink: 0 }}>
           <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
             <Image src={avatarSrc} alt="" width={36} height={36} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
-          {esCeo && <UsuarioBadge badgeEspecial="CEO" style={{ fontSize: 7, padding: "1px 4px" }} />}
+          {esCeo && <UsuarioBadge badgeEspecial="CEO" style={{ fontSize: 12, padding: "1px 4px" }} />}
         </div>
         <div style={{ minWidth: 0 }}>
           <p className="heading" style={{ fontSize: 14, color: "var(--text)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {nick}
           </p>
           {island && (
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "var(--text-muted)" }}>{ISLAND_LABEL[island]}</p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>{ISLAND_LABEL[island]}</p>
           )}
         </div>
       </div>
@@ -120,7 +120,7 @@ function MenuAvatar({ onClose, avatarSrc, nick, island, esCeo }) {
           signOut({ callbackUrl: "/" });
         }}
         className="dropdown-item"
-        style={{ display: "flex", alignItems: "center", gap: 8, borderTop: "1px solid rgba(201,161,90,0.18)", color: "#9a3a3a" }}
+        style={{ display: "flex", alignItems: "center", gap: 8, borderTop: "1px solid var(--rule)", color: "var(--danger)" }}
       >
         <LogOut size={15} /> Cerrar sesión
       </button>
@@ -212,7 +212,7 @@ export function Navbar() {
         position: "sticky",
         top: 0,
         zIndex: 40,
-        borderBottom: "1px solid rgba(201,161,90,0.18)",
+        borderBottom: "1px solid var(--rule)",
       }}
     >
       {/* El blur va en un wrapper interno, no en el <header>: backdrop-filter
@@ -222,7 +222,7 @@ export function Navbar() {
       <div
         className="site-header"
         style={{
-          background: "rgba(14,10,11,0.82)",
+          background: "var(--veil-strong)",
           backdropFilter: "blur(14px)",
           WebkitBackdropFilter: "blur(14px)",
         }}
@@ -241,9 +241,9 @@ export function Navbar() {
               className="navbar-logo-texto"
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: 20,
-                color: "#D8B47E",
-                letterSpacing: "3px",
+                fontSize: 22,
+                color: "var(--gold)",
+                letterSpacing: "0.04em",
                 whiteSpace: "nowrap",
               }}
             >
@@ -300,7 +300,7 @@ export function Navbar() {
                       style={{ width: "100%", height: "100%", objectFit: "cover" }}
                     />
                   </div>
-                  {esCeo && <UsuarioBadge badgeEspecial="CEO" style={{ fontSize: 7, padding: "1px 4px" }} />}
+                  {esCeo && <UsuarioBadge badgeEspecial="CEO" style={{ fontSize: 12, padding: "1px 4px" }} />}
                 </button>
                 {menuAvatarAbierto && (
                   <MenuAvatar

@@ -73,7 +73,7 @@ export function GrupoShell({ grupoId, usuarioId }) {
         }}
       >
         <div>
-          <h1 className="heading" style={{ fontSize: 24, color: "var(--text)" }}>{grupo.nombre}</h1>
+          <h1 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>{grupo.nombre}</h1>
           <p style={{ marginTop: 4, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
             {grupo.miembros_count} miembros
           </p>
@@ -84,7 +84,7 @@ export function GrupoShell({ grupoId, usuarioId }) {
             onClick={eliminarGrupo}
             disabled={eliminando}
             className="btn-outline-gold"
-            style={{ borderColor: "rgba(154,58,58,0.5)", color: "#e07a7a", fontSize: 11, padding: "8px 14px", flexShrink: 0 }}
+            style={{ borderColor: "var(--danger-border)", color: "var(--danger)", fontSize: 12, padding: "8px 14px", flexShrink: 0 }}
           >
             {eliminando ? "Eliminando…" : "Eliminar grupo"}
           </button>

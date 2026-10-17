@@ -21,7 +21,7 @@ export function AdminShell() {
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 24px 80px" }}>
       <p className="kicker">Panel interno</p>
-      <h1 className="heading" style={{ fontSize: 32, color: "var(--text)", marginTop: 6 }}>
+      <h1 className="heading" style={{ fontSize: 30, color: "var(--text)", marginTop: 6 }}>
         Administración
       </h1>
 

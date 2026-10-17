@@ -51,7 +51,7 @@ export function TabGustos({ setFetichesCount }) {
   return (
     <div style={{ maxWidth: 640 }}>
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
-        <h2 className="heading" style={{ fontSize: 24, color: "var(--text)" }}>
+        <h2 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
           Mis gustos
         </h2>
         {guardados.size > 0 && (

@@ -22,7 +22,7 @@ export function AvisoSeguridadBanner() {
         gap: 10,
         padding: "10px 20px",
         background: "rgba(122, 46, 63, 0.14)",
-        borderBottom: "1px solid rgba(201, 161, 90, 0.18)",
+        borderBottom: "1px solid var(--rule)",
         flexShrink: 0,
       }}
     >
@@ -68,7 +68,7 @@ export function AvisoSeguridadModal({ usuarioId }) {
         position: "fixed",
         inset: 0,
         zIndex: 1000,
-        background: "rgba(14, 10, 11, 0.75)",
+        background: "var(--veil-strong)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -80,12 +80,12 @@ export function AvisoSeguridadModal({ usuarioId }) {
           maxWidth: 440,
           width: "100%",
           background: "var(--bg-secondary)",
-          border: "1px solid rgba(201, 161, 90, 0.25)",
+          border: "1px solid var(--rule)",
           borderTop: "3px solid #7A2E3F",
           padding: "28px 26px",
         }}
       >
-        <h3 className="heading" style={{ fontSize: 19, color: "var(--text)", marginBottom: 14 }}>
+        <h3 className="heading" style={{ fontSize: 18, color: "var(--text)", marginBottom: 14 }}>
           Tu seguridad, primero
         </h3>
         <p style={{ fontFamily: "var(--font-body)", fontSize: 14, lineHeight: 1.6, color: "var(--text-secondary)" }}>

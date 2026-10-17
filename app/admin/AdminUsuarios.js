@@ -38,11 +38,11 @@ export function AdminUsuarios() {
 
   return (
     <div style={{ overflowX: "auto" }}>
-      <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "var(--font-body)", fontSize: 13 }}>
+      <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "var(--font-body)", fontSize: 14 }}>
         <thead>
-          <tr style={{ borderBottom: "1px solid rgba(201,161,90,0.3)" }}>
+          <tr style={{ borderBottom: "1px solid var(--rule)" }}>
             {["Nick", "Isla", "Tipo", "Alta", "Última act.", "Fotos", "Estado", ""].map((h) => (
-              <th key={h} style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-muted)", textTransform: "uppercase", fontSize: 10, letterSpacing: 1 }}>
+              <th key={h} style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-muted)", fontSize: 12, letterSpacing: "0.04em" }}>
                 {h}
               </th>
             ))}
@@ -50,7 +50,7 @@ export function AdminUsuarios() {
         </thead>
         <tbody>
           {usuarios.map((u) => (
-            <tr key={u.id} style={{ borderBottom: "1px solid rgba(201,161,90,0.1)" }}>
+            <tr key={u.id} style={{ borderBottom: "1px solid var(--rule)" }}>
               <td style={{ padding: "10px 12px", color: "var(--text)" }}>{u.nick}</td>
               <td style={{ padding: "10px 12px", color: "var(--text-secondary)" }}>{ISLAND_LABEL[u.island]}</td>
               <td style={{ padding: "10px 12px", color: "var(--text-secondary)" }}>{PROFILE_TYPE_LABEL[u.profile_type]}</td>
@@ -59,15 +59,15 @@ export function AdminUsuarios() {
               <td style={{ padding: "10px 12px", color: "var(--text-secondary)" }}>{u.fotos_count}</td>
               <td style={{ padding: "10px 12px" }}>
                 {u.deleted_at ? (
-                  <span style={{ color: "#e07a7a" }}>Suspendida</span>
+                  <span style={{ color: "var(--danger)" }}>Suspendida</span>
                 ) : u.role === "admin" ? (
                   <span style={{ color: "var(--gold)" }}>Admin</span>
                 ) : (
-                  <span style={{ color: "#4ade80" }}>Activa</span>
+                  <span style={{ color: "var(--online)" }}>Activa</span>
                 )}
               </td>
               <td style={{ padding: "10px 12px", display: "flex", gap: 8 }}>
-                <Link href={`/perfil/${u.nick}`} className="btn-outline-gold" style={{ fontSize: 10, padding: "5px 10px" }}>
+                <Link href={`/perfil/${u.nick}`} className="btn-outline-gold" style={{ fontSize: 12, padding: "5px 10px" }}>
                   Ver perfil
                 </Link>
                 {!u.deleted_at && u.role !== "admin" && (
@@ -75,7 +75,7 @@ export function AdminUsuarios() {
                     type="button"
                     onClick={() => suspender(u.id, u.nick)}
                     className="btn-outline-gold"
-                    style={{ fontSize: 10, padding: "5px 10px", borderColor: "rgba(154,58,58,0.5)", color: "#e07a7a" }}
+                    style={{ fontSize: 12, padding: "5px 10px", borderColor: "var(--danger-border)", color: "var(--danger)" }}
                   >
                     Suspender
                   </button>

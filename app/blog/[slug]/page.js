@@ -54,7 +54,7 @@ export default async function ArticuloBlog({ params }) {
     <main>
       <section style={{ padding: "24px 24px 0", maxWidth: 860, margin: "0 auto" }}>
         <Link href="/blog" style={{ display: "inline-flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-          <span className="heading" style={{ fontSize: 16, letterSpacing: 3, color: "var(--text)" }}>
+          <span className="heading" style={{ fontSize: 16, letterSpacing: "0.04em", color: "var(--text)" }}>
             ← CONTACTOS BLOG
           </span>
         </Link>
@@ -65,10 +65,10 @@ export default async function ArticuloBlog({ params }) {
       ) : (
         <section style={{ maxWidth: 780, margin: "24px auto 0", padding: "0 24px" }}>
           <p className="kicker">Blog</p>
-          <h1 className="heading" style={{ marginTop: 12, fontFamily: "var(--font-display)", fontSize: 36, color: "var(--text)" }}>
+          <h1 className="heading" style={{ marginTop: 12, fontFamily: "var(--font-display)", fontSize: 40, color: "var(--text)" }}>
             {post.titulo}
           </h1>
-          <p style={{ marginTop: 12, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>
+          <p style={{ marginTop: 12, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
             {formatearFecha(post.publicado_at)}
           </p>
         </section>
@@ -89,8 +89,8 @@ export default async function ArticuloBlog({ params }) {
         </div>
       </article>
 
-      <section style={{ maxWidth: 780, margin: "64px auto 0", padding: "40px 24px", textAlign: "center", borderTop: "1px solid rgba(201,161,90,0.18)" }}>
-        <h2 className="heading" style={{ fontSize: 24, color: "var(--text)" }}>
+      <section style={{ maxWidth: 780, margin: "64px auto 0", padding: "40px 24px", textAlign: "center", borderTop: "1px solid var(--rule)" }}>
+        <h2 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
           Únete a la comunidad liberal de Canarias
         </h2>
         <div style={{ marginTop: 20 }}>

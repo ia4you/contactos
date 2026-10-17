@@ -25,7 +25,7 @@ function ItemLink({ href, icono: Icono, texto }) {
 
 export function FeedNavSidebar() {
   return (
-    <nav className="feed-nav-sidebar" style={{ background: "#0e0a0b", borderRight: "1px solid rgba(201,161,90,0.18)", padding: "24px 0" }}>
+    <nav className="feed-nav-sidebar" style={{ background: "var(--bg)", borderRight: "1px solid var(--rule)", padding: "24px 0" }}>
       <div style={{ marginBottom: 28 }}>
         <p className="kicker" style={{ padding: "0 20px", marginBottom: 8 }}>
           Explorar

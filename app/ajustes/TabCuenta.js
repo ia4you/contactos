@@ -86,12 +86,12 @@ function FormularioNick({ nickActual, nickChangedAt }) {
       </p>
 
       {bloqueadoHasta && (
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#8a8a8a" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
           Podrás cambiar tu nick el {bloqueadoHasta}.
         </p>
       )}
-      {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
-      {mensaje && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)" }}>{mensaje}</p>}
+      {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{error}</p>}
+      {mensaje && <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--gold)" }}>{mensaje}</p>}
 
       <button
         type="submit"
@@ -140,7 +140,7 @@ function FormularioEmail({ emailActual }) {
       <h2 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
         Cambiar email
       </h2>
-      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
         Email actual: {emailActual}
       </p>
 
@@ -165,8 +165,8 @@ function FormularioEmail({ emailActual }) {
         />
       </label>
 
-      {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
-      {mensaje && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)" }}>{mensaje}</p>}
+      {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{error}</p>}
+      {mensaje && <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--gold)" }}>{mensaje}</p>}
 
       <button type="submit" disabled={enviando} className="btn-outline-gold" style={{ alignSelf: "flex-start" }}>
         {enviando ? "Guardando…" : "Guardar"}
@@ -246,8 +246,8 @@ function FormularioPassword() {
         />
       </label>
 
-      {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
-      {mensaje && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)" }}>{mensaje}</p>}
+      {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{error}</p>}
+      {mensaje && <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--gold)" }}>{mensaje}</p>}
 
       <button type="submit" disabled={enviando} className="btn-outline-gold" style={{ alignSelf: "flex-start" }}>
         {enviando ? "Guardando…" : "Guardar"}
@@ -258,11 +258,11 @@ function FormularioPassword() {
 
 function ZonaPeligro() {
   return (
-    <div style={{ borderTop: "1px solid rgba(154,58,58,0.3)", paddingTop: 24 }}>
-      <h2 className="heading" style={{ fontSize: 22, color: "#e07a7a" }}>
+    <div style={{ borderTop: "1px solid var(--danger-border)", paddingTop: 24 }}>
+      <h2 className="heading" style={{ fontSize: 22, color: "var(--danger)" }}>
         Zona de peligro
       </h2>
-      <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>
+      <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
         Eliminar tu cuenta es una acción irreversible.
       </p>
       <Link
@@ -271,8 +271,8 @@ function ZonaPeligro() {
           display: "inline-block",
           marginTop: 16,
           fontFamily: "var(--font-body)",
-          fontSize: 13,
-          color: "#e07a7a",
+          fontSize: 14,
+          color: "var(--danger)",
           textDecoration: "underline",
         }}
       >

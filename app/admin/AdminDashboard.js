@@ -28,9 +28,9 @@ export function AdminDashboard() {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 16 }}>
       {TARJETAS.map((t) => (
-        <div key={t.key} style={{ background: "#141414", border: "1px solid #2a2a2a", padding: 20, textAlign: "center" }}>
-          <p className="heading" style={{ fontSize: 36, color: "var(--gold)" }}>{stats[t.key]}</p>
-          <p style={{ marginTop: 6, fontFamily: "var(--font-body)", fontSize: 11, textTransform: "uppercase", letterSpacing: 1, color: "var(--text-muted)" }}>
+        <div key={t.key} style={{ background: "var(--surface)", border: "1px solid var(--rule)", padding: 20, textAlign: "center" }}>
+          <p className="heading" style={{ fontSize: 40, color: "var(--gold)" }}>{stats[t.key]}</p>
+          <p style={{ marginTop: 6, fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: "0.04em", color: "var(--text-muted)" }}>
             {t.label}
           </p>
         </div>

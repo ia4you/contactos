@@ -19,8 +19,8 @@ export function JuegosBanner({ vertical = false }) {
           <div
             key={j.titulo}
             style={{
-              background: "#1c1416",
-              border: "1px solid rgba(201,161,90,0.18)",
+              background: "var(--surface)",
+              border: "1px solid var(--rule)",
               padding: 16,
               display: "flex",
               flexDirection: "column",
@@ -31,7 +31,7 @@ export function JuegosBanner({ vertical = false }) {
             <h3 className="heading" style={{ fontFamily: "var(--font-display)", fontSize: 18, color: "var(--gold)" }}>
               {j.titulo}
             </h3>
-            <p style={{ flex: 1, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+            <p style={{ flex: 1, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
               {j.texto}
             </p>
             <a
@@ -39,7 +39,7 @@ export function JuegosBanner({ vertical = false }) {
               target="_blank"
               rel="noopener noreferrer"
               className="btn-outline-gold"
-              style={{ alignSelf: "flex-start", padding: "7px 16px", fontSize: 11 }}
+              style={{ alignSelf: "flex-start", padding: "7px 16px", fontSize: 12 }}
             >
               Jugar
             </a>

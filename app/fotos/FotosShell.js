@@ -34,7 +34,7 @@ export function FotosShell() {
   return (
     <div style={{ maxWidth: 1000, margin: "0 auto", padding: "40px 24px 80px" }}>
       <p className="kicker">Comunidad</p>
-      <h1 className="heading" style={{ fontSize: 32, color: "var(--text)", marginTop: 6 }}>
+      <h1 className="heading" style={{ fontSize: 30, color: "var(--text)", marginTop: 6 }}>
         Fotos
       </h1>
 
@@ -76,7 +76,7 @@ export function FotosShell() {
                       alignItems: "center",
                       gap: 6,
                       padding: "16px 8px 6px",
-                      background: "linear-gradient(180deg, transparent 0%, rgba(14,10,11,0.85) 100%)",
+                      background: "linear-gradient(180deg, transparent 0%, var(--veil-strong) 100%)",
                     }}
                   >
                     <div style={{ position: "relative", width: 22, height: 22, flexShrink: 0, borderRadius: "50%", overflow: "hidden", border: "1px solid rgba(255,255,255,0.5)" }}>

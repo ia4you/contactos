@@ -28,10 +28,10 @@ function CabeceraUsuario({ userId, nick, profileType, island, avatarFilename, ti
           <Link href={`/perfil/${nick}`} className="heading" style={{ fontSize: 16, color: "var(--text)", textDecoration: "none" }}>
             {nick}
           </Link>
-          <span className="badge-gold" style={{ fontSize: 9, padding: "2px 7px" }}>{ISLAND_LABEL[island]}</span>
+          <span className="badge-gold" style={{ fontSize: 12, padding: "2px 7px" }}>{ISLAND_LABEL[island]}</span>
         </div>
         {tiempo && (
-          <span style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "var(--text-muted)" }}>{tiempo}</span>
+          <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>{tiempo}</span>
         )}
       </div>
     </div>
@@ -48,16 +48,15 @@ export function AnuncioCardFeed({ anuncio, usuarioActualId, onEliminar }) {
   }
 
   return (
-    <div style={{ position: "relative", background: "#141414", border: "1px solid #2a2a2a", padding: 20, marginBottom: 16 }}>
+    <div style={{ position: "relative", background: "var(--surface)", border: "1px solid var(--rule)", padding: 20, marginBottom: 16 }}>
       <span
         style={{
           position: "absolute",
           right: 0,
           top: 0,
           fontFamily: "var(--font-body)",
-          fontSize: 10,
-          textTransform: "uppercase",
-          letterSpacing: 1.5,
+          fontSize: 12,
+          letterSpacing: "0.04em",
           padding: "5px 12px",
           background: "var(--gold-light)",
           color: "var(--bg)",
@@ -102,7 +101,7 @@ export function AnuncioCardFeed({ anuncio, usuarioActualId, onEliminar }) {
             type="button"
             onClick={eliminar}
             className="btn-outline-gold"
-            style={{ borderColor: "rgba(154,58,58,0.5)", color: "#e07a7a" }}
+            style={{ borderColor: "var(--danger-border)", color: "var(--danger)" }}
           >
             Eliminar
           </button>
@@ -136,7 +135,7 @@ export function EventoCardFeed({ evento, usuarioActualId, onEliminar }) {
   }
 
   return (
-    <div style={{ position: "relative", background: "#141414", border: "1px solid #2a2a2a", marginBottom: 16, overflow: "hidden" }}>
+    <div style={{ position: "relative", background: "var(--surface)", border: "1px solid var(--rule)", marginBottom: 16, overflow: "hidden" }}>
       <span
         style={{
           position: "absolute",
@@ -144,9 +143,8 @@ export function EventoCardFeed({ evento, usuarioActualId, onEliminar }) {
           top: 0,
           zIndex: 1,
           fontFamily: "var(--font-body)",
-          fontSize: 10,
-          textTransform: "uppercase",
-          letterSpacing: 1.5,
+          fontSize: 12,
+          letterSpacing: "0.04em",
           padding: "5px 12px",
           background: "var(--gold-light)",
           color: "var(--bg)",
@@ -162,16 +160,16 @@ export function EventoCardFeed({ evento, usuarioActualId, onEliminar }) {
       )}
 
       <div style={{ padding: 20 }}>
-        <span className="badge-gold" style={{ fontSize: 9 }}>{TIPO_EVENTO_LABEL[evento.tipo]}</span>
+        <span className="badge-gold" style={{ fontSize: 12 }}>{TIPO_EVENTO_LABEL[evento.tipo]}</span>
 
         <h3 className="heading" style={{ marginTop: 10, fontSize: 18, color: "var(--text)" }}>
           {evento.titulo}
         </h3>
-        <p style={{ marginTop: 6, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)" }}>
+        <p style={{ marginTop: 6, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--gold)" }}>
           {formatearFechaEvento(evento.fecha_evento)}
         </p>
         {evento.lugar && (
-          <p style={{ marginTop: 2, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+          <p style={{ marginTop: 2, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
             {evento.lugar} · {ISLAND_LABEL[evento.isla]}
           </p>
         )}
@@ -182,7 +180,7 @@ export function EventoCardFeed({ evento, usuarioActualId, onEliminar }) {
               type="button"
               onClick={eliminar}
               className="btn-outline-gold"
-              style={{ borderColor: "rgba(154,58,58,0.5)", color: "#e07a7a" }}
+              style={{ borderColor: "var(--danger-border)", color: "var(--danger)" }}
             >
               Eliminar
             </button>
@@ -198,7 +196,7 @@ export function EventoCardFeed({ evento, usuarioActualId, onEliminar }) {
 
 export function ClubEventoCardFeed({ evento }) {
   return (
-    <div style={{ position: "relative", background: "#141414", border: "1px solid #2a2a2a", marginBottom: 16, overflow: "hidden" }}>
+    <div style={{ position: "relative", background: "var(--surface)", border: "1px solid var(--rule)", marginBottom: 16, overflow: "hidden" }}>
       <span
         style={{
           position: "absolute",
@@ -206,11 +204,10 @@ export function ClubEventoCardFeed({ evento }) {
           top: 0,
           zIndex: 1,
           fontFamily: "var(--font-body)",
-          fontSize: 10,
-          textTransform: "uppercase",
-          letterSpacing: 1.5,
+          fontSize: 12,
+          letterSpacing: "0.04em",
           padding: "5px 12px",
-          background: "#7A2E3F",
+          background: "var(--wine)",
           color: "#fff",
         }}
       >
@@ -231,7 +228,7 @@ export function ClubEventoCardFeed({ evento }) {
         <h3 className="heading" style={{ marginTop: 8, fontSize: 18, color: "var(--text)" }}>
           {evento.titulo}
         </h3>
-        <p style={{ marginTop: 6, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+        <p style={{ marginTop: 6, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
           {formatearFechaEvento(evento.fecha_evento)}
           {evento.precio && ` · ${evento.precio}`}
         </p>
@@ -248,7 +245,7 @@ export function ClubEventoCardFeed({ evento }) {
 
 export function BlogPostCardFeed({ post }) {
   return (
-    <div style={{ position: "relative", background: "#141414", border: "1px solid #2a2a2a", marginBottom: 16, overflow: "hidden" }}>
+    <div style={{ position: "relative", background: "var(--surface)", border: "1px solid var(--rule)", marginBottom: 16, overflow: "hidden" }}>
       <span
         style={{
           position: "absolute",
@@ -256,9 +253,8 @@ export function BlogPostCardFeed({ post }) {
           top: 0,
           zIndex: 1,
           fontFamily: "var(--font-body)",
-          fontSize: 10,
-          textTransform: "uppercase",
-          letterSpacing: 1.5,
+          fontSize: 12,
+          letterSpacing: "0.04em",
           padding: "5px 12px",
           background: "var(--gold-light)",
           color: "var(--bg)",
@@ -278,7 +274,7 @@ export function BlogPostCardFeed({ post }) {
           {post.titulo}
         </h3>
         {post.extracto && (
-          <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+          <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
             {post.extracto}
           </p>
         )}
@@ -307,16 +303,15 @@ export function GrupoEventoCardFeed({ evento }) {
     );
 
   return (
-    <div style={{ position: "relative", background: "#141414", border: "1px solid #2a2a2a", padding: 20, marginBottom: 16 }}>
+    <div style={{ position: "relative", background: "var(--surface)", border: "1px solid var(--rule)", padding: 20, marginBottom: 16 }}>
       <span
         style={{
           position: "absolute",
           right: 0,
           top: 0,
           fontFamily: "var(--font-body)",
-          fontSize: 10,
-          textTransform: "uppercase",
-          letterSpacing: 1.5,
+          fontSize: 12,
+          letterSpacing: "0.04em",
           padding: "5px 12px",
           background: "var(--gold-light)",
           color: "var(--bg)",
@@ -430,7 +425,7 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
   if (eliminada) return null;
 
   return (
-    <div style={{ background: "#141414", border: "1px solid #2a2a2a", padding: 20, marginBottom: 16 }}>
+    <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", padding: 20, marginBottom: 16 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <CabeceraUsuario
           userId={p.user_id}
@@ -457,12 +452,12 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
 
       <div style={{ marginTop: 16 }}>
         {p.titulo && (
-          <h3 className="heading" style={{ fontSize: 17, color: "var(--gold)", marginBottom: 8 }}>
+          <h3 className="heading" style={{ fontSize: 18, color: "var(--gold)", marginBottom: 8 }}>
             {p.titulo}
           </h3>
         )}
         {p.tipo === "texto" ? (
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 15, color: "var(--text)", whiteSpace: "pre-wrap" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "var(--text)", whiteSpace: "pre-wrap" }}>
             {p.contenido}
           </p>
         ) : (
@@ -479,7 +474,7 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
               />
             </div>
             {p.contenido && (
-              <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+              <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
                 {p.contenido}
               </p>
             )}
@@ -487,7 +482,7 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
         )}
       </div>
 
-      <div style={{ marginTop: 16, display: "flex", borderTop: "1px solid rgba(201,161,90,0.12)", paddingTop: 12 }}>
+      <div style={{ marginTop: 16, display: "flex", borderTop: "1px solid var(--rule)", paddingTop: 12 }}>
         <button
           type="button"
           onClick={toggleLike}
@@ -499,11 +494,11 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
             gap: 8,
             background: "transparent",
             border: "none",
-            borderRight: "1px solid #2a2a2a",
+            borderRight: "1px solid var(--rule)",
             padding: "8px 0",
             cursor: "pointer",
             fontFamily: "var(--font-body)",
-            fontSize: 13,
+            fontSize: 14,
             color: meGusta ? "var(--gold)" : "var(--text-secondary)",
           }}
         >
@@ -524,7 +519,7 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
             padding: "8px 0",
             cursor: "pointer",
             fontFamily: "var(--font-body)",
-            fontSize: 13,
+            fontSize: 14,
             color: comentariosAbiertos ? "var(--gold)" : "var(--text-secondary)",
           }}
         >
@@ -534,16 +529,16 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
       </div>
 
       {comentariosAbiertos && (
-        <div style={{ marginTop: 14, borderTop: "1px solid rgba(201,161,90,0.12)", paddingTop: 14 }}>
+        <div style={{ marginTop: 14, borderTop: "1px solid var(--rule)", paddingTop: 14 }}>
           {comentarios === null ? (
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>Cargando…</p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>Cargando…</p>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {/* Ya hay comentarios en pantalla (de una apertura anterior):
                   se mantienen visibles mientras llega el refetch, en vez de
                   vaciar la lista, para que no "parpadee" a blanco. */}
               {cargandoComentarios && (
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "var(--text-muted)" }}>Actualizando…</p>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>Actualizando…</p>
               )}
               {comentarios.map((c) => (
                 <div key={c.id} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
@@ -562,14 +557,14 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
                   <div>
                     <Link
                       href={`/perfil/${c.nick}`}
-                      style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text)", fontWeight: 500, textDecoration: "none" }}
+                      style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text)", fontWeight: 500, textDecoration: "none" }}
                     >
                       {c.nick}
                     </Link>{" "}
-                    <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+                    <span style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
                       {c.texto}
                     </span>
-                    <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>
+                    <div style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>
                       {tiempoRelativo(c.created_at)}
                     </div>
                   </div>
@@ -599,7 +594,7 @@ export function PublicacionCard({ publicacion, usuarioActualId, onEliminar }) {
             </button>
           </div>
           {errorComentario && (
-            <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 12.5, color: "#e07a7a" }}>{errorComentario}</p>
+            <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{errorComentario}</p>
           )}
         </div>
       )}

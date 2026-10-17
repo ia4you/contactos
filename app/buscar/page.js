@@ -105,12 +105,11 @@ export default function Buscar() {
           padding: "16px 24px",
           background: "var(--bg-secondary)",
           border: "none",
-          borderBottom: "1px solid rgba(201,161,90,0.18)",
+          borderBottom: "1px solid var(--rule)",
           color: "var(--gold)",
           fontFamily: "var(--font-body)",
-          fontSize: 13,
-          textTransform: "uppercase",
-          letterSpacing: 1.5,
+          fontSize: 14,
+          letterSpacing: "0.04em",
           cursor: "pointer",
         }}
       >
@@ -123,7 +122,7 @@ export default function Buscar() {
           className={`buscar-sidebar ${filtrosAbiertosMovil ? "" : "buscar-sidebar--cerrado"}`}
           style={{
             background: "var(--bg-secondary)",
-            borderRight: "1px solid rgba(201,161,90,0.18)",
+            borderRight: "1px solid var(--rule)",
             padding: "24px",
           }}
         >
@@ -220,7 +219,7 @@ export default function Buscar() {
               Seleccionar gustos
             </button>
             {filtros.feticheIds.size > 0 && (
-              <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 12.5, color: "var(--gold)" }}>
+              <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--gold)" }}>
                 {filtros.feticheIds.size} gustos seleccionados
               </p>
             )}
@@ -240,7 +239,7 @@ export default function Buscar() {
               background: "none",
               border: "none",
               fontFamily: "var(--font-body)",
-              fontSize: 12.5,
+              fontSize: 14,
               color: "var(--text-muted)",
               cursor: "pointer",
             }}
@@ -295,9 +294,8 @@ function Bloque({ titulo, children }) {
       <p
         style={{
           fontFamily: "var(--font-body)",
-          fontSize: 11,
-          textTransform: "uppercase",
-          letterSpacing: 2,
+          fontSize: 12,
+          letterSpacing: "0.04em",
           color: "var(--text-secondary)",
           marginBottom: 12,
         }}
@@ -320,7 +318,7 @@ function TarjetaPerfil({ perfil }) {
         display: "block",
         aspectRatio: "3 / 4",
         overflow: "hidden",
-        border: "1px solid rgba(201,161,90,0.2)",
+        border: "1px solid var(--rule)",
         textDecoration: "none",
       }}
     >
@@ -338,12 +336,12 @@ function TarjetaPerfil({ perfil }) {
         style={{
           position: "absolute",
           inset: 0,
-          background: "linear-gradient(180deg, transparent 50%, rgba(14,10,11,0.9) 100%)",
+          background: "linear-gradient(180deg, transparent 50%, var(--veil-solid) 100%)",
           pointerEvents: "none",
         }}
       />
 
-      <UsuarioBadge badgeEspecial={perfil.badge_especial} isDemo={perfil.is_demo} style={{ bottom: 8, right: 8, fontSize: 9 }} />
+      <UsuarioBadge badgeEspecial={perfil.badge_especial} isDemo={perfil.is_demo} style={{ bottom: 8, right: 8, fontSize: 12 }} />
 
       {mostrarPuntoOnline(perfil) && (
         <span
@@ -354,7 +352,7 @@ function TarjetaPerfil({ perfil }) {
             width: 10,
             height: 10,
             borderRadius: "50%",
-            background: "#4ade80",
+            background: "var(--online)",
             border: "2px solid var(--bg)",
           }}
         />
@@ -367,9 +365,8 @@ function TarjetaPerfil({ perfil }) {
             right: 8,
             top: 8,
             fontFamily: "var(--font-body)",
-            fontSize: 9,
-            textTransform: "uppercase",
-            letterSpacing: 1,
+            fontSize: 12,
+            letterSpacing: "0.04em",
             padding: "3px 7px",
             background: "var(--gold)",
             color: "var(--bg)",
@@ -387,9 +384,8 @@ function TarjetaPerfil({ perfil }) {
           <span
             style={{
               fontFamily: "var(--font-body)",
-              fontSize: 9,
-              textTransform: "uppercase",
-              letterSpacing: 1,
+              fontSize: 12,
+              letterSpacing: "0.04em",
               padding: "2px 6px",
               border: "1px solid var(--gold)",
               color: "var(--gold)",
@@ -400,11 +396,10 @@ function TarjetaPerfil({ perfil }) {
           <span
             style={{
               fontFamily: "var(--font-body)",
-              fontSize: 9,
-              textTransform: "uppercase",
-              letterSpacing: 1,
+              fontSize: 12,
+              letterSpacing: "0.04em",
               padding: "2px 6px",
-              border: "1px solid rgba(244,234,217,0.3)",
+              border: "1px solid rgba(246,231,225,0.3)",
               color: "var(--text)",
             }}
           >

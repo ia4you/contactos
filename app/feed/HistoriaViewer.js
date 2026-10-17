@@ -63,7 +63,7 @@ export function HistoriaViewer({ grupos, indiceGrupoInicial, meId, onClose }) {
 
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "#000", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ position: "relative", width: "100%", maxWidth: 420, height: "100%", maxHeight: 760, background: "#0e0a0b", overflow: "hidden" }}>
+      <div style={{ position: "relative", width: "100%", maxWidth: 420, height: "100%", maxHeight: 760, background: "var(--bg)", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: 10, left: 10, right: 10, zIndex: 3, display: "flex", gap: 4 }}>
           {grupo.historias.map((h, i) => (
             <div key={h.id} style={{ flex: 1, height: 3, background: "rgba(255,255,255,0.3)", overflow: "hidden" }}>
@@ -84,8 +84,8 @@ export function HistoriaViewer({ grupos, indiceGrupoInicial, meId, onClose }) {
           <div style={{ position: "relative", width: 32, height: 32, borderRadius: "50%", overflow: "hidden", border: "1px solid rgba(255,255,255,0.4)" }}>
             <Image sizes="32px" src={avatarUrl} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
           </div>
-          <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#fff", fontWeight: 500 }}>{grupo.nick}</span>
-          <span style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(255,255,255,0.6)" }}>{tiempoRelativo(historia.created_at)}</span>
+          <span style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "#fff", fontWeight: 500 }}>{grupo.nick}</span>
+          <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(255,255,255,0.6)" }}>{tiempoRelativo(historia.created_at)}</span>
           <button
             type="button"
             onClick={onClose}
@@ -133,7 +133,7 @@ export function HistoriaViewer({ grupos, indiceGrupoInicial, meId, onClose }) {
                 padding: 32,
               }}
             >
-              <p className="heading" style={{ fontSize: 26, color: "var(--text)", textAlign: "center", lineHeight: 1.4 }}>
+              <p className="heading" style={{ fontSize: 30, color: "var(--text)", textAlign: "center", lineHeight: 1.4 }}>
                 {historia.contenido}
               </p>
             </div>

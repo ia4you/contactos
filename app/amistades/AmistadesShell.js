@@ -31,15 +31,15 @@ function FilaUsuario({ u, children }) {
         <Link href={`/perfil/${u.nick}`} className="heading" style={{ fontSize: 16, color: "var(--text)", textDecoration: "none" }}>
           {u.nick}
         </Link>
-        <span className="badge-gold" style={{ fontSize: 9 }}>{ISLAND_LABEL[u.island]}</span>
-        <span className="badge-gold" style={{ fontSize: 9 }}>{PROFILE_TYPE_LABEL[u.profile_type]}</span>
+        <span className="badge-gold" style={{ fontSize: 12 }}>{ISLAND_LABEL[u.island]}</span>
+        <span className="badge-gold" style={{ fontSize: 12 }}>{PROFILE_TYPE_LABEL[u.profile_type]}</span>
       </div>
       <div className="fila-amistad__acciones">{children}</div>
     </div>
   );
 }
 
-const botonPequeno = { fontSize: 11, padding: "6px 12px" };
+const botonPequeno = { fontSize: 12, padding: "6px 12px" };
 
 export function AmistadesShell() {
   const [tab, setTab] = useState("amigos");
@@ -90,7 +90,7 @@ export function AmistadesShell() {
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", padding: "40px 24px 80px" }}>
       <p className="kicker">Comunidad</p>
-      <h1 className="heading" style={{ fontSize: 32, color: "var(--text)", marginTop: 6 }}>
+      <h1 className="heading" style={{ fontSize: 30, color: "var(--text)", marginTop: 6 }}>
         Amistades
       </h1>
 
@@ -124,7 +124,7 @@ export function AmistadesShell() {
                     type="button"
                     onClick={() => eliminarAmigo(u.id)}
                     className="btn-outline-gold"
-                    style={{ ...botonPequeno, borderColor: "rgba(154,58,58,0.5)", color: "#e07a7a" }}
+                    style={{ ...botonPequeno, borderColor: "var(--danger-border)", color: "var(--danger)" }}
                   >
                     Eliminar amistad
                   </button>
@@ -139,9 +139,9 @@ export function AmistadesShell() {
             <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>Cargando…</p>
           ) : (
             <>
-              <p className="kicker" style={{ letterSpacing: 3, marginTop: 16 }}>Recibidas</p>
+              <p className="kicker" style={{ letterSpacing: "0.04em", marginTop: 16 }}>Recibidas</p>
               {recibidas.length === 0 ? (
-                <p style={{ marginTop: 10, marginBottom: 32, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>
+                <p style={{ marginTop: 10, marginBottom: 32, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
                   No tienes solicitudes pendientes.
                 </p>
               ) : (
@@ -164,16 +164,16 @@ export function AmistadesShell() {
                 </div>
               )}
 
-              <p className="kicker" style={{ letterSpacing: 3 }}>Enviadas</p>
+              <p className="kicker" style={{ letterSpacing: "0.04em" }}>Enviadas</p>
               {enviadas.length === 0 ? (
-                <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>
+                <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
                   No has enviado solicitudes.
                 </p>
               ) : (
                 <div style={{ marginTop: 6 }}>
                   {enviadas.map((u) => (
                     <FilaUsuario key={u.id} u={u}>
-                      <span style={{ fontFamily: "var(--font-body)", fontSize: 11, textTransform: "uppercase", letterSpacing: 1.5, color: "var(--text-muted)" }}>
+                      <span style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: "0.04em", color: "var(--text-muted)" }}>
                         Pendiente
                       </span>
                     </FilaUsuario>

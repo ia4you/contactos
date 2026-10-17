@@ -97,7 +97,7 @@ export function AnunciosShell({ usuario }) {
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 24px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
         <div>
           <p className="kicker">Comunidad</p>
-          <h1 className="heading" style={{ fontSize: 32, color: "var(--text)", marginTop: 6 }}>
+          <h1 className="heading" style={{ fontSize: 30, color: "var(--text)", marginTop: 6 }}>
             Anuncios
           </h1>
         </div>
@@ -117,13 +117,12 @@ export function AnunciosShell({ usuario }) {
           padding: "16px 24px",
           background: "var(--bg-secondary)",
           border: "none",
-          borderTop: "1px solid rgba(201,161,90,0.18)",
-          borderBottom: "1px solid rgba(201,161,90,0.18)",
+          borderTop: "1px solid var(--rule)",
+          borderBottom: "1px solid var(--rule)",
           color: "var(--gold)",
           fontFamily: "var(--font-body)",
-          fontSize: 13,
-          textTransform: "uppercase",
-          letterSpacing: 1.5,
+          fontSize: 14,
+          letterSpacing: "0.04em",
           cursor: "pointer",
         }}
       >

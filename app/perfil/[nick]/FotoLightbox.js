@@ -173,7 +173,7 @@ export function FotoLightbox({ usuarioId, fotos, indiceInicial, onClose }) {
             color: comentariosAbiertos ? "var(--bg)" : "#fff",
             cursor: "pointer",
             fontFamily: "var(--font-body)",
-            fontSize: 13,
+            fontSize: 14,
           }}
         >
           <MessageCircle size={16} />
@@ -270,23 +270,23 @@ export function FotoLightbox({ usuarioId, fotos, indiceInicial, onClose }) {
             zIndex: 2,
             maxHeight: "45vh",
             overflowY: "auto",
-            background: "rgba(14,10,11,0.92)",
-            borderTop: "1px solid rgba(201,161,90,0.25)",
+            background: "var(--veil-solid)",
+            borderTop: "1px solid var(--rule)",
             padding: 20,
           }}
         >
           {comentarios === null ? (
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(255,255,255,0.6)" }}>Cargando…</p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(255,255,255,0.6)" }}>Cargando…</p>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {/* Ya hay comentarios en pantalla (de una apertura anterior):
                   se mantienen visibles mientras llega el refetch, en vez de
                   vaciar la lista, para que no "parpadee" a blanco. */}
               {cargandoComentarios && (
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(255,255,255,0.5)" }}>Actualizando…</p>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(255,255,255,0.5)" }}>Actualizando…</p>
               )}
               {comentarios.length === 0 && !cargandoComentarios && (
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(255,255,255,0.6)" }}>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(255,255,255,0.6)" }}>
                   Todavía no hay comentarios.
                 </p>
               )}
@@ -307,14 +307,14 @@ export function FotoLightbox({ usuarioId, fotos, indiceInicial, onClose }) {
                   <div>
                     <Link
                       href={`/perfil/${c.nick}`}
-                      style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#fff", fontWeight: 500, textDecoration: "none" }}
+                      style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "#fff", fontWeight: 500, textDecoration: "none" }}
                     >
                       {c.nick}
                     </Link>{" "}
-                    <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "rgba(255,255,255,0.8)" }}>
+                    <span style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "rgba(255,255,255,0.8)" }}>
                       {c.texto}
                     </span>
-                    <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(255,255,255,0.5)", marginTop: 2 }}>
+                    <div style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "rgba(255,255,255,0.5)", marginTop: 2 }}>
                       {tiempoRelativo(c.created_at)}
                     </div>
                   </div>
@@ -344,7 +344,7 @@ export function FotoLightbox({ usuarioId, fotos, indiceInicial, onClose }) {
             </button>
           </div>
           {errorComentario && (
-            <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 12.5, color: "#e07a7a" }}>{errorComentario}</p>
+            <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{errorComentario}</p>
           )}
         </div>
       )}

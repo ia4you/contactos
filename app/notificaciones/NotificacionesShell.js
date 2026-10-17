@@ -69,7 +69,7 @@ export function NotificacionesShell() {
   return (
     <div style={{ maxWidth: 680, margin: "0 auto", padding: "40px 0 80px" }}>
       <div style={{ padding: "0 24px" }}>
-        <h1 className="heading" style={{ fontSize: 32, color: "var(--text)" }}>
+        <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
           Notificaciones
         </h1>
       </div>
@@ -112,7 +112,7 @@ export function NotificacionesShell() {
                     alignItems: "center",
                     gap: 14,
                     padding: "14px 24px",
-                    borderBottom: "1px solid #2a2a2a",
+                    borderBottom: "1px solid var(--rule)",
                     textDecoration: "none",
                     cursor: href ? "pointer" : "default",
                   }}

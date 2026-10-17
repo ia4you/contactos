@@ -6,7 +6,7 @@ export function Toggle({ checked, onChange, label, descripcion }) {
       <div>
         <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text)" }}>{label}</p>
         {descripcion && (
-          <p style={{ marginTop: 4, fontFamily: "var(--font-body)", fontSize: 12.5, color: "var(--text-muted)" }}>
+          <p style={{ marginTop: 4, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
             {descripcion}
           </p>
         )}
@@ -21,7 +21,7 @@ export function Toggle({ checked, onChange, label, descripcion }) {
           width: 44,
           height: 24,
           flexShrink: 0,
-          background: checked ? "var(--gold)" : "#2a2a2a",
+          background: checked ? "var(--gold)" : "var(--bg-deep)",
           border: "none",
           cursor: "pointer",
           transition: "background 0.2s ease",

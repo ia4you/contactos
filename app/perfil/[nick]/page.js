@@ -215,7 +215,7 @@ export default async function PerfilPublico({ params }) {
             </h2>
             {Object.entries(gustosPorCategoria).map(([categoria, nombres]) => (
               <div key={categoria} style={{ marginTop: 24 }}>
-                <p className="kicker" style={{ letterSpacing: 3 }}>
+                <p className="kicker" style={{ letterSpacing: "0.04em" }}>
                   {categoria}
                 </p>
                 <div style={{ marginTop: 14, display: "flex", flexWrap: "wrap", gap: 10 }}>

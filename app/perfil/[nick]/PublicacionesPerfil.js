@@ -25,11 +25,11 @@ function CabeceraTarjeta({ usuario, avatarFilename, tiempo }) {
           <span className="heading" style={{ fontSize: 16, color: "var(--text)" }}>
             {usuario.nick}
           </span>
-          <span className="badge-gold" style={{ fontSize: 9, padding: "2px 7px" }}>
+          <span className="badge-gold" style={{ fontSize: 12, padding: "2px 7px" }}>
             {ISLAND_LABEL[usuario.island]}
           </span>
         </div>
-        <span style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "var(--text-muted)" }}>{tiempo}</span>
+        <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>{tiempo}</span>
       </div>
     </div>
   );
@@ -38,12 +38,12 @@ function CabeceraTarjeta({ usuario, avatarFilename, tiempo }) {
 function TarjetaPublicacion({ publicacion, usuario, avatarFilename }) {
   const p = publicacion;
   return (
-    <div style={{ background: "#141414", border: "1px solid #2a2a2a", padding: 20, marginBottom: 16 }}>
+    <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", padding: 20, marginBottom: 16 }}>
       <CabeceraTarjeta usuario={usuario} avatarFilename={avatarFilename} tiempo={tiempoRelativo(p.created_at)} />
 
       <div style={{ marginTop: 16 }}>
         {p.tipo === "texto" ? (
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 15, color: "var(--text)", whiteSpace: "pre-wrap" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 16, color: "var(--text)", whiteSpace: "pre-wrap" }}>
             {p.contenido}
           </p>
         ) : (
@@ -60,7 +60,7 @@ function TarjetaPublicacion({ publicacion, usuario, avatarFilename }) {
               />
             </div>
             {p.contenido && (
-              <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+              <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
                 {p.contenido}
               </p>
             )}

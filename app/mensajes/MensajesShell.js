@@ -155,7 +155,7 @@ export function MensajesShell({ usuarioId }) {
       <AvisoSeguridadModal usuarioId={usuarioId} />
       <AvisoSeguridadBanner />
       <div className={`mensajes-layout ${otro ? "chat-abierto" : ""}`}>
-      <aside className="mensajes-sidebar" style={{ background: "#150f10", borderRight: "1px solid rgba(201,161,90,0.18)", overflowY: "auto" }}>
+      <aside className="mensajes-sidebar" style={{ background: "#150f10", borderRight: "1px solid var(--rule)", overflowY: "auto" }}>
         <div style={{ padding: "20px 20px 12px" }}>
           <p className="kicker">Mensajes</p>
           <input
@@ -164,7 +164,7 @@ export function MensajesShell({ usuarioId }) {
             onChange={(e) => setBusqueda(e.target.value)}
             placeholder="Buscar conversación…"
             className="input-field"
-            style={{ marginTop: 12, fontSize: 13, padding: "9px 12px" }}
+            style={{ marginTop: 12, fontSize: 14, padding: "9px 12px" }}
           />
         </div>
 
@@ -178,7 +178,7 @@ export function MensajesShell({ usuarioId }) {
         </div>
 
         {conversaciones === null ? (
-          <p style={{ padding: "0 20px", fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>
+          <p style={{ padding: "0 20px", fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
             Cargando…
           </p>
         ) : conversaciones.length === 0 ? (
@@ -186,7 +186,7 @@ export function MensajesShell({ usuarioId }) {
             <EmptyState texto="Cuando conectes con alguien podrás enviarle un mensaje" alto={120} />
           </div>
         ) : conversacionesFiltradas.length === 0 ? (
-          <p style={{ padding: "20px", fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>
+          <p style={{ padding: "20px", fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
             Sin resultados.
           </p>
         ) : (
@@ -205,9 +205,9 @@ export function MensajesShell({ usuarioId }) {
                   gap: 12,
                   width: "100%",
                   padding: "14px 20px",
-                  background: activaId === c.id ? "rgba(201,161,90,0.1)" : c.no_leidos > 0 ? "#1c1416" : "transparent",
+                  background: activaId === c.id ? "rgba(217,178,107,0.1)" : c.no_leidos > 0 ? "var(--surface)" : "transparent",
                   border: "none",
-                  borderBottom: "1px solid rgba(201,161,90,0.08)",
+                  borderBottom: "1px solid var(--rule)",
                   cursor: "pointer",
                   textAlign: "left",
                 }}
@@ -221,7 +221,7 @@ export function MensajesShell({ usuarioId }) {
                     <Image sizes="44px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
                   </div>
                   {mostrarPuntoOnline(c) && <PuntoOnline />}
-                  <UsuarioBadge badgeEspecial={c.badge_especial} isDemo={c.is_demo} style={{ fontSize: 6, padding: "1px 3px", bottom: -1, right: -1 }} />
+                  <UsuarioBadge badgeEspecial={c.badge_especial} isDemo={c.is_demo} style={{ fontSize: 12, padding: "1px 3px", bottom: -1, right: -1 }} />
                 </Link>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
@@ -239,12 +239,12 @@ export function MensajesShell({ usuarioId }) {
                       >
                         {c.nick}
                       </span>
-                      <span className="badge-gold" style={{ fontSize: 8, padding: "1px 5px", flexShrink: 0 }}>
+                      <span className="badge-gold" style={{ fontSize: 12, padding: "1px 5px", flexShrink: 0 }}>
                         {ISLAND_LABEL[c.island]}
                       </span>
                     </span>
                     {c.last_message_at && (
-                      <span style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "var(--text-muted)", flexShrink: 0 }}>
+                      <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)", flexShrink: 0 }}>
                         {tiempoRelativo(c.last_message_at)}
                       </span>
                     )}
@@ -271,8 +271,8 @@ export function MensajesShell({ usuarioId }) {
                           borderRadius: 9,
                           background: "var(--gold)",
                           color: "var(--bg)",
-                          fontSize: 10,
-                          fontWeight: 600,
+                          fontSize: 12,
+                          fontWeight: 500,
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -305,7 +305,7 @@ export function MensajesShell({ usuarioId }) {
                 alignItems: "center",
                 gap: 12,
                 padding: "16px 24px",
-                borderBottom: "1px solid rgba(201,161,90,0.18)",
+                borderBottom: "1px solid var(--rule)",
               }}
             >
               <button
@@ -328,22 +328,22 @@ export function MensajesShell({ usuarioId }) {
                   />
                 </div>
                 {mostrarPuntoOnline(otro) && <PuntoOnline />}
-                <UsuarioBadge badgeEspecial={otro.badge_especial} isDemo={otro.is_demo} style={{ fontSize: 6, padding: "1px 3px", bottom: -1, right: -1 }} />
+                <UsuarioBadge badgeEspecial={otro.badge_especial} isDemo={otro.is_demo} style={{ fontSize: 12, padding: "1px 3px", bottom: -1, right: -1 }} />
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <span className="heading" style={{ fontSize: 16, color: "var(--text)" }}>{otro.nick}</span>
-                  <span className="badge-gold" style={{ fontSize: 9, padding: "2px 7px" }}>{ISLAND_LABEL[otro.island]}</span>
+                  <span className="badge-gold" style={{ fontSize: 12, padding: "2px 7px" }}>{ISLAND_LABEL[otro.island]}</span>
                 </div>
               </div>
-              <Link href={`/perfil/${otro.nick}`} className="nav-top-link" style={{ fontSize: 11 }}>
+              <Link href={`/perfil/${otro.nick}`} className="nav-top-link" style={{ fontSize: 12 }}>
                 Ver perfil
               </Link>
             </div>
 
             <div ref={scrollRef} style={{ flex: 1, overflowY: "auto", padding: "20px 24px", display: "flex", flexDirection: "column", gap: 10 }}>
               {cargandoChat ? (
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)", textAlign: "center" }}>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)", textAlign: "center" }}>
                   Cargando…
                 </p>
               ) : (
@@ -379,7 +379,7 @@ export function MensajesShell({ usuarioId }) {
                           }}
                         >
                           {m.eliminado ? (
-                            <span style={{ fontStyle: "italic", color: esMio ? "rgba(14,10,11,0.6)" : "var(--text-muted)" }}>
+                            <span style={{ fontStyle: "italic", color: esMio ? "var(--veil)" : "var(--text-muted)" }}>
                               Mensaje eliminado
                             </span>
                           ) : (
@@ -390,7 +390,7 @@ export function MensajesShell({ usuarioId }) {
                           style={{
                             marginTop: 3,
                             fontFamily: "var(--font-body)",
-                            fontSize: 10,
+                            fontSize: 12,
                             color: "var(--text-muted)",
                             textAlign: esMio ? "right" : "left",
                           }}
@@ -404,7 +404,7 @@ export function MensajesShell({ usuarioId }) {
               )}
             </div>
 
-            <div style={{ display: "flex", gap: 10, padding: "16px 24px", borderTop: "1px solid rgba(201,161,90,0.18)" }}>
+            <div style={{ display: "flex", gap: 10, padding: "16px 24px", borderTop: "1px solid var(--rule)" }}>
               <textarea
                 ref={textareaRef}
                 rows={1}

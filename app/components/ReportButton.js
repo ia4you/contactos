@@ -55,7 +55,7 @@ export function ReportButton({ reportedUserId, label, className, style }) {
             position: "fixed",
             inset: 0,
             zIndex: 100,
-            background: "rgba(14,10,11,0.85)",
+            background: "var(--veil-strong)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -76,7 +76,7 @@ export function ReportButton({ reportedUserId, label, className, style }) {
           >
             {enviado ? (
               <>
-                <h3 className="heading" style={{ fontSize: 20, color: "var(--text)" }}>
+                <h3 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
                   Denuncia enviada
                 </h3>
                 <p
@@ -100,7 +100,7 @@ export function ReportButton({ reportedUserId, label, className, style }) {
               </>
             ) : (
               <>
-                <h3 className="heading" style={{ fontSize: 20, color: "var(--text)" }}>
+                <h3 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
                   Denunciar perfil
                 </h3>
 
@@ -134,7 +134,7 @@ export function ReportButton({ reportedUserId, label, className, style }) {
                 )}
 
                 {error && (
-                  <p style={{ marginTop: 12, fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>
+                  <p style={{ marginTop: 12, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>
                     {error}
                   </p>
                 )}

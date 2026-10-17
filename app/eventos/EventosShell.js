@@ -110,7 +110,7 @@ export function EventosShell({ usuario }) {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
         <div>
           <p className="kicker">Comunidad</p>
-          <h1 className="heading" style={{ fontSize: 32, color: "var(--text)", marginTop: 6 }}>
+          <h1 className="heading" style={{ fontSize: 30, color: "var(--text)", marginTop: 6 }}>
             Eventos
           </h1>
         </div>
@@ -176,9 +176,8 @@ export function EventosShell({ usuario }) {
             border: "none",
             cursor: "pointer",
             fontFamily: "var(--font-body)",
-            fontSize: 13,
-            textTransform: "uppercase",
-            letterSpacing: 1.5,
+            fontSize: 14,
+            letterSpacing: "0.04em",
             color: "var(--text-secondary)",
             padding: 0,
           }}
@@ -192,7 +191,7 @@ export function EventosShell({ usuario }) {
             {pasados === null ? (
               <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>Cargando…</p>
             ) : pasados.length === 0 ? (
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>No hay eventos anteriores.</p>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>No hay eventos anteriores.</p>
             ) : (
               <div className="anuncios-grid">
                 {pasados.map((e) => (

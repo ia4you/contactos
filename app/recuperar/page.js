@@ -32,7 +32,7 @@ export default function Recuperar() {
           padding: "24px",
         }}
       >
-        <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+        <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
           Revisa tu email
         </h1>
         <p style={{ marginTop: 16, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
@@ -46,10 +46,10 @@ export default function Recuperar() {
   return (
     <main style={{ minHeight: "60vh", display: "flex", justifyContent: "center", padding: "80px 24px" }}>
       <div style={{ width: "100%", maxWidth: 400 }}>
-        <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+        <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
           Recuperar contraseña
         </h1>
-        <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+        <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
           Te enviaremos un enlace a tu email para elegir una nueva contraseña.
         </p>
 

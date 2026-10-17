@@ -45,7 +45,7 @@ export function TabBloqueados() {
                   alignItems: "center",
                   gap: 14,
                   padding: "10px 14px",
-                  border: "1px solid rgba(201,161,90,0.18)",
+                  border: "1px solid var(--rule)",
                 }}
               >
                 <div style={{ position: "relative", width: 40, height: 40, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
@@ -58,7 +58,7 @@ export function TabBloqueados() {
                   type="button"
                   onClick={() => desbloquear(u.id)}
                   className="btn-outline-gold"
-                  style={{ padding: "8px 16px", fontSize: 11 }}
+                  style={{ padding: "8px 16px", fontSize: 12 }}
                 >
                   Desbloquear
                 </button>

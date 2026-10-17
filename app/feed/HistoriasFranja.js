@@ -83,7 +83,7 @@ export function HistoriasFranja({ usuario, avatarUrl }) {
               width: 56,
               height: 56,
               borderRadius: "50%",
-              border: miGrupo ? "2px solid var(--gold)" : "2px dashed rgba(201,161,90,0.4)",
+              border: miGrupo ? "2px solid var(--gold)" : "2px dashed var(--rule-strong)",
               padding: 2,
             }}
           >
@@ -114,7 +114,7 @@ export function HistoriasFranja({ usuario, avatarUrl }) {
               </div>
             )}
           </div>
-          <span style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "var(--text-secondary)" }}>Tu historia</span>
+          <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-secondary)" }}>Tu historia</span>
         </button>
 
         {otros.map((g, i) => {
@@ -143,7 +143,7 @@ export function HistoriasFranja({ usuario, avatarUrl }) {
                   width: 56,
                   height: 56,
                   borderRadius: "50%",
-                  border: noVistas ? "2px solid var(--gold)" : "2px solid rgba(244,234,217,0.2)",
+                  border: noVistas ? "2px solid var(--gold)" : "2px solid rgba(246,231,225,0.2)",
                   padding: 2,
                 }}
               >
@@ -154,7 +154,7 @@ export function HistoriasFranja({ usuario, avatarUrl }) {
               <span
                 style={{
                   fontFamily: "var(--font-body)",
-                  fontSize: 11,
+                  fontSize: 12,
                   color: "var(--text-secondary)",
                   overflow: "hidden",
                   textOverflow: "ellipsis",

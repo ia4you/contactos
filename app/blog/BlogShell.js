@@ -12,7 +12,7 @@ function formatearFecha(fecha) {
 
 function TarjetaBlog({ post }) {
   return (
-    <article style={{ background: "#141414", border: "1px solid #2a2a2a" }}>
+    <article style={{ background: "var(--surface)", border: "1px solid var(--rule)" }}>
       <Link href={`/blog/${post.slug}`} style={{ display: "block", position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden" }}>
         {post.foto ? (
           <Image sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
@@ -25,15 +25,15 @@ function TarjetaBlog({ post }) {
             style={{ objectFit: "cover" }}
           />
         ) : (
-          <div style={{ width: "100%", height: "100%", background: "#1c1416" }} />
+          <div style={{ width: "100%", height: "100%", background: "var(--surface)" }} />
         )}
       </Link>
       <div style={{ padding: 20 }}>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "var(--text-muted)" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
           {formatearFecha(post.publicado_at)}
         </p>
         <Link href={`/blog/${post.slug}`} style={{ textDecoration: "none" }}>
-          <h2 className="heading" style={{ marginTop: 8, fontSize: 20, color: "var(--text)" }}>
+          <h2 className="heading" style={{ marginTop: 8, fontSize: 22, color: "var(--text)" }}>
             {post.titulo}
           </h2>
         </Link>

@@ -22,11 +22,11 @@ export function AhoraOnlineCarrusel() {
 
   if (usuarios.length < 10) {
     return (
-      <div style={{ marginBottom: 24, background: "#1c1416", border: "1px solid rgba(201,161,90,0.18)", padding: 24, textAlign: "center" }}>
-        <h3 className="heading" style={{ fontSize: 20, color: "var(--gold)" }}>
+      <div style={{ marginBottom: 24, background: "var(--surface)", border: "1px solid var(--rule)", padding: 24, textAlign: "center" }}>
+        <h3 className="heading" style={{ fontSize: 22, color: "var(--gold)" }}>
           Sé el primero en conectar hoy
         </h3>
-        <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>
+        <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
           Completa tu perfil y aparece aquí cuando otros estén online
         </p>
         <Link href="/mi-perfil" className="btn-outline-gold" style={{ marginTop: 16, display: "inline-block" }}>
@@ -40,7 +40,7 @@ export function AhoraOnlineCarrusel() {
     <div style={{ marginBottom: 24 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <span className="punto-pulso" />
-        <p className="kicker" style={{ letterSpacing: 3 }}>Ahora online</p>
+        <p className="kicker" style={{ letterSpacing: "0.04em" }}>Ahora online</p>
       </div>
 
       <div className="scroll-sin-barra" style={{ marginTop: 14, display: "flex", gap: 16, overflowX: "auto" }}>
@@ -71,7 +71,7 @@ export function AhoraOnlineCarrusel() {
               >
                 {u.nick}
               </span>
-              <span style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "var(--text-muted)" }}>
+              <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
                 {ISLAND_LABEL[u.island]}
               </span>
             </Link>

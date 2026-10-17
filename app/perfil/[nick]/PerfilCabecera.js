@@ -18,7 +18,7 @@ function CompatibilidadBadge({ pct }) {
   let color = "var(--text-muted)";
   let Icono = null;
   if (pct > 80) {
-    color = "#4ade80";
+    color = "var(--online)";
     Icono = Flame;
   } else if (pct > 50) {
     color = "var(--gold)";
@@ -32,9 +32,8 @@ function CompatibilidadBadge({ pct }) {
         alignItems: "center",
         gap: 4,
         fontFamily: "var(--font-body)",
-        fontSize: 11,
-        textTransform: "uppercase",
-        letterSpacing: 1,
+        fontSize: 12,
+        letterSpacing: "0.04em",
         color,
         border: `1px solid ${color}`,
         padding: "4px 10px",
@@ -53,9 +52,8 @@ function GrupoChips({ titulo, valores }) {
       <span
         style={{
           fontFamily: "var(--font-body)",
-          fontSize: 11,
-          textTransform: "uppercase",
-          letterSpacing: 1.5,
+          fontSize: 12,
+          letterSpacing: "0.04em",
           color: "var(--text-muted)",
           marginRight: 8,
         }}
@@ -78,9 +76,8 @@ const estiloBadgeSolido = {
   fontFamily: "var(--font-body)",
   background: "var(--gold)",
   color: "var(--bg)",
-  fontSize: 10,
-  textTransform: "uppercase",
-  letterSpacing: 1.5,
+  fontSize: 12,
+  letterSpacing: "0.04em",
   padding: "4px 10px",
 };
 
@@ -92,8 +89,7 @@ const estiloBotonBase = {
   padding: "11px 22px",
   fontFamily: "var(--font-body)",
   fontSize: 12,
-  textTransform: "uppercase",
-  letterSpacing: 2,
+  letterSpacing: "0.04em",
   cursor: "pointer",
   background: "transparent",
 };
@@ -194,7 +190,7 @@ export function PerfilCabecera({
     <div
       style={{
         background: "var(--bg-secondary)",
-        borderBottom: "1px solid rgba(201,161,90,0.18)",
+        borderBottom: "1px solid var(--rule)",
         padding: "40px 24px",
       }}
     >
@@ -228,7 +224,7 @@ export function PerfilCabecera({
           </div>
 
           <div className="perfil-cabecera-textos" style={{ maxWidth: 480 }}>
-            <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+            <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
               {usuario.nick}
             </h1>
 
@@ -242,9 +238,8 @@ export function PerfilCabecera({
                   background: "var(--surface)",
                   border: "1px solid var(--border-gold)",
                   color: "var(--text)",
-                  fontSize: 10,
-                  textTransform: "uppercase",
-                  letterSpacing: 1.5,
+                  fontSize: 12,
+                  letterSpacing: "0.04em",
                   padding: "4px 10px",
                 }}
               >
@@ -294,15 +289,15 @@ export function PerfilCabecera({
               disabled={cargandoLike}
               style={{
                 ...estiloBotonBase,
-                border: `1px solid ${meGusta ? "#e07a7a" : "var(--gold)"}`,
-                color: meGusta ? "#e07a7a" : "var(--gold)",
+                border: `1px solid ${meGusta ? "var(--danger)" : "var(--gold)"}`,
+                color: meGusta ? "var(--danger)" : "var(--gold)",
                 background: "transparent",
               }}
             >
               <Heart
                 size={15}
-                fill={meGusta ? "#e07a7a" : "none"}
-                color={meGusta ? "#e07a7a" : "var(--gold)"}
+                fill={meGusta ? "var(--danger)" : "none"}
+                color={meGusta ? "var(--danger)" : "var(--gold)"}
                 className={corazonAnimado ? "corazon-pop" : undefined}
                 style={{ transition: "fill 0.25s ease, color 0.25s ease" }}
               />
@@ -313,7 +308,7 @@ export function PerfilCabecera({
               <button
                 type="button"
                 disabled
-                style={{ ...estiloBotonBase, border: "1px solid rgba(244,234,217,0.2)", color: "var(--text-muted)", cursor: "not-allowed" }}
+                style={{ ...estiloBotonBase, border: "1px solid rgba(246,231,225,0.2)", color: "var(--text-muted)", cursor: "not-allowed" }}
               >
                 Solicitud enviada
               </button>
@@ -332,7 +327,7 @@ export function PerfilCabecera({
                   type="button"
                   onClick={() => responderAmistad("rechazar")}
                   disabled={cargandoAmistad}
-                  style={{ ...estiloBotonBase, flex: 1, border: "1px solid rgba(244,234,217,0.3)", color: "var(--text-secondary)" }}
+                  style={{ ...estiloBotonBase, flex: 1, border: "1px solid rgba(246,231,225,0.3)", color: "var(--text-secondary)" }}
                 >
                   Rechazar
                 </button>
@@ -354,7 +349,7 @@ export function PerfilCabecera({
               disabled={cargandoMensaje}
               style={{
                 ...estiloBotonBase,
-                border: "1px solid rgba(244,234,217,0.3)",
+                border: "1px solid rgba(246,231,225,0.3)",
                 color: "var(--text)",
               }}
             >
@@ -366,8 +361,8 @@ export function PerfilCabecera({
               label="Denunciar perfil"
               style={{
                 ...estiloBotonBase,
-                border: "1px solid rgba(154,58,58,0.5)",
-                color: "#e07a7a",
+                border: "1px solid var(--danger-border)",
+                color: "var(--danger)",
               }}
             />
 
@@ -376,7 +371,7 @@ export function PerfilCabecera({
               label="Bloquear"
               style={{
                 ...estiloBotonBase,
-                border: "1px solid rgba(244,234,217,0.3)",
+                border: "1px solid rgba(246,231,225,0.3)",
                 color: "var(--text-secondary)",
               }}
             />

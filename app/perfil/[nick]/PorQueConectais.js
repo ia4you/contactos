@@ -18,10 +18,10 @@ export function PorQueConectais({ nick }) {
   if (gustosCompartidos.length === 0 && gustosComplementarios.length === 0 && !explicacion) return null;
 
   return (
-    <div style={{ marginTop: 56, background: "#1c1416", border: "1px solid rgba(201,161,90,0.18)", padding: 24 }}>
+    <div style={{ marginTop: 56, background: "var(--surface)", border: "1px solid var(--rule)", padding: 24 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         <Heart size={18} color="var(--gold)" fill="var(--gold)" />
-        <h2 className="heading" style={{ fontSize: 20, color: "var(--text)" }}>
+        <h2 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
           Por qué conectáis
         </h2>
       </div>
@@ -45,7 +45,7 @@ export function PorQueConectais({ nick }) {
               style={{
                 display: "inline-block",
                 fontFamily: "var(--font-body)",
-                fontSize: 13,
+                fontSize: 14,
                 padding: "8px 16px",
                 border: "1px solid var(--burdeos)",
                 background: "var(--burdeos)",

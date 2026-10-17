@@ -54,7 +54,7 @@ export function AnuncioModal({ anuncioExistente, islaPorDefecto, onClose, onGuar
         position: "fixed",
         inset: 0,
         zIndex: 100,
-        background: "rgba(14,10,11,0.85)",
+        background: "var(--veil-strong)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -124,7 +124,7 @@ export function AnuncioModal({ anuncioExistente, islaPorDefecto, onClose, onGuar
         </label>
 
         {error && (
-          <p style={{ marginTop: 14, fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>
+          <p style={{ marginTop: 14, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{error}</p>
         )}
 
         <div style={{ marginTop: 24, display: "flex", gap: 12 }}>

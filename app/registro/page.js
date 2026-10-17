@@ -131,7 +131,7 @@ export default function Registro() {
   if (exito) {
     return (
       <AuthLayout activo="registro">
-        <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+        <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
           Revisa tu email
         </h1>
         <p style={{ marginTop: 16, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
@@ -140,7 +140,7 @@ export default function Registro() {
         </p>
         <Link
           href="/login"
-          style={{ display: "inline-block", marginTop: 24, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)" }}
+          style={{ display: "inline-block", marginTop: 24, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--gold)" }}
         >
           Ir a iniciar sesión
         </Link>
@@ -150,10 +150,10 @@ export default function Registro() {
 
   return (
     <AuthLayout activo="registro">
-      <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+      <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
         Crear cuenta
       </h1>
-      <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+      <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
         Todos los campos son necesarios. Tus datos están protegidos.
       </p>
 
@@ -205,8 +205,8 @@ export default function Registro() {
                 flexShrink: 0,
                 borderRadius: "50%",
                 overflow: "hidden",
-                border: "1px solid rgba(201,161,90,0.35)",
-                background: "rgba(201,161,90,0.06)",
+                border: "1px solid var(--rule)",
+                background: "rgba(217,178,107,0.06)",
               }}
             >
               {fotoPreview && (
@@ -219,13 +219,13 @@ export default function Registro() {
               required
               accept="image/jpeg,image/png"
               onChange={elegirFoto}
-              style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "var(--text-secondary)", minWidth: 0 }}
+              style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)", minWidth: 0 }}
             />
           </div>
           <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>
             Obligatoria. JPG o PNG, máximo {MAX_FOTO_MB} MB.
           </div>
-          {errorFoto && <div style={{ fontSize: 12, color: "#e07a7a", marginTop: 4 }}>{errorFoto}</div>}
+          {errorFoto && <div style={{ fontSize: 12, color: "var(--danger)", marginTop: 4 }}>{errorFoto}</div>}
           <label style={{ display: "flex", gap: 8, marginTop: 10, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
             <input
               type="checkbox"
@@ -335,8 +335,8 @@ export default function Registro() {
           style={{
             margin: 0,
             padding: "10px 12px",
-            background: "rgba(201, 161, 90, 0.08)",
-            border: "1px solid rgba(201, 161, 90, 0.25)",
+            background: "rgba(217,178,107,0.08)",
+            border: "1px solid var(--rule)",
             fontFamily: "var(--font-body)",
             fontSize: 12,
             lineHeight: 1.5,
@@ -375,7 +375,7 @@ export default function Registro() {
                   alignItems: "center",
                   gap: 8,
                   fontFamily: "var(--font-body)",
-                  fontSize: 13,
+                  fontSize: 14,
                   color: "var(--text)",
                 }}
               >
@@ -398,7 +398,7 @@ export default function Registro() {
             flexDirection: "column",
             gap: 12,
             paddingTop: 16,
-            borderTop: "1px solid rgba(201,161,90,0.12)",
+            borderTop: "1px solid var(--rule)",
           }}
         >
           <label style={{ display: "flex", gap: 8, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
@@ -462,13 +462,13 @@ export default function Registro() {
           </label>
         </div>
 
-        {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
+        {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{error}</p>}
 
         <button type="submit" disabled={enviando} className="btn-gold" style={{ width: "100%" }}>
           {enviando ? "Creando cuenta…" : "Crear mi perfil"}
         </button>
 
-        <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: 12.5, color: "var(--text-muted)" }}>
+        <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
           Tus datos están protegidos y nunca se comparten con terceros.
         </p>
       </form>

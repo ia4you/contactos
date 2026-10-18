@@ -288,6 +288,10 @@ textarea::placeholder {
   border-color: var(--gold);
   background: var(--gold-tint);
 }
+/* Pastilla de filtro activa: borde dorado, sin relleno. */
+.btn-outline-gold[aria-pressed="true"] {
+  border-color: var(--gold);
+}
 
 .btn-peligro {
   border-color: var(--danger-border) !important;

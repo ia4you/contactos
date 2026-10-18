@@ -103,7 +103,7 @@ export function AdminUsuarios() {
             type="button"
             aria-pressed={filtro === f.id}
             onClick={() => setFiltro(f.id)}
-            className={filtro === f.id ? "btn-gold" : "btn-outline-gold"}
+            className="btn-outline-gold"
             style={estiloBoton}
           >
             {f.label}

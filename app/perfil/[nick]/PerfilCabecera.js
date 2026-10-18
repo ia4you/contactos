@@ -220,12 +220,16 @@ export function PerfilCabecera({
               <Image sizes="100px" src={avatarSrc} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
             </div>
             {online && <PuntoOnline size={16} />}
-            <UsuarioBadge badgeEspecial={usuario.badge_especial} isDemo={usuario.is_demo} />
           </div>
 
           <div className="perfil-cabecera-textos" style={{ maxWidth: 480 }}>
-            <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
+            <h1 className="heading" style={{ fontSize: 30, color: "var(--text)", display: "flex", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
               {usuario.nick}
+              <UsuarioBadge
+                badgeEspecial={usuario.badge_especial}
+                isDemo={usuario.is_demo}
+                style={{ position: "static", border: "none" }}
+              />
             </h1>
 
             <div className="perfil-cabecera-badges" style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 8 }}>

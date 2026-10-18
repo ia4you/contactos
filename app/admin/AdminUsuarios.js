@@ -4,87 +4,298 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ISLANDS, PROFILE_TYPES } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
+import { Dialogo } from "../components/Dialogo";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
 
-export function AdminUsuarios() {
-  const [usuarios, setUsuarios] = useState(null);
+const FILTROS = [
+  { id: "todas", label: "Todas" },
+  { id: "activas", label: "Activas" },
+  { id: "suspendidas", label: "Suspendidas" },
+  { id: "pendientes", label: "Pendientes de borrado" },
+];
 
-  function cargar() {
-    fetch("/api/admin/usuarios")
+const ROJO = "#e07a7a";
+const estiloCelda = { padding: "10px 12px", color: "var(--text-secondary)", verticalAlign: "top" };
+const estiloBoton = { fontSize: 11, padding: "6px 10px", whiteSpace: "nowrap" };
+const estiloBotonPeligro = { ...estiloBoton, borderColor: "rgba(154,58,58,0.6)", color: ROJO };
+
+function estadoDe(u) {
+  if (u.role === "admin") return "admin";
+  if (u.suspended_at) return "suspendida";
+  if (u.deleted_at) return "pendiente";
+  return "activa";
+}
+
+function Estado({ u }) {
+  const estado = estadoDe(u);
+  if (estado === "admin") return <span style={{ color: "var(--gold)" }}>Admin</span>;
+  if (estado === "activa") return <span style={{ color: "#4ade80" }}>Activa</span>;
+  if (estado === "suspendida") {
+    return (
+      <span style={{ color: ROJO }}>
+        Suspendida {tiempoRelativo(u.suspended_at)}
+        {u.suspended_reason && (
+          <span style={{ display: "block", color: "var(--text-muted)", maxWidth: 260 }}>Motivo: {u.suspended_reason}</span>
+        )}
+      </span>
+    );
+  }
+  return <span style={{ color: "var(--gold-light)" }}>Eliminada por su titular {tiempoRelativo(u.deleted_at)}</span>;
+}
+
+export function AdminUsuarios() {
+  const [filtro, setFiltro] = useState("todas");
+  const [usuarios, setUsuarios] = useState(null);
+  const [dialogo, setDialogo] = useState(null); // { tipo: "suspender" | "eliminar", usuario }
+  const [aviso, setAviso] = useState("");
+
+  function cargar(estado = filtro) {
+    fetch(`/api/admin/usuarios?estado=${estado}`)
       .then((r) => r.json())
       .then((d) => setUsuarios(d.usuarios || []))
       .catch(() => setUsuarios([]));
   }
 
   useEffect(() => {
-    cargar();
-  }, []);
+    setUsuarios(null);
+    cargar(filtro);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filtro]);
 
-  async function suspender(id, nick) {
-    if (!window.confirm(`¿Suspender la cuenta de ${nick}? Esto es un soft-delete (deleted_at).`)) return;
-    const res = await fetch(`/api/admin/usuarios/${id}/suspender`, { method: "PATCH" });
-    if (res.ok) cargar();
-    else {
-      const data = await res.json().catch(() => null);
-      alert(data?.error || "No se pudo suspender.");
-    }
+  async function accion(url, opciones, textoOk) {
+    const res = await fetch(url, opciones);
+    const data = await res.json().catch(() => null);
+    if (!res.ok) return data?.error || "No se pudo completar la acción.";
+    setDialogo(null);
+    setAviso(textoOk);
+    cargar();
+    return null;
   }
 
-  if (usuarios === null) {
-    return <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>Cargando…</p>;
+  const suspender = (u, motivo) =>
+    accion(
+      `/api/admin/usuarios/${u.id}/suspender`,
+      { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ motivo }) },
+      `Cuenta de ${u.nick} suspendida. Sus sesiones abiertas se cerrarán en menos de un minuto.`
+    );
+
+  const eliminar = (u, confirmacionNick) =>
+    accion(
+      `/api/admin/usuarios/${u.id}`,
+      { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ confirmacionNick }) },
+      `Cuenta de ${u.nick} eliminada definitivamente.`
+    );
+
+  async function reactivar(u) {
+    const error = await accion(`/api/admin/usuarios/${u.id}/reactivar`, { method: "PATCH" }, `Cuenta de ${u.nick} reactivada.`);
+    if (error) setAviso(error);
   }
 
   return (
-    <div style={{ overflowX: "auto" }}>
-      <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "var(--font-body)", fontSize: 13 }}>
-        <thead>
-          <tr style={{ borderBottom: "1px solid rgba(201,161,90,0.3)" }}>
-            {["Nick", "Isla", "Tipo", "Alta", "Última act.", "Fotos", "Estado", ""].map((h) => (
-              <th key={h} style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-muted)", textTransform: "uppercase", fontSize: 10, letterSpacing: 1 }}>
-                {h}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {usuarios.map((u) => (
-            <tr key={u.id} style={{ borderBottom: "1px solid rgba(201,161,90,0.1)" }}>
-              <td style={{ padding: "10px 12px", color: "var(--text)" }}>{u.nick}</td>
-              <td style={{ padding: "10px 12px", color: "var(--text-secondary)" }}>{ISLAND_LABEL[u.island]}</td>
-              <td style={{ padding: "10px 12px", color: "var(--text-secondary)" }}>{PROFILE_TYPE_LABEL[u.profile_type]}</td>
-              <td style={{ padding: "10px 12px", color: "var(--text-secondary)" }}>{tiempoRelativo(u.created_at)}</td>
-              <td style={{ padding: "10px 12px", color: "var(--text-secondary)" }}>{u.last_active ? tiempoRelativo(u.last_active) : "—"}</td>
-              <td style={{ padding: "10px 12px", color: "var(--text-secondary)" }}>{u.fotos_count}</td>
-              <td style={{ padding: "10px 12px" }}>
-                {u.deleted_at ? (
-                  <span style={{ color: "#e07a7a" }}>Suspendida</span>
-                ) : u.role === "admin" ? (
-                  <span style={{ color: "var(--gold)" }}>Admin</span>
-                ) : (
-                  <span style={{ color: "#4ade80" }}>Activa</span>
-                )}
-              </td>
-              <td style={{ padding: "10px 12px", display: "flex", gap: 8 }}>
-                <Link href={`/perfil/${u.nick}`} className="btn-outline-gold" style={{ fontSize: 10, padding: "5px 10px" }}>
-                  Ver perfil
-                </Link>
-                {!u.deleted_at && u.role !== "admin" && (
-                  <button
-                    type="button"
-                    onClick={() => suspender(u.id, u.nick)}
-                    className="btn-outline-gold"
-                    style={{ fontSize: 10, padding: "5px 10px", borderColor: "rgba(154,58,58,0.5)", color: "#e07a7a" }}
-                  >
-                    Suspender
-                  </button>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div>
+      <div role="group" aria-label="Filtrar cuentas" style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 20 }}>
+        {FILTROS.map((f) => (
+          <button
+            key={f.id}
+            type="button"
+            aria-pressed={filtro === f.id}
+            onClick={() => setFiltro(f.id)}
+            className={filtro === f.id ? "btn-gold" : "btn-outline-gold"}
+            style={estiloBoton}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+
+      {aviso && (
+        <p role="status" style={{ marginBottom: 16, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+          {aviso}
+        </p>
+      )}
+
+      {usuarios === null ? (
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>Cargando…</p>
+      ) : usuarios.length === 0 ? (
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>No hay cuentas en este filtro.</p>
+      ) : (
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "var(--font-body)", fontSize: 13 }}>
+            <thead>
+              <tr style={{ borderBottom: "1px solid rgba(201,161,90,0.3)" }}>
+                {["Nick", "Isla", "Tipo", "Alta", "Última act.", "Fotos", "Estado", "Acciones"].map((h) => (
+                  <th key={h} style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-muted)", fontSize: 11, fontWeight: 500 }}>
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {usuarios.map((u) => {
+                const estado = estadoDe(u);
+                return (
+                  <tr key={u.id} style={{ borderBottom: "1px solid rgba(201,161,90,0.1)" }}>
+                    <td style={{ ...estiloCelda, color: "var(--text)" }}>{u.nick}</td>
+                    <td style={estiloCelda}>{ISLAND_LABEL[u.island]}</td>
+                    <td style={estiloCelda}>{PROFILE_TYPE_LABEL[u.profile_type]}</td>
+                    <td style={estiloCelda}>{tiempoRelativo(u.created_at)}</td>
+                    <td style={estiloCelda}>{u.last_active ? tiempoRelativo(u.last_active) : "—"}</td>
+                    <td style={estiloCelda}>{u.fotos_count}</td>
+                    <td style={estiloCelda}>
+                      <Estado u={u} />
+                    </td>
+                    <td style={estiloCelda}>
+                      <div style={{ display: "flex", gap: 8 }}>
+                        <Link href={`/perfil/${u.nick}`} className="btn-outline-gold" style={estiloBoton}>
+                          Ver perfil
+                        </Link>
+                        {estado === "activa" && (
+                          <button type="button" onClick={() => setDialogo({ tipo: "suspender", usuario: u })} className="btn-outline-gold" style={estiloBotonPeligro}>
+                            Suspender
+                          </button>
+                        )}
+                        {estado === "suspendida" && (
+                          <button type="button" onClick={() => reactivar(u)} className="btn-outline-gold" style={estiloBoton}>
+                            Reactivar
+                          </button>
+                        )}
+                        {(estado === "suspendida" || estado === "pendiente") && (
+                          <button type="button" onClick={() => setDialogo({ tipo: "eliminar", usuario: u })} className="btn-outline-gold" style={estiloBotonPeligro}>
+                            Eliminar definitivamente
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {dialogo?.tipo === "suspender" && (
+        <DialogoSuspender usuario={dialogo.usuario} onCerrar={() => setDialogo(null)} onConfirmar={suspender} />
+      )}
+      {dialogo?.tipo === "eliminar" && (
+        <DialogoEliminar usuario={dialogo.usuario} onCerrar={() => setDialogo(null)} onConfirmar={eliminar} />
+      )}
     </div>
+  );
+}
+
+function PieDialogo({ onCerrar, enviando, deshabilitado, texto, textoEnviando }) {
+  return (
+    <div style={{ marginTop: 24, display: "flex", justifyContent: "flex-end", flexWrap: "wrap", gap: 10 }}>
+      <button type="button" onClick={onCerrar} className="btn-outline-gold" style={{ fontSize: 12 }}>
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        disabled={deshabilitado || enviando}
+        className="btn-outline-gold"
+        style={{ fontSize: 12, borderColor: "rgba(154,58,58,0.6)", color: ROJO, opacity: deshabilitado || enviando ? 0.45 : 1 }}
+      >
+        {enviando ? textoEnviando : texto}
+      </button>
+    </div>
+  );
+}
+
+function useEnvio(onConfirmar, usuario) {
+  const [enviando, setEnviando] = useState(false);
+  const [error, setError] = useState("");
+  async function enviar(valor) {
+    setEnviando(true);
+    setError("");
+    const err = await onConfirmar(usuario, valor);
+    setEnviando(false);
+    if (err) setError(err);
+  }
+  return { enviando, error, enviar };
+}
+
+function DialogoSuspender({ usuario, onCerrar, onConfirmar }) {
+  const [motivo, setMotivo] = useState("");
+  const { enviando, error, enviar } = useEnvio(onConfirmar, usuario);
+  return (
+    <Dialogo onCerrar={onCerrar} idTitulo="suspender-titulo">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          enviar(motivo);
+        }}
+      >
+        <h2 id="suspender-titulo" className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
+          Suspender a {usuario.nick}
+        </h2>
+        <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
+          Deja de aparecer en la web, no puede iniciar sesión y sus sesiones abiertas se cierran. Se puede reactivar.
+        </p>
+        <label style={{ display: "block", marginTop: 18 }}>
+          <span className="label-field">Motivo (opcional, solo lo ven los administradores)</span>
+          <textarea
+            rows={3}
+            maxLength={500}
+            value={motivo}
+            onChange={(e) => setMotivo(e.target.value)}
+            className="input-field"
+            style={{ resize: "vertical" }}
+            autoFocus
+          />
+        </label>
+        {error && <p role="alert" style={{ marginTop: 12, fontSize: 13, color: ROJO }}>{error}</p>}
+        <PieDialogo onCerrar={onCerrar} enviando={enviando} texto="Suspender" textoEnviando="Suspendiendo…" />
+      </form>
+    </Dialogo>
+  );
+}
+
+function DialogoEliminar({ usuario, onCerrar, onConfirmar }) {
+  const [nick, setNick] = useState("");
+  const { enviando, error, enviar } = useEnvio(onConfirmar, usuario);
+  const coincide = nick === usuario.nick;
+  return (
+    <Dialogo onCerrar={onCerrar} idTitulo="eliminar-titulo">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (coincide) enviar(nick);
+        }}
+      >
+        <h2 id="eliminar-titulo" className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
+          Eliminar definitivamente a {usuario.nick}
+        </h2>
+        <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
+          <strong style={{ color: ROJO }}>No se puede deshacer.</strong> Se borran sus fotos del disco, publicaciones,
+          historias, comentarios, likes, mensajes, visitas, amistades, bloqueos, anuncios y eventos. Las denuncias contra
+          esta cuenta se conservan solo con su nick y la fecha.
+        </p>
+        <label style={{ display: "block", marginTop: 18 }}>
+          <span className="label-field">
+            Escribe <strong style={{ color: "var(--text)" }}>{usuario.nick}</strong> para confirmar
+          </span>
+          <input
+            type="text"
+            value={nick}
+            onChange={(e) => setNick(e.target.value)}
+            className="input-field"
+            autoComplete="off"
+            spellCheck={false}
+            autoFocus
+          />
+        </label>
+        {error && <p role="alert" style={{ marginTop: 12, fontSize: 13, color: ROJO }}>{error}</p>}
+        <PieDialogo
+          onCerrar={onCerrar}
+          enviando={enviando}
+          deshabilitado={!coincide}
+          texto="Eliminar definitivamente"
+          textoEnviando="Eliminando…"
+        />
+      </form>
+    </Dialogo>
   );
 }

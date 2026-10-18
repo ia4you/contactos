@@ -892,3 +892,29 @@ body {
     width: 100% !important;
   }
 }
+
+/* ---------- Diálogo accesible (app/components/Dialogo.js) ---------- */
+
+.dialogo-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  background: rgba(14, 10, 11, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.dialogo {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border-gold);
+  padding: 28px;
+}
+.dialogo:focus {
+  outline: none;
+}

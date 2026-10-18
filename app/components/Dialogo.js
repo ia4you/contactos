@@ -8,7 +8,8 @@ const ENFOCABLES =
 
 // Diálogo modal accesible: role="dialog" + aria-modal, foco atrapado dentro,
 // Escape y clic en el fondo cierran, y al cerrar el foco vuelve a donde
-// estaba. variante="hoja" lo ancla abajo a todo el ancho (hoja inferior).
+// estaba. variante="hoja" lo ancla abajo a todo el ancho (hoja inferior),
+// "completa" ocupa toda la pantalla y "lightbox" es un visor sobre negro.
 // Se pinta en <body> (portal) para que ningún contexto de apilamiento del
 // padre (menús desplegables, cabeceras sticky) lo deje por debajo. Solo se
 // monta tras una interacción o un efecto, nunca en el SSR.
@@ -58,10 +59,9 @@ export function Dialogo({ onCerrar, etiqueta, idTitulo, variante, className = ""
     };
   }, []);
 
-  const hoja = variante === "hoja";
   return createPortal(
     <div
-      className={`dialogo-fondo${hoja ? " dialogo-fondo--hoja" : ""}`}
+      className={`dialogo-fondo${variante ? ` dialogo-fondo--${variante}` : ""}`}
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onCerrar();
       }}
@@ -73,7 +73,7 @@ export function Dialogo({ onCerrar, etiqueta, idTitulo, variante, className = ""
         aria-label={idTitulo ? undefined : etiqueta}
         aria-labelledby={idTitulo}
         tabIndex={-1}
-        className={`dialogo${hoja ? " dialogo--hoja" : ""} ${className}`}
+        className={`dialogo${variante ? ` dialogo--${variante}` : ""} ${className}`}
       >
         {children}
       </div>

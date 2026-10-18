@@ -6,6 +6,7 @@ import Link from "next/link";
 import { X, ChevronLeft, ChevronRight, MessageCircle } from "lucide-react";
 import { avatarSrc } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
+import { Dialogo } from "../../components/Dialogo";
 
 const SWIPE_MIN_PX = 50;
 
@@ -41,19 +42,10 @@ export function FotoLightbox({ usuarioId, fotos, indiceInicial, onClose }) {
     setIndice((i) => (i + 1) % fotos.length);
   }
 
-  // Bloquea el scroll del fondo mientras el lightbox está abierto.
   useEffect(() => {
-    const previo = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previo;
-    };
-  }, []);
-
-  useEffect(() => {
+    // Escape y el bloqueo del scroll los gestiona Dialogo.
     function onKeyDown(e) {
-      if (e.key === "Escape") onClose();
-      else if (e.key === "ArrowLeft") anterior();
+      if (e.key === "ArrowLeft") anterior();
       else if (e.key === "ArrowRight") siguiente();
     }
     window.addEventListener("keydown", onKeyDown);
@@ -114,15 +106,14 @@ export function FotoLightbox({ usuarioId, fotos, indiceInicial, onClose }) {
   }
 
   return (
+    <Dialogo onCerrar={onClose} etiqueta="Foto ampliada" variante="lightbox">
     <div
       onClick={onClose}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
       style={{
-        position: "fixed",
+        position: "absolute",
         inset: 0,
-        zIndex: 300,
-        background: "rgba(0,0,0,0.95)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -349,5 +340,6 @@ export function FotoLightbox({ usuarioId, fotos, indiceInicial, onClose }) {
         </div>
       )}
     </div>
+    </Dialogo>
   );
 }

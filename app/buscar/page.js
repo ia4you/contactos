@@ -102,6 +102,7 @@ export default function Buscar() {
               key={p.value}
               type="button"
               onClick={() => actualizar("tipos", toggleEnArray(filtros.tipos, p.value))}
+              aria-pressed={filtros.tipos.includes(p.value)}
               className={`pill-select ${filtros.tipos.includes(p.value) ? "active" : ""}`}
             >
               {p.label}
@@ -158,6 +159,7 @@ export default function Buscar() {
               key={o}
               type="button"
               onClick={() => actualizar("orientaciones", toggleEnArray(filtros.orientaciones, o))}
+              aria-pressed={filtros.orientaciones.includes(o)}
               className={`fetiche-chip ${filtros.orientaciones.includes(o) ? "active" : ""}`}
             >
               {o}
@@ -173,6 +175,7 @@ export default function Buscar() {
               key={o.value}
               type="button"
               onClick={() => actualizar("lookingFor", toggleEnArray(filtros.lookingFor, o.value))}
+              aria-pressed={filtros.lookingFor.includes(o.value)}
               className={`fetiche-chip ${filtros.lookingFor.includes(o.value) ? "active" : ""}`}
             >
               {o.label}

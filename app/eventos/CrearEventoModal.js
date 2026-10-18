@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { SelectorArchivo } from "../components/SelectorArchivo";
 import { ISLANDS } from "@/lib/constants";
 import { LugarAutocomplete } from "./LugarAutocomplete";
+import { Dialogo } from "../components/Dialogo";
 
 const TIPOS = [
   { value: "quedada", label: "Quedada" },
@@ -114,15 +115,8 @@ export function CrearEventoModal({ eventoExistente, islaPorDefecto, onClose, onG
   }
 
   return (
-    <div
-      style={{ position: "fixed", inset: 0, zIndex: 100, background: "var(--veil-strong)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24, overflowY: "auto" }}
-      onClick={onClose}
-    >
-      <div
-        style={{ width: "100%", maxWidth: 480, background: "var(--surface)", border: "1px solid var(--border-gold)", padding: 28, margin: "auto" }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h3 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
+    <Dialogo onCerrar={onClose} idTitulo="crear-evento-titulo">
+        <h3 id="crear-evento-titulo" className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
           {esEdicion ? "Editar evento" : "Crear evento"}
         </h3>
 
@@ -205,7 +199,6 @@ export function CrearEventoModal({ eventoExistente, islaPorDefecto, onClose, onG
             {enviando ? "Guardando…" : esEdicion ? "Guardar cambios" : "Crear evento"}
           </button>
         </div>
-      </div>
-    </div>
+    </Dialogo>
   );
 }

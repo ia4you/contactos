@@ -172,6 +172,7 @@ export default function Registro() {
                   type="button"
                   key={p.value}
                   onClick={() => actualizar("profileType", p.value)}
+                  aria-pressed={form.profileType === p.value}
                   className={`pill-select ${form.profileType === p.value ? "active" : ""}`}
                 >
                   {p.label}

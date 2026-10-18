@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CATEGORIAS_DENUNCIA } from "@/lib/reportes";
+import { Dialogo } from "./Dialogo";
 
 export function ReportButton({ reportedUserId, label, className, style }) {
   const [abierto, setAbierto] = useState(false);
@@ -50,33 +51,11 @@ export function ReportButton({ reportedUserId, label, className, style }) {
       </button>
 
       {abierto && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 100,
-            background: "var(--veil-strong)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 24,
-          }}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) cerrar();
-          }}
-        >
-          <div
-            style={{
-              width: "100%",
-              maxWidth: 420,
-              background: "var(--surface)",
-              border: "1px solid var(--border-gold)",
-              padding: 28,
-            }}
-          >
+        <Dialogo onCerrar={cerrar} idTitulo="denuncia-titulo">
+          <div aria-live="polite">
             {enviado ? (
               <>
-                <h3 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
+                <h3 id="denuncia-titulo" className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
                   Denuncia enviada
                 </h3>
                 <p
@@ -100,7 +79,7 @@ export function ReportButton({ reportedUserId, label, className, style }) {
               </>
             ) : (
               <>
-                <h3 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
+                <h3 id="denuncia-titulo" className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
                   Denunciar perfil
                 </h3>
 
@@ -162,7 +141,7 @@ export function ReportButton({ reportedUserId, label, className, style }) {
               </>
             )}
           </div>
-        </div>
+        </Dialogo>
       )}
     </>
   );

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Search, X } from "lucide-react";
+import { Dialogo } from "./Dialogo";
 
 // Modal reutilizable: en /mi-perfil persiste la selección del usuario, en
 // /buscar solo alimenta el filtro de búsqueda. El propio componente decide
@@ -45,16 +46,7 @@ export function GustosModal({ seleccionInicial, onCerrar, onGuardar }) {
     .filter(([, items]) => items.length > 0);
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 1000,
-        background: "var(--bg)",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <Dialogo onCerrar={onCerrar} idTitulo="gustos-titulo" variante="completa">
       <div
         style={{
           display: "flex",
@@ -65,7 +57,7 @@ export function GustosModal({ seleccionInicial, onCerrar, onGuardar }) {
           flexShrink: 0,
         }}
       >
-        <h2 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
+        <h2 id="gustos-titulo" className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
           Mis gustos
         </h2>
         <button
@@ -122,6 +114,7 @@ export function GustosModal({ seleccionInicial, onCerrar, onGuardar }) {
                     key={f.id}
                     type="button"
                     onClick={() => toggle(f.id)}
+                    aria-pressed={seleccion.has(f.id)}
                     className={`fetiche-chip ${seleccion.has(f.id) ? "active" : ""}`}
                   >
                     {f.nombre}
@@ -160,6 +153,6 @@ export function GustosModal({ seleccionInicial, onCerrar, onGuardar }) {
           {guardando ? "Guardando…" : "Guardar"}
         </button>
       </div>
-    </div>
+    </Dialogo>
   );
 }

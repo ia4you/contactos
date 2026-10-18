@@ -161,6 +161,7 @@ export function AnunciosShell({ usuario }) {
                       busco: f.busco.includes(o.value) ? f.busco.filter((v) => v !== o.value) : [...f.busco, o.value],
                     }))
                   }
+                  aria-pressed={filtros.busco.includes(o.value)}
                   className={`fetiche-chip ${filtros.busco.includes(o.value) ? "active" : ""}`}
                 >
                   {o.label}

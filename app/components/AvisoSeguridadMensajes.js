@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Lock } from "lucide-react";
+import { Dialogo } from "./Dialogo";
 
 const TEXTO_MODAL =
   "Tu privacidad y seguridad son una prioridad para nosotros. Te recomendamos no compartir datos " +
@@ -65,29 +66,8 @@ export function AvisoSeguridadModal({ usuarioId }) {
   if (!visible) return null;
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 1000,
-        background: "var(--veil-strong)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 20,
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 440,
-          width: "100%",
-          background: "var(--bg-secondary)",
-          border: "1px solid var(--rule)",
-          borderTop: "3px solid #7A2E3F",
-          padding: "28px 26px",
-        }}
-      >
-        <h3 className="heading" style={{ fontSize: 18, color: "var(--text)", marginBottom: 14 }}>
+    <Dialogo onCerrar={cerrar} idTitulo="aviso-seguridad-titulo" className="dialogo--aviso">
+        <h3 id="aviso-seguridad-titulo" className="heading" style={{ fontSize: 22, color: "var(--text)", marginBottom: 14 }}>
           Tu seguridad, primero
         </h3>
         <p style={{ fontFamily: "var(--font-body)", fontSize: 14, lineHeight: 1.6, color: "var(--text-secondary)" }}>
@@ -96,7 +76,6 @@ export function AvisoSeguridadModal({ usuarioId }) {
         <button type="button" onClick={cerrar} className="btn-gold" style={{ marginTop: 20, width: "100%" }}>
           Entendido
         </button>
-      </div>
-    </div>
+    </Dialogo>
   );
 }

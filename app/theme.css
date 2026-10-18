@@ -948,6 +948,35 @@ button.fetiche-chip {
   padding: 8px 0 calc(16px + env(safe-area-inset-bottom));
   max-height: 85dvh;
 }
+.dialogo-fondo--completa,
+.dialogo-fondo--lightbox {
+  padding: 0;
+}
+.dialogo--completa,
+.dialogo--lightbox {
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  border: none;
+  padding: 0;
+}
+.dialogo--completa {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  overflow: hidden;
+}
+.dialogo-fondo--lightbox {
+  background: rgba(0, 0, 0, 0.95);
+}
+.dialogo--lightbox {
+  background: transparent;
+  overflow: hidden;
+}
+.dialogo--aviso {
+  max-width: 440px;
+  border-top: 3px solid var(--wine);
+}
 .hoja-item {
   display: flex;
   align-items: center;

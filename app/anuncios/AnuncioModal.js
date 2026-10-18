@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ISLANDS, LOOKING_FOR_OPTIONS } from "@/lib/constants";
+import { Dialogo } from "../components/Dialogo";
 
 export function AnuncioModal({ anuncioExistente, islaPorDefecto, onClose, onGuardado }) {
   const esEdicion = Boolean(anuncioExistente);
@@ -49,24 +50,8 @@ export function AnuncioModal({ anuncioExistente, islaPorDefecto, onClose, onGuar
   }
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 100,
-        background: "var(--veil-strong)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 24,
-      }}
-      onClick={onClose}
-    >
-      <div
-        style={{ width: "100%", maxWidth: 480, background: "var(--surface)", border: "1px solid var(--border-gold)", padding: 28 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h3 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
+    <Dialogo onCerrar={onClose} idTitulo="anuncio-modal-titulo">
+        <h3 id="anuncio-modal-titulo" className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
           {esEdicion ? "Editar anuncio" : "Crear anuncio"}
         </h3>
 
@@ -104,6 +89,7 @@ export function AnuncioModal({ anuncioExistente, islaPorDefecto, onClose, onGuar
                 key={o.value}
                 type="button"
                 onClick={() => toggleBusco(o.value)}
+                aria-pressed={busco.includes(o.value)}
                 className={`fetiche-chip ${busco.includes(o.value) ? "active" : ""}`}
               >
                 {o.label}
@@ -135,7 +121,6 @@ export function AnuncioModal({ anuncioExistente, islaPorDefecto, onClose, onGuar
             {enviando ? "Guardando…" : "Publicar anuncio"}
           </button>
         </div>
-      </div>
-    </div>
+    </Dialogo>
   );
 }

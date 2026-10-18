@@ -192,6 +192,7 @@ export function ClubsShell({ clubs, proximamenteSlug }) {
             key={f.value}
             type="button"
             onClick={() => setIslaFiltro(f.value)}
+            aria-pressed={islaFiltro === f.value}
             className={`fetiche-chip ${islaFiltro === f.value ? "active" : ""}`}
           >
             {f.label}

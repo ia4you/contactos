@@ -65,18 +65,7 @@ export function AjustesShell({ usuario, avatarFilename }) {
             </h1>
             <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 8 }}>
               <span className="badge-gold">{ISLAND_LABEL[usuario.island]}</span>
-              <span
-                style={{
-                  display: "inline-block",
-                  fontFamily: "var(--font-body)",
-                  background: "var(--surface)",
-                  border: "1px solid var(--border-gold)",
-                  color: "var(--text)",
-                  fontSize: 12,
-                  letterSpacing: "0.04em",
-                  padding: "4px 10px",
-                }}
-              >
+              <span className="badge-gold">
                 {PROFILE_TYPE_LABEL[usuario.profile_type]}
               </span>
               {usuario.verified && (

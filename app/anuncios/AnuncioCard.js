@@ -27,7 +27,7 @@ export function AnuncioCard({ anuncio, esPropio, onEditar, onEliminar }) {
             <Link href={`/perfil/${anuncio.nick}`} className="heading" style={{ fontSize: 16, color: "var(--text)", textDecoration: "none" }}>
               {anuncio.nick}
             </Link>
-            <span className="badge-gold" style={{ fontSize: 12, padding: "2px 7px" }}>{ISLAND_LABEL[anuncio.island]}</span>
+            <span className="badge-gold" style={{ fontSize: 12 }}>{ISLAND_LABEL[anuncio.island]}</span>
           </div>
           <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
             {tiempoRelativo(anuncio.created_at)}

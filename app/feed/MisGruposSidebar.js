@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Users, Plus } from "lucide-react";
+import { Users } from "lucide-react";
 import { CrearGrupoModal } from "./CrearGrupoModal";
 
 export function MisGruposSidebar() {
@@ -23,7 +23,7 @@ export function MisGruposSidebar() {
 
   return (
     <div>
-      <p className="kicker" style={{ letterSpacing: "0.04em" }}>Mis grupos</p>
+      <h3 className="widget-titulo">Mis grupos</h3>
 
       <div style={{ marginTop: 14 }}>
         {grupos === null ? (
@@ -31,7 +31,7 @@ export function MisGruposSidebar() {
         ) : grupos.length === 0 ? (
           <>
             <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>Únete a un grupo</p>
-            <Link href="/grupos" className="btn-outline-gold" style={{ marginTop: 10, display: "inline-block", fontSize: 12, padding: "7px 14px" }}>
+            <Link href="/grupos" className="enlace-flecha" style={{ marginTop: 6 }}>
               Ver grupos
             </Link>
           </>
@@ -83,17 +83,11 @@ export function MisGruposSidebar() {
         )}
       </div>
 
-      <div style={{ marginTop: 18, display: "flex", flexDirection: "column", gap: 8 }}>
-        <Link href="/grupos" className="btn-outline-gold" style={{ fontSize: 12, padding: "7px 14px", textAlign: "center" }}>
+      <div style={{ marginTop: 14, display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+        <Link href="/grupos" className="enlace-flecha">
           Ver todos
         </Link>
-        <button
-          type="button"
-          onClick={() => setModalAbierto(true)}
-          className="btn-outline-gold"
-          style={{ fontSize: 12, padding: "7px 14px", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
-        >
-          <Plus size={13} />
+        <button type="button" onClick={() => setModalAbierto(true)} className="enlace-flecha">
           Crear grupo
         </button>
       </div>

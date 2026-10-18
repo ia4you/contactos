@@ -103,7 +103,7 @@ export function Composer({ usuario, avatarUrl, onPublicado, autoAbrir }) {
   }
 
   return (
-    <div style={{ background: "var(--surface)", border: "1px solid var(--border-gold)", padding: 20 }}>
+    <div style={{ paddingBottom: 20, borderBottom: "1px solid var(--rule)" }}>
       <div style={{ display: "flex", gap: 14 }}>
         <div style={{ position: "relative", width: 32, height: 32, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
           <Image sizes="32px" src={imagenAvatar} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />

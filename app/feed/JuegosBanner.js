@@ -19,16 +19,13 @@ export function JuegosBanner({ vertical = false }) {
           <div
             key={j.titulo}
             style={{
-              background: "var(--surface)",
-              border: "1px solid var(--rule)",
-              padding: 16,
               display: "flex",
               flexDirection: "column",
               gap: 8,
             }}
           >
             <Gamepad2 size={22} color="var(--gold)" />
-            <h3 className="heading" style={{ fontFamily: "var(--font-display)", fontSize: 18, color: "var(--gold)" }}>
+            <h3 className="widget-titulo">
               {j.titulo}
             </h3>
             <p style={{ flex: 1, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
@@ -38,8 +35,8 @@ export function JuegosBanner({ vertical = false }) {
               href={j.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-outline-gold"
-              style={{ alignSelf: "flex-start", padding: "7px 16px", fontSize: 12 }}
+              className="enlace-flecha"
+              style={{ alignSelf: "flex-start" }}
             >
               Jugar
             </a>

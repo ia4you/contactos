@@ -10,8 +10,8 @@ export function ActivosIslaWidget({ usuarios, isla }) {
   if (!usuarios || usuarios.length < 2) return null;
 
   return (
-    <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", padding: 18, marginBottom: 24 }}>
-      <h3 className="heading" style={{ fontSize: 16, color: "var(--gold)" }}>
+    <div style={{ marginBottom: 24 }}>
+      <h3 className="widget-titulo">
         Activos en {ISLAND_LABEL[isla]} hoy
       </h3>
       <div style={{ marginTop: 14, display: "flex", gap: 18, flexWrap: "wrap" }}>

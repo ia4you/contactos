@@ -35,9 +35,7 @@ function TarjetaRecomendacion({ r }) {
       style={{
         width: 148,
         flexShrink: 0,
-        background: "var(--surface)",
-        border: "1px solid var(--rule)",
-        padding: 14,
+        padding: "14px 0",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -68,7 +66,7 @@ function TarjetaRecomendacion({ r }) {
         </p>
       )}
 
-      <Link href={`/perfil/${r.nick}`} className="btn-outline-gold" style={{ marginTop: 4, fontSize: 12, padding: "6px 16px" }}>
+      <Link href={`/perfil/${r.nick}`} className="enlace-flecha" aria-label={`Ver perfil de ${r.nick}`}>
         Ver
       </Link>
     </div>
@@ -98,7 +96,7 @@ function FilaRecomendacionCompacta({ r }) {
           <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>{ISLAND_LABEL[r.island]}</span>
         )}
       </div>
-      <Link href={`/perfil/${r.nick}`} className="btn-outline-gold" style={{ flexShrink: 0, fontSize: 12, padding: "5px 10px" }}>
+      <Link href={`/perfil/${r.nick}`} className="enlace-flecha" style={{ flexShrink: 0 }} aria-label={`Ver perfil de ${r.nick}`}>
         Ver
       </Link>
     </div>
@@ -128,8 +126,8 @@ export function RecomendadosWidget({ compacto = false }) {
     <div style={{ marginBottom: 24 }}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
         <div>
-          <p className="kicker" style={{ letterSpacing: "0.04em" }}>Recomendados para ti</p>
-          <p style={{ marginTop: 2, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
+          <h3 className="widget-titulo">Recomendados para ti</h3>
+          <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
             Seleccionados por IA según tus gustos
           </p>
         </div>
@@ -163,11 +161,11 @@ export function RecomendadosWidget({ compacto = false }) {
           </div>
         )
       ) : estado.sinGustos ? (
-        <div style={{ marginTop: 14, background: "var(--surface)", border: "1px solid var(--rule)", padding: 20, textAlign: "center" }}>
+        <div style={{ marginTop: 14 }}>
           <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
             Añade tus gustos para recibir recomendaciones personalizadas
           </p>
-          <Link href="/mi-perfil#gustos" className="btn-outline-gold" style={{ marginTop: 12, display: "inline-block", fontSize: 12 }}>
+          <Link href="/mi-perfil#gustos" className="enlace-flecha">
             Añadir gustos
           </Link>
         </div>

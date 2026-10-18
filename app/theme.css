@@ -517,14 +517,59 @@ input[type="file"]::file-selector-button:hover {
 
 /* ---------- Etiquetas, pastillas, chips ---------- */
 
+/* Dato informativo, no clicable: texto plano sin borde; varias seguidas
+   se separan con « · ». */
 .badge-gold {
   display: inline-block;
   font-family: var(--font-body);
-  border: 1px solid var(--rule-strong);
   color: var(--gold);
   font-size: var(--fs-12);
   letter-spacing: 0.02em;
-  padding: 3px 10px;
+}
+.badge-gold + .badge-gold::before {
+  content: "·";
+  margin-right: 0.5em;
+  color: var(--text-muted);
+}
+
+/* Título de widget / bloque lateral: Cormorant + regla dorada corta. */
+.widget-titulo {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--fs-22);
+  line-height: 1.15;
+  color: var(--text);
+}
+.widget-titulo::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 1px;
+  margin-top: 10px;
+  background: var(--gold);
+}
+
+/* Acción secundaria como enlace de texto dorado con flecha. */
+.enlace-flecha {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0;
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: var(--fs-14);
+  font-weight: 500;
+  color: var(--gold);
+  text-decoration: none;
+  cursor: pointer;
+}
+.enlace-flecha::after {
+  content: "\00a0→";
+}
+.enlace-flecha:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .pill-select {

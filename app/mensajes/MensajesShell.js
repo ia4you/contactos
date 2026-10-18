@@ -335,7 +335,7 @@ export function MensajesShell({ usuarioId }) {
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <span className="heading" style={{ fontSize: 16, color: "var(--text)" }}>{otro.nick}</span>
-                  <span className="badge-gold" style={{ fontSize: 12, padding: "2px 7px" }}>{ISLAND_LABEL[otro.island]}</span>
+                  <span className="badge-gold" style={{ fontSize: 12 }}>{ISLAND_LABEL[otro.island]}</span>
                 </div>
               </div>
               <Link href={`/perfil/${otro.nick}`} className="nav-top-link" style={{ fontSize: 12 }}>

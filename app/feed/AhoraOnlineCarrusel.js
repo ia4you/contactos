@@ -40,7 +40,7 @@ export function AhoraOnlineCarrusel() {
     <div style={{ marginBottom: 24 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <span className="punto-pulso" />
-        <p className="kicker" style={{ letterSpacing: "0.04em" }}>Ahora online</p>
+        <h3 className="widget-titulo">Ahora online</h3>
       </div>
 
       <div className="scroll-sin-barra" style={{ marginTop: 14, display: "flex", gap: 16, overflowX: "auto" }}>

@@ -43,7 +43,7 @@ export function GrupoAdminTab({ grupoId, usuarioId, miembros, onMiembroExpulsado
                 </div>
                 <span style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text)" }}>{m.nick}</span>
                 {m.rol === "admin" && (
-                  <span className="badge-gold" style={{ fontSize: 12, padding: "2px 7px" }}>Admin</span>
+                  <span className="badge-gold" style={{ fontSize: 12 }}>Admin</span>
                 )}
               </Link>
 

@@ -21,7 +21,7 @@ export function FotosTopWidget() {
 
   return (
     <div style={{ marginBottom: 24 }}>
-      <p className="kicker">Fotos más valoradas hoy</p>
+      <h3 className="widget-titulo">Fotos más valoradas hoy</h3>
       <div className="scroll-sin-barra" style={{ marginTop: 14, display: "flex", gap: 12, overflowX: "auto", paddingBottom: 4 }}>
         {fotos.slice(0, 3).map((f, i) => (
           <Link

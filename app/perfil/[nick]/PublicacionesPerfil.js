@@ -25,7 +25,7 @@ function CabeceraTarjeta({ usuario, avatarFilename, tiempo }) {
           <span className="heading" style={{ fontSize: 16, color: "var(--text)" }}>
             {usuario.nick}
           </span>
-          <span className="badge-gold" style={{ fontSize: 12, padding: "2px 7px" }}>
+          <span className="badge-gold" style={{ fontSize: 12 }}>
             {ISLAND_LABEL[usuario.island]}
           </span>
         </div>

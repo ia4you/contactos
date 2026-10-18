@@ -130,6 +130,10 @@ textarea::placeholder {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  /* El degradado de .tab-nav va ligado al scroll, no es movimiento */
+  .tab-nav {
+    animation-duration: auto !important;
+  }
   /* La barra de las historias marca el ritmo del visor: no se acelera */
   .historia-progreso-fill {
     animation-duration: 5s !important;
@@ -713,6 +717,28 @@ button.fetiche-chip {
 }
 .tab-nav::-webkit-scrollbar {
   display: none;
+}
+/* Cuando queda scroll a la derecha, el borde derecho se desvanece para
+   indicar que hay más pestañas. Va con una animación ligada al scroll: sin
+   desbordamiento la línea de tiempo está inactiva y no hay degradado.
+   ponytail: sin degradado en navegadores sin animation-timeline (Firefox);
+   añadir un fallback con JS si hiciera falta. */
+@supports (animation-timeline: scroll()) {
+  .tab-nav {
+    animation: tab-nav-borde linear both;
+    animation-timeline: scroll(self inline);
+  }
+}
+@keyframes tab-nav-borde {
+  from,
+  92% {
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent);
+    mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent);
+  }
+  to {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
 }
 .tab-nav-item {
   flex-shrink: 0;

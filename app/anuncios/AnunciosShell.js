@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Filter } from "lucide-react";
 import { ISLANDS, LOOKING_FOR_OPTIONS } from "@/lib/constants";
@@ -27,7 +27,11 @@ export function AnunciosShell({ usuario }) {
   const [modalAbierto, setModalAbierto] = useState(() => searchParams.get("crear") === "1");
   const [anuncioEnEdicion, setAnuncioEnEdicion] = useState(null);
 
+  const peticionRef = useRef(0);
+
+  // Si llegan dos respuestas desordenadas, solo cuenta la de la última petición.
   const cargar = useCallback(async (filtrosActuales, offsetActual, append) => {
+    const id = ++peticionRef.current;
     setCargando(true);
     const params = new URLSearchParams();
     filtrosActuales.islas.forEach((v) => params.append("islas", v));
@@ -36,6 +40,7 @@ export function AnunciosShell({ usuario }) {
 
     const res = await fetch(`/api/anuncios?${params.toString()}`);
     const data = await res.json().catch(() => null);
+    if (id !== peticionRef.current) return;
     setCargando(false);
     if (!res.ok || !data) return;
 
@@ -44,8 +49,12 @@ export function AnunciosShell({ usuario }) {
     setOffset(offsetActual + LIMITE);
   }, []);
 
+  // Los filtros se aplican en cuanto cambian (también la carga inicial).
   useEffect(() => {
-    cargar(ESTADO_INICIAL, 0, false);
+    cargar(filtros, 0, false);
+  }, [filtros, cargar]);
+
+  useEffect(() => {
     fetch("/api/anuncios/mio")
       .then((r) => r.json())
       .then((d) => setAnuncioPropio(d.anuncio))
@@ -53,14 +62,8 @@ export function AnunciosShell({ usuario }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function filtrar() {
-    setFiltrosAbiertosMovil(false);
-    cargar(filtros, 0, false);
-  }
-
   function limpiar() {
     setFiltros(ESTADO_INICIAL);
-    cargar(ESTADO_INICIAL, 0, false);
   }
 
   function cargarMas() {
@@ -170,14 +173,9 @@ export function AnunciosShell({ usuario }) {
             </div>
           </div>
 
-          <div style={{ marginTop: 24, display: "flex", gap: 10 }}>
-            <button type="button" onClick={filtrar} className="btn-gold" style={{ flex: 1 }}>
-              Filtrar
-            </button>
-            <button type="button" onClick={limpiar} className="btn-outline-gold" style={{ flex: 1 }}>
-              Limpiar
-            </button>
-          </div>
+          <button type="button" onClick={limpiar} className="enlace-flecha" style={{ marginTop: 20 }}>
+            Limpiar filtros
+          </button>
         </aside>
 
         <section style={{ paddingTop: 24 }}>

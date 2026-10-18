@@ -1081,6 +1081,13 @@ button.fetiche-chip {
 .evento-fecha__dia {
   font-size: var(--fs-52);
 }
+/* Fila de selects que se aplican al cambiar: columnas iguales y alineadas */
+.filtros-fila {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 220px));
+  gap: 12px;
+}
 .eventos-lista > * + * {
   margin-top: 28px;
   padding-top: 28px;

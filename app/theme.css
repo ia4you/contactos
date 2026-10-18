@@ -288,9 +288,13 @@ textarea::placeholder {
   border-color: var(--gold);
   background: var(--gold-tint);
 }
-/* Pastilla de filtro activa: borde dorado, sin relleno. */
+/* Pastillas de filtro: la activa con borde dorado, el resto atenuadas. */
 .btn-outline-gold[aria-pressed="true"] {
   border-color: var(--gold);
+}
+.btn-outline-gold[aria-pressed="false"] {
+  border-color: var(--rule);
+  color: var(--text-secondary);
 }
 
 .btn-peligro {

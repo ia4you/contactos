@@ -155,7 +155,7 @@ export function MensajesShell({ usuarioId }) {
       <AvisoSeguridadModal usuarioId={usuarioId} />
       <AvisoSeguridadBanner />
       <div className={`mensajes-layout ${otro ? "chat-abierto" : ""}`}>
-      <aside className="mensajes-sidebar" style={{ background: "#150f10", borderRight: "1px solid var(--rule)", overflowY: "auto" }}>
+      <aside className="mensajes-sidebar" style={{ background: "var(--bg-deep)", borderRight: "1px solid var(--rule)", overflowY: "auto" }}>
         <div style={{ padding: "20px 20px 12px" }}>
           <p className="kicker">Mensajes</p>
           <input
@@ -205,7 +205,7 @@ export function MensajesShell({ usuarioId }) {
                   gap: 12,
                   width: "100%",
                   padding: "14px 20px",
-                  background: activaId === c.id ? "rgba(217,178,107,0.1)" : c.no_leidos > 0 ? "var(--surface)" : "transparent",
+                  background: activaId === c.id ? "var(--gold-tint)" : c.no_leidos > 0 ? "var(--surface)" : "transparent",
                   border: "none",
                   borderBottom: "1px solid var(--rule)",
                   cursor: "pointer",
@@ -332,11 +332,9 @@ export function MensajesShell({ usuarioId }) {
                 {mostrarPuntoOnline(otro) && <PuntoOnline />}
                 <UsuarioBadge badgeEspecial={otro.badge_especial} isDemo={otro.is_demo} style={{ fontSize: 12, padding: "1px 3px", bottom: -1, right: -1 }} />
               </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span className="heading" style={{ fontSize: 16, color: "var(--text)" }}>{otro.nick}</span>
-                  <span className="badge-gold" style={{ fontSize: 12 }}>{ISLAND_LABEL[otro.island]}</span>
-                </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p className="heading" style={{ fontSize: 22, lineHeight: 1.1, color: "var(--text)" }}>{otro.nick}</p>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>{ISLAND_LABEL[otro.island]}</p>
               </div>
               <Link href={`/perfil/${otro.nick}`} className="nav-top-link" style={{ fontSize: 12 }}>
                 Ver perfil
@@ -428,7 +426,7 @@ export function MensajesShell({ usuarioId }) {
                 className="btn-gold"
                 style={{ display: "flex", alignItems: "center", gap: 8, alignSelf: "flex-end" }}
               >
-                <Send size={14} />
+                <Send size={14} aria-hidden="true" />
                 Enviar
               </button>
             </div>

@@ -235,6 +235,14 @@ textarea::placeholder {
   opacity: 0.55;
   cursor: default;
 }
+/* Primario deshabilitado: contorno y texto atenuado en vez de oro al 55 %,
+   que dejaba el texto oscuro sobre oro translúcido casi ilegible. */
+.btn-gold:disabled {
+  opacity: 1;
+  background: transparent;
+  color: var(--text-muted);
+  border-color: var(--rule-strong);
+}
 
 /* Primario */
 .btn-gold {

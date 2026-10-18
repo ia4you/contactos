@@ -29,12 +29,7 @@ export function MisGruposSidebar() {
         {grupos === null ? (
           <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>Cargando…</p>
         ) : grupos.length === 0 ? (
-          <>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>Únete a un grupo</p>
-            <Link href="/grupos" className="enlace-flecha" style={{ marginTop: 6 }}>
-              Ver grupos
-            </Link>
-          </>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>Únete a un grupo</p>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {grupos.map((g) => (

@@ -1810,6 +1810,11 @@ button.fetiche-chip {
   align-items: center;
   gap: 10px;
 }
+.perfil-cab__acciones .btn-gold,
+.perfil-cab__acciones .btn-outline-gold {
+  padding: 11px 22px;
+  font-size: var(--fs-14);
+}
 .perfil-cab__mas {
   width: var(--tap);
   height: var(--tap);

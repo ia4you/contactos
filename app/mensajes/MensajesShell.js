@@ -223,7 +223,6 @@ export function MensajesShell({ usuarioId }) {
                     <Image sizes="44px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
                   </div>
                   {mostrarPuntoOnline(c) && <PuntoOnline />}
-                  <UsuarioBadge badgeEspecial={c.badge_especial} isDemo={c.is_demo} style={{ fontSize: 12, padding: "1px 3px", bottom: -1, right: -1 }} />
                 </Link>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <span
@@ -238,7 +237,8 @@ export function MensajesShell({ usuarioId }) {
                       whiteSpace: "nowrap",
                     }}
                   >
-                    {c.nick}
+                    {c.nick}{" "}
+                    <UsuarioBadge badgeEspecial={c.badge_especial} isDemo={c.is_demo} style={{ position: "static", border: "none", marginLeft: 4, verticalAlign: "middle" }} />
                   </span>
                   <span
                     style={{
@@ -332,10 +332,12 @@ export function MensajesShell({ usuarioId }) {
                   />
                 </div>
                 {mostrarPuntoOnline(otro) && <PuntoOnline />}
-                <UsuarioBadge badgeEspecial={otro.badge_especial} isDemo={otro.is_demo} style={{ fontSize: 12, padding: "1px 3px", bottom: -1, right: -1 }} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p className="heading" style={{ fontSize: 22, lineHeight: 1.1, color: "var(--text)" }}>{otro.nick}</p>
+                <p className="heading" style={{ fontSize: 22, lineHeight: 1.1, color: "var(--text)" }}>
+                  {otro.nick}{" "}
+                  <UsuarioBadge badgeEspecial={otro.badge_especial} isDemo={otro.is_demo} style={{ position: "static", border: "none", verticalAlign: "middle" }} />
+                </p>
                 <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>{ISLAND_LABEL[otro.island]}</p>
               </div>
               <Link href={`/perfil/${otro.nick}`} className="nav-top-link" style={{ fontSize: 12 }}>

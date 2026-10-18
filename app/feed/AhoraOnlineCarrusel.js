@@ -66,7 +66,7 @@ export function AhoraOnlineCarrusel() {
               >
                 {u.nick}
               </span>
-              <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
+              <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "100%" }}>
                 {ISLAND_LABEL[u.island]}
               </span>
             </Link>

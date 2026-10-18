@@ -2,12 +2,15 @@
 
 import Link from "next/link";
 import { COOKIE_SETTINGS_EVENT } from "./CookieConsent";
+import { Marca } from "./Marca";
 
 export function Footer() {
   return (
     <footer className="site-footer">
       <div>
-        <span className="site-footer__marca">Contactos</span>
+        <div className="site-footer__marca">
+          <Marca />
+        </div>
         <p className="meta" style={{ marginTop: 10, fontSize: 14 }}>
           Acceso exclusivo a mayores de 18 años.
         </p>

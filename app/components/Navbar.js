@@ -26,6 +26,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import { AVATAR_PLACEHOLDER, ISLANDS } from "@/lib/constants";
+import { Marca } from "./Marca";
 import { UsuarioBadge } from "./UsuarioBadge";
 import { RegistroCTA } from "./RegistroCTA";
 import { Dialogo } from "./Dialogo";
@@ -307,10 +308,8 @@ export function Navbar() {
     <>
       <header className="site-header">
         <div className="site-header__inner">
-          <p className="site-header__izq">Canarias · Solo +18</p>
-
-          <Link href={autenticado ? "/feed" : "/"} className="site-header__wordmark" aria-label="Contactos, ir al inicio">
-            Contactos
+          <Link href={autenticado ? "/feed" : "/"} className="site-header__marca">
+            <Marca />
           </Link>
 
           {autenticado ? (

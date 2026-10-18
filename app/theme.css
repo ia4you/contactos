@@ -781,33 +781,42 @@ button.fetiche-chip {
 }
 .site-header__inner {
   height: 100%;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 16px;
   padding: 0 var(--gutter);
 }
-.site-header__izq {
-  font-family: var(--font-body);
-  font-size: var(--fs-14);
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-}
-.site-header__wordmark {
-  font-family: var(--font-display);
-  font-size: 34px;
-  font-weight: 500;
-  line-height: 1;
-  color: var(--text);
-  text-decoration: none;
-  letter-spacing: 0.01em;
+.site-header__marca {
   display: inline-flex;
   align-items: center;
   min-height: var(--tap);
+  min-width: 0;
+  text-decoration: none;
 }
-.site-header__wordmark em {
+
+/* Logo + nombre (app/components/Marca.js) */
+.marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.marca__logo {
+  height: 40px;
+  width: auto;
+  flex-shrink: 0;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.marca__nombre {
+  font-family: var(--font-display);
+  font-size: var(--fs-22);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.08em;
   color: var(--gold);
+  white-space: nowrap;
 }
 .site-header__der {
   display: flex;
@@ -871,20 +880,16 @@ button.fetiche-chip {
   border: 1px solid var(--rule-strong);
 }
 
-@media (max-width: 1024px) {
-  .site-header__izq {
-    display: none;
-  }
-  .site-header__inner {
-    grid-template-columns: auto 1fr;
-  }
-  .site-header__wordmark {
-    font-size: 30px;
-  }
-}
 @media (max-width: 767px) {
-  .site-header__wordmark {
-    font-size: 26px;
+  .marca {
+    gap: 8px;
+  }
+  .marca__logo {
+    height: 32px;
+  }
+  .marca__nombre {
+    font-size: var(--fs-18);
+    letter-spacing: 0.04em;
   }
   .solo-escritorio {
     display: none !important;
@@ -894,6 +899,17 @@ button.fetiche-chip {
   }
   .site-header__der .btn-gold {
     padding: 8px 14px;
+    white-space: nowrap;
+  }
+}
+/* En móvil estrecho el nombre va en dos líneas para dejar sitio a
+   Acceder / Crear perfil. */
+@media (max-width: 480px) {
+  .site-header .marca__nombre {
+    white-space: normal;
+    max-width: 6em;
+    font-size: var(--fs-16);
+    line-height: 1.05;
   }
 }
 @media (min-width: 768px) {
@@ -2171,9 +2187,7 @@ button.fetiche-chip {
   padding-top: 28px;
 }
 .gate__marca {
-  font-family: var(--font-display);
-  font-size: var(--fs-30);
-  color: var(--text);
+  display: flex;
 }
 .gate__titulo {
   margin-top: 40px;
@@ -2231,10 +2245,7 @@ button.fetiche-chip {
   align-items: flex-end;
 }
 .site-footer__marca {
-  font-family: var(--font-display);
-  font-size: var(--fs-30);
-  line-height: 1;
-  color: var(--text);
+  display: flex;
 }
 .site-footer__nav {
   display: flex;

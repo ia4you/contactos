@@ -1,4 +1,5 @@
 import { confirmarEdad } from "../actions/gate";
+import { Marca } from "./Marca";
 
 const DIAS = Array.from({ length: 31 }, (_, i) => i + 1);
 const MESES = [
@@ -15,7 +16,9 @@ export function GateScreen({ error }) {
   return (
     <main className="gate">
       <div className="gate__caja">
-        <p className="gate__marca">Contactos</p>
+        <div className="gate__marca">
+          <Marca />
+        </div>
 
         {/* No es <h1>: el H1 real de la página es el de Landing (contenido
             real indexable). Este es un overlay/diálogo interstitial, así que

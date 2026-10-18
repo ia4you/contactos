@@ -76,9 +76,12 @@
 
 /* ---------- Base ---------- */
 
+/* clip y no hidden: hidden convierte <body> en contenedor de scroll y anula
+   position: sticky (cita del registro, barra lateral del feed). */
 html,
 body {
   overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100vw;
 }
 

@@ -8,14 +8,19 @@ import { PuntoOnline } from "../components/PuntoOnline";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 
-export function AhoraOnlineCarrusel() {
+export function AhoraOnlineCarrusel({ onCargado }) {
   const [usuarios, setUsuarios] = useState(null);
 
   useEffect(() => {
     fetch("/api/usuarios/online")
       .then((r) => r.json())
-      .then((d) => setUsuarios(d.usuarios || []))
-      .catch(() => setUsuarios([]));
+      .then((d) => d.usuarios || [])
+      .catch(() => [])
+      .then((lista) => {
+        setUsuarios(lista);
+        onCargado?.(lista);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (usuarios === null) return null;

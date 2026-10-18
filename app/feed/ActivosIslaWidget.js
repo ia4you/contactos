@@ -7,7 +7,9 @@ import { PuntoOnline } from "../components/PuntoOnline";
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 
 export function ActivosIslaWidget({ usuarios, isla }) {
-  if (!usuarios || usuarios.length < 2) return null;
+  // feed/page.js ya exige 2 o más; aquí basta con que quede alguien tras
+  // quitar a quienes ya salen en «Ahora online».
+  if (!usuarios?.length) return null;
 
   return (
     <div style={{ marginBottom: 24 }}>

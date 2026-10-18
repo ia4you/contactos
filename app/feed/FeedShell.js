@@ -24,6 +24,7 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [cargando, setCargando] = useState(true);
+  const [idsOnline, setIdsOnline] = useState(null);
 
   const avatarUrl = avatarFilename ? `/uploads/${usuario.id}/${avatarFilename}` : null;
 
@@ -81,7 +82,7 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
       {/* En móvil los .feed-extra bajan detrás de las publicaciones (theme.css). */}
       <div className="feed-centro" style={{ maxWidth: 680, width: "100%", margin: "0 auto", background: "var(--bg)" }}>
         <div className="feed-extra">
-          <AhoraOnlineCarrusel />
+          <AhoraOnlineCarrusel onCargado={(lista) => setIdsOnline(new Set(lista.map((u) => u.id)))} />
         </div>
 
         <HistoriasFranja usuario={usuario} avatarUrl={avatarUrl} />
@@ -93,7 +94,10 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
         )}
 
         <div className="feed-extra">
-          <ActivosIslaWidget usuarios={activosIsla} isla={usuario.island} />
+          {/* Solo la gente que no sale ya en «Ahora online»; nada hasta saberlo, para no parpadear. */}
+          {idsOnline && (
+            <ActivosIslaWidget usuarios={activosIsla.filter((u) => !idsOnline.has(u.id))} isla={usuario.island} />
+          )}
           {tab === "parati" && <FotosTopWidget />}
         </div>
 

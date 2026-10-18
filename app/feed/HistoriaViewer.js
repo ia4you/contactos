@@ -132,7 +132,7 @@ export function HistoriaViewer({ grupos, indiceGrupoInicial, meId, onClose }) {
               style={{
                 position: "absolute",
                 inset: 0,
-                background: "radial-gradient(ellipse at 50% 30%, rgba(107,21,36,0.6), #0e0a0b 75%)",
+                background: "radial-gradient(ellipse at 50% 30%, var(--surface), var(--bg-deep) 75%)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",

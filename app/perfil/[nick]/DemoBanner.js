@@ -4,8 +4,8 @@ export function DemoBanner() {
   return (
     <div
       style={{
-        background: "rgba(122,46,63,0.15)",
-        border: "1px solid rgba(122,46,63,0.5)",
+        background: "var(--surface)",
+        border: "1px solid var(--rule)",
         padding: "14px 24px",
         display: "flex",
         alignItems: "center",

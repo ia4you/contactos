@@ -23,7 +23,7 @@ export function AvisoSeguridadBanner() {
         alignItems: "center",
         gap: 10,
         padding: "10px 20px",
-        background: "rgba(122, 46, 63, 0.14)",
+        background: "var(--surface)",
         borderBottom: "1px solid var(--rule)",
         flexShrink: 0,
       }}

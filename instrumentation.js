@@ -7,5 +7,11 @@ export async function register() {
   if (process.env.NEXT_RUNTIME === "nodejs") {
     const { limpiarEventosCaducados } = await import("@/lib/startup");
     await limpiarEventosCaducados();
+
+    // Borrado definitivo diario de cuentas auto-eliminadas hace más de 30
+    // días (nunca suspendidas). Antes dependía de lanzar a mano
+    // scripts/purge-deleted.js.
+    const { programarPurgaDiaria } = await import("@/lib/purgaDiaria");
+    programarPurgaDiaria();
   }
 }

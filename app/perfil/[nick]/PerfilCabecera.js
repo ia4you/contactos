@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Heart, Flame } from "lucide-react";
+import { Heart, MoreHorizontal } from "lucide-react";
 import { ISLANDS, PROFILE_TYPES } from "@/lib/constants";
 import { mostrarPuntoOnline } from "@/lib/online";
 import { ReportButton } from "../../components/ReportButton";
@@ -14,85 +14,14 @@ import { UsuarioBadge } from "../../components/UsuarioBadge";
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
 
-function CompatibilidadBadge({ pct }) {
-  let color = "var(--text-muted)";
-  let Icono = null;
-  if (pct > 80) {
-    color = "var(--online)";
-    Icono = Flame;
-  } else if (pct > 50) {
-    color = "var(--gold)";
-    Icono = Heart;
-  }
-
-  return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 4,
-        fontFamily: "var(--font-body)",
-        fontSize: 12,
-        letterSpacing: "0.04em",
-        color,
-        border: `1px solid ${color}`,
-        padding: "4px 10px",
-      }}
-    >
-      {Icono && <Icono size={11} fill={color} />}
-      {pct}% de afinidad
-    </span>
-  );
-}
-
-function GrupoChips({ titulo, valores }) {
+function LineaDatos({ titulo, valores }) {
   if (!valores || valores.length === 0) return null;
   return (
-    <div style={{ marginTop: 10 }}>
-      <span
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: 12,
-          letterSpacing: "0.04em",
-          color: "var(--text-muted)",
-          marginRight: 8,
-        }}
-      >
-        {titulo}:
-      </span>
-      <span style={{ display: "inline-flex", flexWrap: "wrap", gap: 6 }}>
-        {valores.map((v) => (
-          <span key={v} className="badge-gold">
-            {v}
-          </span>
-        ))}
-      </span>
-    </div>
+    <p className="perfil-cab__datos">
+      <span>{titulo}:</span> {valores.join(" · ")}
+    </p>
   );
 }
-
-const estiloBadgeSolido = {
-  display: "inline-block",
-  fontFamily: "var(--font-body)",
-  background: "var(--gold)",
-  color: "var(--bg)",
-  fontSize: 12,
-  letterSpacing: "0.04em",
-  padding: "4px 10px",
-};
-
-const estiloBotonBase = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: 8,
-  padding: "11px 22px",
-  fontFamily: "var(--font-body)",
-  fontSize: 12,
-  letterSpacing: "0.04em",
-  cursor: "pointer",
-  background: "transparent",
-};
 
 export function PerfilCabecera({
   usuario,
@@ -110,7 +39,31 @@ export function PerfilCabecera({
   const [cargandoAmistad, setCargandoAmistad] = useState(false);
   const [cargandoMensaje, setCargandoMensaje] = useState(false);
   const [corazonAnimado, setCorazonAnimado] = useState(false);
+  const [menuAbierto, setMenuAbierto] = useState(false);
+  const menuRef = useRef(null);
+  const botonMenuRef = useRef(null);
   const online = mostrarPuntoOnline(usuario, esPropio);
+
+  // Menú «⋯»: se cierra con Escape o clic fuera, salvo si el clic o la tecla
+  // son de un diálogo abierto desde el propio menú (denunciar, confirmar).
+  useEffect(() => {
+    if (!menuAbierto) return;
+    function onDown(e) {
+      if (menuRef.current?.contains(e.target) || e.target.closest?.(".dialogo-fondo")) return;
+      setMenuAbierto(false);
+    }
+    function onKey(e) {
+      if (e.key !== "Escape" || document.querySelector(".dialogo-fondo")) return;
+      setMenuAbierto(false);
+      botonMenuRef.current?.focus();
+    }
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menuAbierto]);
 
   // El valor inicial ya viene por SSR (estadoInicial), pero se revalida al
   // montar para que el corazón de la cabecera siempre refleje el estado
@@ -186,202 +139,115 @@ export function PerfilCabecera({
     }
   }
 
+  const meta = [
+    PROFILE_TYPE_LABEL[usuario.profile_type],
+    ISLAND_LABEL[usuario.island],
+    `Miembro desde ${miembroDesde}`,
+    usuario.verified && "Verificado",
+    !esPropio && match && "Match",
+    !esPropio && amistad === "amigos" && "Amigos",
+  ].filter(Boolean);
+
+  const bio = (texto) => <p className="perfil-cab__bio">{texto}</p>;
+
   return (
-    <div
-      style={{
-        background: "var(--bg-secondary)",
-        borderBottom: "1px solid var(--rule)",
-        padding: "40px 24px",
-      }}
-    >
-      <div
-        className="perfil-cabecera-row"
-        style={{
-          maxWidth: 1100,
-          margin: "0 auto",
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 28,
-          justifyContent: "space-between",
-        }}
-      >
-        <div className="perfil-cabecera-info" style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
-          <div style={{ position: "relative", width: 100, height: 100, flexShrink: 0 }}>
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                height: "100%",
-                borderRadius: "50%",
-                overflow: "hidden",
-                border: "2px solid var(--gold)",
-              }}
-            >
-              <Image sizes="100px" src={avatarSrc} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
-            </div>
-            {online && <PuntoOnline size={16} />}
+    <header className="perfil-cab">
+      <div className="perfil-cab__inner">
+        <div className="perfil-cab__avatar">
+          <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
+            <Image sizes="120px" src={avatarSrc} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
           </div>
-
-          <div className="perfil-cabecera-textos" style={{ maxWidth: 480 }}>
-            <h1 className="heading" style={{ fontSize: 30, color: "var(--text)", display: "flex", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
-              {usuario.nick}
-              <UsuarioBadge
-                badgeEspecial={usuario.badge_especial}
-                isDemo={usuario.is_demo}
-                style={{ position: "static", border: "none" }}
-              />
-            </h1>
-
-            <div className="perfil-cabecera-badges" style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 8 }}>
-              <span className="badge-gold">{ISLAND_LABEL[usuario.island]}</span>
-              {compatibilidad && <CompatibilidadBadge pct={compatibilidad.pct} />}
-              <span
-                style={{
-                  display: "inline-block",
-                  fontFamily: "var(--font-body)",
-                  background: "var(--surface)",
-                  border: "1px solid var(--border-gold)",
-                  color: "var(--text)",
-                  fontSize: 12,
-                  letterSpacing: "0.04em",
-                  padding: "4px 10px",
-                }}
-              >
-                {PROFILE_TYPE_LABEL[usuario.profile_type]}
-              </span>
-              {usuario.verified && <span style={estiloBadgeSolido}>Verificado</span>}
-              {!esPropio && match && <span style={estiloBadgeSolido}>✓ Match</span>}
-              {!esPropio && amistad === "amigos" && <span style={estiloBadgeSolido}>Amigos</span>}
-            </div>
-
-            <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
-              Miembro desde {miembroDesde}
-            </p>
-
-            {usuario.profile_type === "pareja" ? (
-              <>
-                {usuario.her_bio && (
-                  <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
-                    <strong style={{ color: "var(--text)" }}>Ella:</strong> {usuario.her_bio}
-                  </p>
-                )}
-                {usuario.his_bio && (
-                  <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
-                    <strong style={{ color: "var(--text)" }}>Él:</strong> {usuario.his_bio}
-                  </p>
-                )}
-              </>
-            ) : (
-              usuario.bio && (
-                <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
-                  {usuario.bio}
-                </p>
-              )
-            )}
-
-            <GrupoChips titulo="Género" valores={usuario.genero} />
-            <GrupoChips titulo="Orientación" valores={usuario.orientacion} />
-            <GrupoChips titulo="Rol" valores={usuario.rol} />
-          </div>
+          {online && <PuntoOnline size={16} />}
         </div>
 
-        {!esPropio && (
-          <div className="perfil-cabecera-acciones" style={{ display: "flex", flexDirection: "column", gap: 10, alignSelf: "flex-start" }}>
-            <button
-              type="button"
-              onClick={toggleLike}
-              disabled={cargandoLike}
-              style={{
-                ...estiloBotonBase,
-                border: `1px solid ${meGusta ? "var(--danger)" : "var(--gold)"}`,
-                color: meGusta ? "var(--danger)" : "var(--gold)",
-                background: "transparent",
-              }}
-            >
-              <Heart
-                size={15}
-                fill={meGusta ? "var(--danger)" : "none"}
-                color={meGusta ? "var(--danger)" : "var(--gold)"}
-                className={corazonAnimado ? "corazon-pop" : undefined}
-                style={{ transition: "fill 0.25s ease, color 0.25s ease" }}
-              />
-              {meGusta ? "Te gusta" : "Dar like"}
-            </button>
+        <div className="perfil-cab__textos">
+          <h1 className="perfil-cab__nick">
+            {usuario.nick}
+            <UsuarioBadge
+              badgeEspecial={usuario.badge_especial}
+              isDemo={usuario.is_demo}
+              style={{ position: "static", border: "none", alignSelf: "center" }}
+            />
+          </h1>
+          <p className="perfil-cab__meta">{meta.join(" · ")}</p>
+          {compatibilidad && <p className="perfil-cab__afinidad">{compatibilidad.pct} % de afinidad</p>}
 
-            {amistad === "amigos" ? null : amistad === "enviada" ? (
+          {usuario.profile_type === "pareja" ? (
+            <>
+              {usuario.her_bio && bio(<><strong>Ella:</strong> {usuario.her_bio}</>)}
+              {usuario.his_bio && bio(<><strong>Él:</strong> {usuario.his_bio}</>)}
+            </>
+          ) : (
+            usuario.bio && bio(usuario.bio)
+          )}
+
+          <LineaDatos titulo="Género" valores={usuario.genero} />
+          <LineaDatos titulo="Orientación" valores={usuario.orientacion} />
+          <LineaDatos titulo="Rol" valores={usuario.rol} />
+
+          {!esPropio && (
+            <div className="perfil-cab__acciones">
               <button
                 type="button"
-                disabled
-                style={{ ...estiloBotonBase, border: "1px solid rgba(246,231,225,0.2)", color: "var(--text-muted)", cursor: "not-allowed" }}
+                onClick={toggleLike}
+                disabled={cargandoLike}
+                aria-pressed={meGusta}
+                className={meGusta ? "btn-outline-gold" : "btn-gold"}
+                style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
               >
-                Solicitud enviada
+                <Heart
+                  size={15}
+                  fill={meGusta ? "currentColor" : "none"}
+                  className={corazonAnimado ? "corazon-pop" : undefined}
+                  aria-hidden="true"
+                />
+                {meGusta ? "Te gusta" : "Dar like"}
               </button>
-            ) : amistad === "recibida" ? (
-              <div style={{ display: "flex", gap: 8 }}>
+              <button type="button" onClick={enviarMensaje} disabled={cargandoMensaje} className="btn-outline-gold">
+                Enviar mensaje
+              </button>
+
+              <div ref={menuRef} style={{ position: "relative" }}>
                 <button
+                  ref={botonMenuRef}
                   type="button"
-                  onClick={() => responderAmistad("aceptar")}
-                  disabled={cargandoAmistad}
-                  className="btn-gold"
-                  style={{ flex: 1, fontSize: 12 }}
+                  onClick={() => setMenuAbierto((v) => !v)}
+                  aria-label="Más acciones"
+                  aria-haspopup="true"
+                  aria-expanded={menuAbierto}
+                  aria-controls="perfil-mas-acciones"
+                  className="icon-btn perfil-cab__mas"
                 >
-                  Aceptar
+                  <MoreHorizontal size={20} aria-hidden="true" />
                 </button>
-                <button
-                  type="button"
-                  onClick={() => responderAmistad("rechazar")}
-                  disabled={cargandoAmistad}
-                  style={{ ...estiloBotonBase, flex: 1, border: "1px solid rgba(246,231,225,0.3)", color: "var(--text-secondary)" }}
-                >
-                  Rechazar
-                </button>
+                {/* hidden y no desmontado: el diálogo de denuncia vive dentro */}
+                <div id="perfil-mas-acciones" className="dropdown-menu" hidden={!menuAbierto} style={{ top: "calc(100% + 6px)" }}>
+                  {amistad === "amigos" ? null : amistad === "enviada" ? (
+                    <button type="button" disabled className="dropdown-item" style={{ cursor: "not-allowed", opacity: 0.6 }}>
+                      Solicitud de amistad enviada
+                    </button>
+                  ) : amistad === "recibida" ? (
+                    <>
+                      <button type="button" onClick={() => responderAmistad("aceptar")} disabled={cargandoAmistad} className="dropdown-item">
+                        Aceptar amistad
+                      </button>
+                      <button type="button" onClick={() => responderAmistad("rechazar")} disabled={cargandoAmistad} className="dropdown-item">
+                        Rechazar amistad
+                      </button>
+                    </>
+                  ) : (
+                    <button type="button" onClick={solicitarAmistad} disabled={cargandoAmistad} className="dropdown-item">
+                      Solicitar amistad
+                    </button>
+                  )}
+                  <ReportButton reportedUserId={usuario.id} label="Denunciar perfil" className="dropdown-item" style={{ color: "var(--danger)" }} />
+                  <BlockButton blockedId={usuario.id} label="Bloquear" className="dropdown-item" />
+                </div>
               </div>
-            ) : (
-              <button
-                type="button"
-                onClick={solicitarAmistad}
-                disabled={cargandoAmistad}
-                style={{ ...estiloBotonBase, border: "1px solid var(--gold)", color: "var(--gold)" }}
-              >
-                Solicitar amistad
-              </button>
-            )}
-
-            <button
-              type="button"
-              onClick={enviarMensaje}
-              disabled={cargandoMensaje}
-              style={{
-                ...estiloBotonBase,
-                border: "1px solid rgba(246,231,225,0.3)",
-                color: "var(--text)",
-              }}
-            >
-              Enviar mensaje
-            </button>
-
-            <ReportButton
-              reportedUserId={usuario.id}
-              label="Denunciar perfil"
-              style={{
-                ...estiloBotonBase,
-                border: "1px solid var(--danger-border)",
-                color: "var(--danger)",
-              }}
-            />
-
-            <BlockButton
-              blockedId={usuario.id}
-              label="Bloquear"
-              style={{
-                ...estiloBotonBase,
-                border: "1px solid rgba(246,231,225,0.3)",
-                color: "var(--text-secondary)",
-              }}
-            />
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </header>
   );
 }

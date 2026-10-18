@@ -1649,37 +1649,101 @@ button.fetiche-chip {
   }
 }
 
-/* Cabecera de /perfil/[nick]: en desktop se mantienen las dos columnas
-   (info a la izquierda, acciones a la derecha) tal cual están en línea;
-   en móvil todo se centra en una sola columna. Los !important son
-   necesarios porque los elementos llevan flex-direction/text-align/etc.
-   como estilo inline para el layout de desktop, que siempre gana sobre
-   una regla de hoja de estilos sin !important. */
+/* Cabecera editorial de /perfil/[nick] */
+.perfil-cab {
+  border-bottom: 1px solid var(--rule);
+  padding: 56px 24px 40px;
+}
+.perfil-cab__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  gap: 36px;
+  align-items: flex-start;
+}
+.perfil-cab__avatar {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+}
+.perfil-cab__textos {
+  min-width: 0;
+  max-width: 640px;
+}
+.perfil-cab__nick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(40px, 5vw, var(--fs-52));
+  line-height: 1.02;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+.perfil-cab__meta {
+  margin-top: 12px;
+  font-family: var(--font-body);
+  font-size: var(--fs-14);
+  color: var(--text-secondary);
+}
+.perfil-cab__afinidad {
+  margin-top: 6px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--fs-22);
+  color: var(--gold);
+}
+.perfil-cab__bio {
+  margin-top: 16px;
+  font-family: var(--font-body);
+  font-size: var(--fs-16);
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+.perfil-cab__bio strong {
+  font-weight: 500;
+  color: var(--text);
+}
+.perfil-cab__datos {
+  margin-top: 8px;
+  font-family: var(--font-body);
+  font-size: var(--fs-14);
+  color: var(--text);
+}
+.perfil-cab__datos span {
+  color: var(--text-muted);
+}
+.perfil-cab__acciones {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.perfil-cab__mas {
+  width: var(--tap);
+  height: var(--tap);
+  justify-content: center;
+  border: 1px solid var(--rule);
+}
 @media (max-width: 768px) {
-  .perfil-cabecera-row {
-    flex-direction: column !important;
-    align-items: center !important;
-    text-align: center !important;
+  .perfil-cab {
+    padding: 32px 16px 28px;
   }
-  .perfil-cabecera-info {
-    flex-direction: column !important;
-    align-items: center !important;
-    width: 100%;
+  .perfil-cab__inner {
+    flex-direction: column;
+    gap: 20px;
   }
-  .perfil-cabecera-textos {
-    text-align: center !important;
-    max-width: 100% !important;
+  .perfil-cab__avatar {
+    width: 96px;
+    height: 96px;
   }
-  .perfil-cabecera-badges {
-    justify-content: center !important;
-  }
-  .perfil-cabecera-acciones {
-    width: 100%;
-    align-self: center !important;
-  }
-  .perfil-cabecera-acciones button,
-  .perfil-cabecera-acciones a {
-    width: 100%;
+  .perfil-cab__acciones > button {
+    flex: 1;
+    padding-left: 12px;
+    padding-right: 12px;
   }
 }
 

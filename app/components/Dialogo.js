@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 const ENFOCABLES =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -8,6 +9,9 @@ const ENFOCABLES =
 // Diálogo modal accesible: role="dialog" + aria-modal, foco atrapado dentro,
 // Escape y clic en el fondo cierran, y al cerrar el foco vuelve a donde
 // estaba. variante="hoja" lo ancla abajo a todo el ancho (hoja inferior).
+// Se pinta en <body> (portal) para que ningún contexto de apilamiento del
+// padre (menús desplegables, cabeceras sticky) lo deje por debajo. Solo se
+// monta tras una interacción o un efecto, nunca en el SSR.
 export function Dialogo({ onCerrar, etiqueta, idTitulo, variante, className = "", children }) {
   const ref = useRef(null);
   const onCerrarRef = useRef(onCerrar);
@@ -51,7 +55,7 @@ export function Dialogo({ onCerrar, etiqueta, idTitulo, variante, className = ""
   }, []);
 
   const hoja = variante === "hoja";
-  return (
+  return createPortal(
     <div
       className={`dialogo-fondo${hoja ? " dialogo-fondo--hoja" : ""}`}
       onMouseDown={(e) => {
@@ -69,6 +73,7 @@ export function Dialogo({ onCerrar, etiqueta, idTitulo, variante, className = ""
       >
         {children}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

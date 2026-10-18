@@ -83,7 +83,6 @@ function FotoItem({ usuarioId, foto, esPropio, destacada, onAbrir }) {
           position: "relative",
           aspectRatio: "1 / 1",
           overflow: "hidden",
-          border: "1px solid var(--rule)",
         }}
       >
         <Image sizes="(max-width: 559px) 50vw, 33vw"

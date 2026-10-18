@@ -341,71 +341,24 @@ function TarjetaPerfil({ perfil }) {
         }}
       />
 
-      <UsuarioBadge badgeEspecial={perfil.badge_especial} isDemo={perfil.is_demo} style={{ bottom: 8, right: 8, fontSize: 12 }} />
-
-      {mostrarPuntoOnline(perfil) && (
-        <span
-          style={{
-            position: "absolute",
-            left: 10,
-            top: 10,
-            width: 10,
-            height: 10,
-            borderRadius: "50%",
-            background: "var(--online)",
-            border: "2px solid var(--bg)",
-          }}
-        />
-      )}
-
-      {perfil.verified && (
-        <span
-          style={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            letterSpacing: "0.04em",
-            padding: "3px 7px",
-            background: "var(--gold)",
-            color: "var(--bg)",
-          }}
-        >
-          Verificado
-        </span>
-      )}
-
-      <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, padding: "12px" }}>
-        <p className="heading" style={{ fontSize: 18, color: "var(--text)" }}>
-          {perfil.nick}
-        </p>
-        <div style={{ marginTop: 4, display: "flex", gap: 6 }}>
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              letterSpacing: "0.04em",
-              padding: "2px 6px",
-              border: "1px solid var(--gold)",
-              color: "var(--gold)",
-            }}
-          >
-            {ISLAND_LABEL[perfil.island]}
-          </span>
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              letterSpacing: "0.04em",
-              padding: "2px 6px",
-              border: "1px solid rgba(246,231,225,0.3)",
-              color: "var(--text)",
-            }}
-          >
-            {PROFILE_TYPE_LABEL[perfil.profile_type]}
-          </span>
+      {(mostrarPuntoOnline(perfil) || perfil.badge_especial || perfil.is_demo) && (
+        <div className="tarjeta-perfil__marcas">
+          {mostrarPuntoOnline(perfil) && <span className="tarjeta-perfil__online" aria-label="En línea" />}
+          <UsuarioBadge
+            badgeEspecial={perfil.badge_especial}
+            isDemo={perfil.is_demo}
+            style={{ position: "static", border: "none" }}
+          />
         </div>
+      )}
+
+      {perfil.verified && <span className="tarjeta-perfil__verificado">Verificado</span>}
+
+      <div className="tarjeta-perfil__pie">
+        <p className="tarjeta-perfil__nick">{perfil.nick}</p>
+        <p className="tarjeta-perfil__meta">
+          {[PROFILE_TYPE_LABEL[perfil.profile_type], ISLAND_LABEL[perfil.island]].filter(Boolean).join(" · ")}
+        </p>
       </div>
     </Link>
   );

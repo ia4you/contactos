@@ -932,6 +932,11 @@ button.fetiche-chip {
    Layouts y clases funcionales existentes (colores ya en tokens)
    ========================================================================== */
 
+/* Sin esto el input de archivo fija el min-content de la columna y desborda en móvil. */
+.auth-layout > * {
+  min-width: 0;
+}
+
 @media (max-width: 860px) {
   .auth-layout {
     grid-template-columns: 1fr !important;

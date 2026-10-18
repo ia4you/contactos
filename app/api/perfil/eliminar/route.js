@@ -24,7 +24,11 @@ export async function POST(req) {
     return NextResponse.json({ error: "Contraseña incorrecta." }, { status: 401 });
   }
 
-  await query(`UPDATE users SET deleted_at = now() WHERE id = $1`, [session.user.id]);
+  // session_version + 1: invalida cualquier otra sesión abierta de la cuenta.
+  await query(
+    `UPDATE users SET deleted_at = now(), session_version = session_version + 1 WHERE id = $1`,
+    [session.user.id]
+  );
 
   return NextResponse.json({ ok: true });
 }

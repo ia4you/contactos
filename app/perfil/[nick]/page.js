@@ -21,12 +21,21 @@ export default async function PerfilPublico({ params }) {
 
   const { rows: userRows } = await query(
     `SELECT id, nick, profile_type, island, bio, her_bio, his_bio, genero, orientacion, rol, verified, created_at,
-            last_active, show_last_seen, is_demo, badge_especial
-       FROM users WHERE lower(nick) = lower($1) AND deleted_at IS NULL`,
-    [params.nick]
+            last_active, show_last_seen, is_demo, badge_especial, suspended_at, suspended_reason, deleted_at
+       FROM users
+      WHERE lower(nick) = lower($1)
+        AND ($2 OR (deleted_at IS NULL AND suspended_at IS NULL))`,
+    // Un admin puede ver perfiles suspendidos o pendientes de borrado (el
+    // panel enlaza a ellos); para el resto no existen.
+    [params.nick, session?.user?.role === "admin"]
   );
   const usuario = userRows[0];
   if (!usuario) notFound();
+  const avisoAdmin = usuario.suspended_at
+    ? `Cuenta suspendida${usuario.suspended_reason ? `: ${usuario.suspended_reason}` : ""}. Solo la ven los administradores.`
+    : usuario.deleted_at
+      ? "Cuenta pendiente de borrado (eliminada por su titular). Solo la ven los administradores."
+      : null;
 
   const esPropio = session?.user?.id === String(usuario.id);
 
@@ -183,6 +192,22 @@ export default async function PerfilPublico({ params }) {
 
   return (
     <main>
+      {avisoAdmin && (
+        <p
+          role="status"
+          style={{
+            padding: "12px 24px",
+            background: "rgba(154,58,58,0.18)",
+            borderBottom: "1px solid rgba(154,58,58,0.5)",
+            fontFamily: "var(--font-body)",
+            fontSize: 14,
+            color: "#e07a7a",
+            textAlign: "center",
+          }}
+        >
+          {avisoAdmin}
+        </p>
+      )}
       <PerfilCabecera
         usuario={usuario}
         avatarSrc={avatarSrc}

@@ -45,9 +45,11 @@ export function AdminDenuncias() {
             <p style={{ marginTop: 4, fontFamily: "var(--font-body)", fontSize: 11, color: "var(--text-muted)" }}>{tiempoRelativo(d.created_at)}</p>
           </div>
           <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
-            <Link href={`/perfil/${d.reported_nick}`} className="btn-outline-gold" style={{ fontSize: 11, padding: "8px 14px" }}>
-              Ver perfil denunciado
-            </Link>
+            {d.reported_id && (
+              <Link href={`/perfil/${d.reported_nick}`} className="btn-outline-gold" style={{ fontSize: 11, padding: "8px 14px" }}>
+                Ver perfil denunciado
+              </Link>
+            )}
             <button type="button" onClick={() => resolver(d.id)} className="btn-gold" style={{ fontSize: 11, padding: "8px 14px" }}>
               Resolver
             </button>

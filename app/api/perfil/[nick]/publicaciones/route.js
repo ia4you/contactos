@@ -18,7 +18,7 @@ export async function GET(req, { params }) {
   const offset = Math.max(0, Number(req.nextUrl.searchParams.get("offset")) || 0);
 
   const { rows: userRows } = await query(
-    `SELECT id FROM users WHERE lower(nick) = lower($1) AND deleted_at IS NULL`,
+    `SELECT id FROM users WHERE lower(nick) = lower($1) AND deleted_at IS NULL AND suspended_at IS NULL`,
     [params.nick]
   );
   const usuario = userRows[0];

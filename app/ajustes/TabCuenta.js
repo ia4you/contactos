@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 const DIAS_ESPERA_NICK = 30;
 
@@ -201,10 +201,9 @@ function FormularioPassword() {
       setError(data.error || "No se pudo cambiar la contraseña.");
       return;
     }
-    setMensaje("Contraseña actualizada.");
-    setCurrentPassword("");
-    setNewPassword("");
-    setRepeatPassword("");
+    // Cambiar la contraseña cierra todas las sesiones, también esta.
+    setMensaje("Contraseña actualizada. Vuelve a iniciar sesión…");
+    await signOut({ callbackUrl: "/login?password=cambiada" });
   }
 
   return (

@@ -30,7 +30,7 @@ export async function GET() {
        JOIN users u ON u.id = h.user_id
        LEFT JOIN photos ph ON ph.id = h.photo_id
       WHERE h.expires_at > now()
-        AND u.deleted_at IS NULL
+        AND u.deleted_at IS NULL AND u.suspended_at IS NULL
         AND (h.user_id = $1 OR NOT EXISTS (
           SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1)
         ))

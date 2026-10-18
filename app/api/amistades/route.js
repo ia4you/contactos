@@ -18,7 +18,7 @@ export async function GET() {
     `SELECT ${CAMPOS_USUARIO}, a.resolved_at
        FROM amistades a
        JOIN users u ON u.id = (CASE WHEN a.from_id = $1 THEN a.to_id ELSE a.from_id END)
-      WHERE (a.from_id = $1 OR a.to_id = $1) AND a.status = 'accepted' AND u.deleted_at IS NULL
+      WHERE (a.from_id = $1 OR a.to_id = $1) AND a.status = 'accepted' AND u.deleted_at IS NULL AND u.suspended_at IS NULL
       ORDER BY a.resolved_at DESC`,
     [meId]
   );
@@ -27,7 +27,7 @@ export async function GET() {
     `SELECT ${CAMPOS_USUARIO}, a.created_at
        FROM amistades a
        JOIN users u ON u.id = a.from_id
-      WHERE a.to_id = $1 AND a.status = 'pending' AND u.deleted_at IS NULL
+      WHERE a.to_id = $1 AND a.status = 'pending' AND u.deleted_at IS NULL AND u.suspended_at IS NULL
       ORDER BY a.created_at DESC`,
     [meId]
   );
@@ -36,7 +36,7 @@ export async function GET() {
     `SELECT ${CAMPOS_USUARIO}, a.created_at
        FROM amistades a
        JOIN users u ON u.id = a.to_id
-      WHERE a.from_id = $1 AND a.status = 'pending' AND u.deleted_at IS NULL
+      WHERE a.from_id = $1 AND a.status = 'pending' AND u.deleted_at IS NULL AND u.suspended_at IS NULL
       ORDER BY a.created_at DESC`,
     [meId]
   );
@@ -57,7 +57,7 @@ export async function POST(req) {
     return NextResponse.json({ error: "Destinatario inválido." }, { status: 400 });
   }
 
-  const { rows: destinoRows } = await query(`SELECT 1 FROM users WHERE id = $1 AND deleted_at IS NULL`, [toId]);
+  const { rows: destinoRows } = await query(`SELECT 1 FROM users WHERE id = $1 AND deleted_at IS NULL AND suspended_at IS NULL`, [toId]);
   if (!destinoRows[0]) {
     return NextResponse.json({ error: "Usuario no encontrado." }, { status: 404 });
   }

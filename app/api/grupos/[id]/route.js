@@ -46,7 +46,7 @@ export async function GET(req, { params }) {
             (SELECT filename FROM photos WHERE user_id = u.id AND is_avatar = true AND status = 'approved' LIMIT 1) AS avatar_filename
        FROM grupo_miembros gm
        JOIN users u ON u.id = gm.user_id
-      WHERE gm.grupo_id = $1 AND u.deleted_at IS NULL
+      WHERE gm.grupo_id = $1 AND u.deleted_at IS NULL AND u.suspended_at IS NULL
       ORDER BY gm.joined_at ASC`,
     [id]
   );

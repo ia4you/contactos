@@ -12,7 +12,7 @@ export async function POST(req) {
   }
 
   const { rows } = await query(
-    `SELECT id FROM users WHERE email = $1 AND deleted_at IS NULL`,
+    `SELECT id FROM users WHERE email = $1 AND deleted_at IS NULL AND suspended_at IS NULL`,
     [email]
   );
 

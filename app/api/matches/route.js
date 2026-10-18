@@ -15,7 +15,7 @@ export async function GET() {
             (SELECT filename FROM photos WHERE user_id = u.id AND is_avatar = true AND status = 'approved' LIMIT 1) AS avatar_filename
        FROM matches m
        JOIN users u ON u.id = (CASE WHEN m.user1_id = $1 THEN m.user2_id ELSE m.user1_id END)
-      WHERE (m.user1_id = $1 OR m.user2_id = $1) AND u.deleted_at IS NULL
+      WHERE (m.user1_id = $1 OR m.user2_id = $1) AND u.deleted_at IS NULL AND u.suspended_at IS NULL
       ORDER BY m.created_at DESC`,
     [meId]
   );

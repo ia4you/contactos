@@ -10,6 +10,7 @@ export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const verificado = searchParams.get("verificado");
+  const passwordCambiada = searchParams.get("password") === "cambiada";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,7 +40,13 @@ export function LoginForm() {
     setEnviando(false);
 
     if (res?.error) {
-      setError("Email, contraseña incorrectos o cuenta sin verificar.");
+      // authorize() lanza un mensaje propio para cuentas suspendidas; el
+      // resto de fallos llegan como "CredentialsSignin".
+      setError(
+        res.error.startsWith("Tu cuenta está suspendida")
+          ? res.error
+          : "Email, contraseña incorrectos o cuenta sin verificar."
+      );
       return;
     }
 
@@ -52,6 +59,12 @@ export function LoginForm() {
       <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
         Bienvenido de nuevo
       </h1>
+
+      {passwordCambiada && (
+        <p role="status" style={{ marginTop: 16, fontSize: 14, color: "var(--text-secondary)" }}>
+          Contraseña cambiada. Inicia sesión con la nueva.
+        </p>
+      )}
 
       {verificado === "1" && (
         <p

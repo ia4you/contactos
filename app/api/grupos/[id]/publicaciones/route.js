@@ -36,7 +36,7 @@ export async function GET(req, { params }) {
             EXISTS (SELECT 1 FROM publicacion_likes pl2 WHERE pl2.publicacion_id = p.id AND pl2.user_id = $1) AS me_gusta
        FROM publicaciones p
        JOIN users u ON u.id = p.user_id
-      WHERE p.grupo_id = $2 AND p.deleted_at IS NULL AND u.deleted_at IS NULL
+      WHERE p.grupo_id = $2 AND p.deleted_at IS NULL AND u.deleted_at IS NULL AND u.suspended_at IS NULL
       ORDER BY p.created_at DESC
       LIMIT $3 OFFSET $4`,
     [session.user.id, grupoId, LIMITE + 1, offset]

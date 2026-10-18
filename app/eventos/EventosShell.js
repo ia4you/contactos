@@ -7,6 +7,7 @@ import { ISLANDS } from "@/lib/constants";
 import { EventoCard } from "./EventoCard";
 import { CrearEventoModal } from "./CrearEventoModal";
 import { EmptyState } from "../components/EmptyState";
+import { useConfirmar } from "../components/Confirmar";
 
 const TIPOS = [
   { value: "quedada", label: "Quedada" },
@@ -16,6 +17,7 @@ const TIPOS = [
 ];
 
 export function EventosShell({ usuario }) {
+  const confirmar = useConfirmar();
   const searchParams = useSearchParams();
   const [eventos, setEventos] = useState(null);
   const [filtroIsla, setFiltroIsla] = useState("");
@@ -99,7 +101,7 @@ export function EventosShell({ usuario }) {
   }
 
   async function eliminarEvento(id) {
-    if (!window.confirm("¿Eliminar este evento?")) return;
+    if (!(await confirmar({ mensaje: "¿Eliminar este evento?", accion: "Eliminar" }))) return;
     setEventos((prev) => (prev ? prev.filter((e) => e.id !== id) : prev));
     setPasados((prev) => (prev ? prev.filter((e) => e.id !== id) : prev));
     await fetch(`/api/eventos/${id}`, { method: "DELETE" });

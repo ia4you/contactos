@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { slugify } from "@/lib/slug";
 import { EmptyState } from "../components/EmptyState";
+import { useConfirmar } from "../components/Confirmar";
 
 const VACIO = { id: null, titulo: "", slug: "", extracto: "", contenido: "", foto: null };
 
@@ -12,6 +13,7 @@ function formatearFecha(fecha) {
 }
 
 export function AdminBlog() {
+  const confirmar = useConfirmar();
   const [posts, setPosts] = useState(null);
   const [form, setForm] = useState(VACIO);
   const [slugTocado, setSlugTocado] = useState(false);
@@ -113,7 +115,7 @@ export function AdminBlog() {
   }
 
   async function eliminar(id) {
-    if (!window.confirm("¿Eliminar este artículo? No se puede deshacer.")) return;
+    if (!(await confirmar({ mensaje: "¿Eliminar este artículo?", detalle: "No se puede deshacer.", accion: "Eliminar" }))) return;
     setPosts((prev) => prev.filter((p) => p.id !== id));
     await fetch(`/api/admin/blog/${id}`, { method: "DELETE" });
     if (form.id === id) nuevoArticulo();

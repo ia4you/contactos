@@ -4,13 +4,15 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { avatarSrc } from "@/lib/constants";
+import { useConfirmar } from "../../components/Confirmar";
 
 export function GrupoAdminTab({ grupoId, usuarioId, miembros, onMiembroExpulsado }) {
+  const confirmar = useConfirmar();
   const [expulsando, setExpulsando] = useState(null);
   const [error, setError] = useState("");
 
   async function expulsar(m) {
-    if (!window.confirm(`¿Expulsar a ${m.nick} del grupo?`)) return;
+    if (!(await confirmar({ mensaje: `¿Expulsar a ${m.nick} del grupo?`, accion: "Expulsar" }))) return;
     setError("");
     setExpulsando(m.id);
     const res = await fetch(`/api/grupos/${grupoId}/miembros/${m.id}`, { method: "DELETE" });

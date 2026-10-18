@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { tiempoRelativo } from "@/lib/tiempo";
+import { useConfirmar } from "../components/Confirmar";
 
 export function AdminVerificacionEmail() {
+  const confirmar = useConfirmar();
   const [usuarios, setUsuarios] = useState(null);
   const [procesando, setProcesando] = useState(null);
 
@@ -19,7 +21,7 @@ export function AdminVerificacionEmail() {
   }, []);
 
   async function verificar(id, nick) {
-    if (!window.confirm(`¿Marcar el email de ${nick} como verificado manualmente?`)) return;
+    if (!(await confirmar({ mensaje: `¿Marcar el email de ${nick} como verificado manualmente?`, accion: "Verificar", peligro: false }))) return;
     setProcesando(id);
     try {
       const res = await fetch(`/api/admin/usuarios/${id}/verificar-email`, { method: "PATCH" });

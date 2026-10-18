@@ -7,6 +7,7 @@ import { ISLANDS, PROFILE_TYPES, avatarSrc } from "@/lib/constants";
 import { mostrarPuntoOnline } from "@/lib/online";
 import { EmptyState } from "../components/EmptyState";
 import { PuntoOnline } from "../components/PuntoOnline";
+import { useConfirmar } from "../components/Confirmar";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
@@ -42,6 +43,7 @@ function FilaUsuario({ u, children }) {
 const botonPequeno = { fontSize: 12, padding: "6px 12px" };
 
 export function AmistadesShell() {
+  const confirmar = useConfirmar();
   const [tab, setTab] = useState("amigos");
   const [amigos, setAmigos] = useState(null);
   const [recibidas, setRecibidas] = useState(null);
@@ -82,7 +84,7 @@ export function AmistadesShell() {
   }
 
   async function eliminarAmigo(userId) {
-    if (!window.confirm("¿Eliminar esta amistad?")) return;
+    if (!(await confirmar({ mensaje: "¿Eliminar esta amistad?", accion: "Eliminar" }))) return;
     setAmigos((prev) => prev.filter((u) => u.id !== userId));
     await fetch(`/api/amistades/${userId}`, { method: "DELETE" });
   }

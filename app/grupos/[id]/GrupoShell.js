@@ -6,8 +6,10 @@ import { GrupoAcercaDeTab } from "./GrupoAcercaDeTab";
 import { GrupoDebatesTab } from "./GrupoDebatesTab";
 import { GrupoMiembrosTab } from "./GrupoMiembrosTab";
 import { GrupoAdminTab } from "./GrupoAdminTab";
+import { useConfirmar } from "../../components/Confirmar";
 
 export function GrupoShell({ grupoId, usuarioId }) {
+  const confirmar = useConfirmar();
   const router = useRouter();
   const [grupo, setGrupo] = useState(null);
   const [miembros, setMiembros] = useState([]);
@@ -25,7 +27,7 @@ export function GrupoShell({ grupoId, usuarioId }) {
   }, [grupoId]);
 
   async function eliminarGrupo() {
-    if (!window.confirm("¿Eliminar este grupo? Se borrarán también sus debates y la lista de miembros. Esta acción no se puede deshacer.")) return;
+    if (!(await confirmar({ mensaje: "¿Eliminar este grupo?", detalle: "Se borrarán también sus debates y la lista de miembros. Esta acción no se puede deshacer.", accion: "Eliminar grupo" }))) return;
     setEliminando(true);
     const res = await fetch(`/api/grupos/${grupoId}`, { method: "DELETE" });
     if (res.ok) {

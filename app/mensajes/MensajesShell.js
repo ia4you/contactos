@@ -11,10 +11,12 @@ import { EmptyState } from "../components/EmptyState";
 import { PuntoOnline } from "../components/PuntoOnline";
 import { UsuarioBadge } from "../components/UsuarioBadge";
 import { AvisoSeguridadBanner, AvisoSeguridadModal } from "../components/AvisoSeguridadMensajes";
+import { useConfirmar } from "../components/Confirmar";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 
 export function MensajesShell({ usuarioId }) {
+  const confirmar = useConfirmar();
   const [conversaciones, setConversaciones] = useState(null);
   const [subTab, setSubTab] = useState("todas");
   const [busqueda, setBusqueda] = useState("");
@@ -133,7 +135,7 @@ export function MensajesShell({ usuarioId }) {
   }
 
   async function eliminarMensaje(mensajeId) {
-    if (!window.confirm("¿Eliminar este mensaje?")) return;
+    if (!(await confirmar({ mensaje: "¿Eliminar este mensaje?", accion: "Eliminar" }))) return;
     setMensajes((prev) => prev.map((m) => (m.id === mensajeId ? { ...m, eliminado: true, texto: null } : m)));
     await fetch(`/api/mensajes/${activaId}/${mensajeId}`, { method: "DELETE" });
   }

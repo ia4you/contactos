@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ISLANDS, PROFILE_TYPES } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
+import { useConfirmar } from "../components/Confirmar";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
 
 export function AdminUsuarios() {
+  const confirmar = useConfirmar();
   const [usuarios, setUsuarios] = useState(null);
 
   function cargar() {
@@ -23,7 +25,7 @@ export function AdminUsuarios() {
   }, []);
 
   async function suspender(id, nick) {
-    if (!window.confirm(`¿Suspender la cuenta de ${nick}? Esto es un soft-delete (deleted_at).`)) return;
+    if (!(await confirmar({ mensaje: `¿Suspender la cuenta de ${nick}?`, detalle: "Esto es un soft-delete (deleted_at).", accion: "Suspender" }))) return;
     const res = await fetch(`/api/admin/usuarios/${id}/suspender`, { method: "PATCH" });
     if (res.ok) cargar();
     else {

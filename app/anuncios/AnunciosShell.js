@@ -8,11 +8,13 @@ import { MultiSelectChips } from "../components/MultiSelectChips";
 import { EmptyState } from "../components/EmptyState";
 import { AnuncioCard } from "./AnuncioCard";
 import { AnuncioModal } from "./AnuncioModal";
+import { useConfirmar } from "../components/Confirmar";
 
 const LIMITE = 20;
 const ESTADO_INICIAL = { islas: [], busco: [] };
 
 export function AnunciosShell({ usuario }) {
+  const confirmar = useConfirmar();
   const searchParams = useSearchParams();
   const [filtros, setFiltros] = useState(ESTADO_INICIAL);
   const [anuncios, setAnuncios] = useState([]);
@@ -86,7 +88,7 @@ export function AnunciosShell({ usuario }) {
   }
 
   async function eliminarAnuncio(id) {
-    if (!window.confirm("¿Eliminar tu anuncio?")) return;
+    if (!(await confirmar({ mensaje: "¿Eliminar tu anuncio?", accion: "Eliminar" }))) return;
     setAnuncios((prev) => prev.filter((a) => a.id !== id));
     setAnuncioPropio(null);
     await fetch(`/api/anuncios/${id}`, { method: "DELETE" });

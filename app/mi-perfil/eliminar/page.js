@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { signOut } from "next-auth/react";
+import { useConfirmar } from "../../components/Confirmar";
 
 export default function EliminarCuenta() {
+  const confirmar = useConfirmar();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [enviando, setEnviando] = useState(false);
@@ -12,9 +14,11 @@ export default function EliminarCuenta() {
     e.preventDefault();
     setError("");
 
-    const confirmado = window.confirm(
-      "Esta acción eliminará tu cuenta de forma irreversible. ¿Seguro que quieres continuar?"
-    );
+    const confirmado = await confirmar({
+      mensaje: "¿Eliminar tu cuenta?",
+      detalle: "Esta acción eliminará tu cuenta de forma irreversible.",
+      accion: "Eliminar cuenta",
+    });
     if (!confirmado) return;
 
     setEnviando(true);

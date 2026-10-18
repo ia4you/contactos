@@ -19,9 +19,9 @@ function estiloScore(score) {
 function TarjetaSkeleton() {
   return (
     <div style={{ width: 148, flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
-      <div style={{ width: 88, height: 88, borderRadius: "50%", background: "#2a2a2a" }} />
-      <div style={{ width: 70, height: 12, background: "#2a2a2a" }} />
-      <div style={{ width: 50, height: 10, background: "#2a2a2a" }} />
+      <div style={{ width: 88, height: 88, borderRadius: "50%", background: "var(--bg-deep)" }} />
+      <div style={{ width: 70, height: 12, background: "var(--bg-deep)" }} />
+      <div style={{ width: 50, height: 10, background: "var(--bg-deep)" }} />
     </div>
   );
 }
@@ -35,9 +35,7 @@ function TarjetaRecomendacion({ r }) {
       style={{
         width: 148,
         flexShrink: 0,
-        background: "#141414",
-        border: "1px solid #2a2a2a",
-        padding: 14,
+        padding: "14px 0",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -52,23 +50,23 @@ function TarjetaRecomendacion({ r }) {
         {mostrarPuntoOnline(r) && <PuntoOnline />}
       </div>
 
-      <span className="heading" style={{ fontSize: 15, color: "var(--text)" }}>{r.nick}</span>
-      <span className="badge-gold" style={{ fontSize: 9 }}>{ISLAND_LABEL[r.island]}</span>
+      <span className="heading" style={{ fontSize: 16, color: "var(--text)" }}>{r.nick}</span>
+      <span className="badge-gold" style={{ fontSize: 12 }}>{ISLAND_LABEL[r.island]}</span>
 
       {r.score != null && (
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontFamily: "var(--font-body)", fontSize: 11, color: score.color }}>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontFamily: "var(--font-body)", fontSize: 12, color: score.color }}>
           {score.icono && <Flame size={11} fill={score.color} />}
           {r.score}% compatible
         </span>
       )}
 
       {r.razon_corta && (
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "var(--text-muted)", lineHeight: 1.3 }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)", lineHeight: 1.3 }}>
           {r.razon_corta}
         </p>
       )}
 
-      <Link href={`/perfil/${r.nick}`} className="btn-outline-gold" style={{ marginTop: 4, fontSize: 10, padding: "6px 16px" }}>
+      <Link href={`/perfil/${r.nick}`} className="enlace-flecha" aria-label={`Ver perfil de ${r.nick}`}>
         Ver
       </Link>
     </div>
@@ -80,7 +78,7 @@ function FilaRecomendacionCompacta({ r }) {
   const score = estiloScore(r.score ?? 0);
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid rgba(201,161,90,0.1)" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid var(--rule)" }}>
       <div style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}>
         <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
           <Image sizes="40px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
@@ -88,17 +86,17 @@ function FilaRecomendacionCompacta({ r }) {
         {mostrarPuntoOnline(r) && <PuntoOnline />}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <span className="heading" style={{ fontSize: 13, color: "var(--text)", display: "block" }}>{r.nick}</span>
+        <span className="heading" style={{ fontSize: 14, color: "var(--text)", display: "block" }}>{r.nick}</span>
         {r.score != null ? (
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontFamily: "var(--font-body)", fontSize: 10, color: score.color }}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontFamily: "var(--font-body)", fontSize: 12, color: score.color }}>
             {score.icono && <Flame size={10} fill={score.color} />}
             {r.score}% compatible
           </span>
         ) : (
-          <span style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "var(--text-muted)" }}>{ISLAND_LABEL[r.island]}</span>
+          <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>{ISLAND_LABEL[r.island]}</span>
         )}
       </div>
-      <Link href={`/perfil/${r.nick}`} className="btn-outline-gold" style={{ flexShrink: 0, fontSize: 9, padding: "5px 10px" }}>
+      <Link href={`/perfil/${r.nick}`} className="enlace-flecha" style={{ flexShrink: 0 }} aria-label={`Ver perfil de ${r.nick}`}>
         Ver
       </Link>
     </div>
@@ -128,8 +126,8 @@ export function RecomendadosWidget({ compacto = false }) {
     <div style={{ marginBottom: 24 }}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
         <div>
-          <p className="kicker" style={{ letterSpacing: 3 }}>Recomendados para ti</p>
-          <p style={{ marginTop: 2, fontFamily: "var(--font-body)", fontSize: 11, color: "var(--text-muted)" }}>
+          <h3 className="widget-titulo">Recomendados para ti</h3>
+          <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
             Seleccionados por IA según tus gustos
           </p>
         </div>
@@ -150,8 +148,8 @@ export function RecomendadosWidget({ compacto = false }) {
           <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 10 }}>
             {[1, 2, 3].map((i) => (
               <div key={i} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#2a2a2a" }} />
-                <div style={{ flex: 1, height: 12, background: "#2a2a2a" }} />
+                <div style={{ width: 40, height: 40, borderRadius: "50%", background: "var(--bg-deep)" }} />
+                <div style={{ flex: 1, height: 12, background: "var(--bg-deep)" }} />
               </div>
             ))}
           </div>
@@ -163,11 +161,11 @@ export function RecomendadosWidget({ compacto = false }) {
           </div>
         )
       ) : estado.sinGustos ? (
-        <div style={{ marginTop: 14, background: "#1c1416", border: "1px solid rgba(201,161,90,0.18)", padding: 20, textAlign: "center" }}>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+        <div style={{ marginTop: 14 }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
             Añade tus gustos para recibir recomendaciones personalizadas
           </p>
-          <Link href="/mi-perfil#gustos" className="btn-outline-gold" style={{ marginTop: 12, display: "inline-block", fontSize: 11 }}>
+          <Link href="/mi-perfil#gustos" className="enlace-flecha">
             Añadir gustos
           </Link>
         </div>

@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Image as ImageIcon } from "lucide-react";
+import { SelectorArchivo } from "../components/SelectorArchivo";
 import { ISLANDS } from "@/lib/constants";
 import { LugarAutocomplete } from "./LugarAutocomplete";
+import { Dialogo } from "../components/Dialogo";
 
 const TIPOS = [
   { value: "quedada", label: "Quedada" },
@@ -114,15 +115,8 @@ export function CrearEventoModal({ eventoExistente, islaPorDefecto, onClose, onG
   }
 
   return (
-    <div
-      style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(14,10,11,0.85)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24, overflowY: "auto" }}
-      onClick={onClose}
-    >
-      <div
-        style={{ width: "100%", maxWidth: 480, background: "var(--surface)", border: "1px solid var(--border-gold)", padding: 28, margin: "auto" }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h3 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
+    <Dialogo onCerrar={onClose} idTitulo="crear-evento-titulo">
+        <h3 id="crear-evento-titulo" className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
           {esEdicion ? "Editar evento" : "Crear evento"}
         </h3>
 
@@ -176,34 +170,26 @@ export function CrearEventoModal({ eventoExistente, islaPorDefecto, onClose, onG
             <span className="label-field">Foto (opcional)</span>
             {previewUrl ? (
               <div>
-                <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden", border: "1px solid rgba(201,161,90,0.2)" }}>
+                <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden", border: "1px solid var(--rule)" }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={previewUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
-                <button type="button" onClick={quitarArchivo} className="btn-outline-gold" style={{ marginTop: 8, fontSize: 11, padding: "6px 14px" }}>
+                <button type="button" onClick={quitarArchivo} className="btn-outline-gold" style={{ marginTop: 8, fontSize: 12, padding: "6px 14px" }}>
                   Quitar foto
                 </button>
               </div>
             ) : (
-              <label
-                className="btn-outline-gold"
-                style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer" }}
-              >
-                <ImageIcon size={15} />
-                Subir foto
-                <input
-                  ref={inputFileRef}
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  style={{ display: "none" }}
-                  onChange={seleccionarArchivo}
-                />
-              </label>
+              <SelectorArchivo
+                inputRef={inputFileRef}
+                archivo={archivo}
+                accept="image/jpeg,image/png,image/webp"
+                onChange={seleccionarArchivo}
+              />
             )}
           </div>
         )}
 
-        {error && <p style={{ marginTop: 14, fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
+        {error && <p style={{ marginTop: 14, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{error}</p>}
 
         <div style={{ marginTop: 24, display: "flex", gap: 12 }}>
           <button type="button" onClick={onClose} disabled={enviando} className="btn-outline-gold" style={{ flex: 1 }}>
@@ -213,7 +199,6 @@ export function CrearEventoModal({ eventoExistente, islaPorDefecto, onClose, onG
             {enviando ? "Guardando…" : esEdicion ? "Guardar cambios" : "Crear evento"}
           </button>
         </div>
-      </div>
-    </div>
+    </Dialogo>
   );
 }

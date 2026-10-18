@@ -197,11 +197,11 @@ export default async function PerfilPublico({ params }) {
           role="status"
           style={{
             padding: "12px 24px",
-            background: "rgba(154,58,58,0.18)",
-            borderBottom: "1px solid rgba(154,58,58,0.5)",
+            background: "var(--surface)",
+            borderBottom: "1px solid var(--danger-border)",
             fontFamily: "var(--font-body)",
             fontSize: 14,
-            color: "#e07a7a",
+            color: "var(--danger)",
             textAlign: "center",
           }}
         >
@@ -240,7 +240,7 @@ export default async function PerfilPublico({ params }) {
             </h2>
             {Object.entries(gustosPorCategoria).map(([categoria, nombres]) => (
               <div key={categoria} style={{ marginTop: 24 }}>
-                <p className="kicker" style={{ letterSpacing: 3 }}>
+                <p className="kicker" style={{ letterSpacing: "0.04em" }}>
                   {categoria}
                 </p>
                 <div style={{ marginTop: 14, display: "flex", flexWrap: "wrap", gap: 10 }}>

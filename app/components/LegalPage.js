@@ -14,7 +14,7 @@ export function LegalPage({ kicker, titulo, children }) {
             flexDirection: "column",
             gap: 20,
             fontFamily: "var(--font-body)",
-            fontSize: 15,
+            fontSize: 16,
             lineHeight: 1.8,
             color: "var(--text-secondary)",
           }}

@@ -6,8 +6,10 @@ import { GrupoAcercaDeTab } from "./GrupoAcercaDeTab";
 import { GrupoDebatesTab } from "./GrupoDebatesTab";
 import { GrupoMiembrosTab } from "./GrupoMiembrosTab";
 import { GrupoAdminTab } from "./GrupoAdminTab";
+import { useConfirmar } from "../../components/Confirmar";
 
 export function GrupoShell({ grupoId, usuarioId }) {
+  const confirmar = useConfirmar();
   const router = useRouter();
   const [grupo, setGrupo] = useState(null);
   const [miembros, setMiembros] = useState([]);
@@ -25,7 +27,7 @@ export function GrupoShell({ grupoId, usuarioId }) {
   }, [grupoId]);
 
   async function eliminarGrupo() {
-    if (!window.confirm("¿Eliminar este grupo? Se borrarán también sus debates y la lista de miembros. Esta acción no se puede deshacer.")) return;
+    if (!(await confirmar({ mensaje: "¿Eliminar este grupo?", detalle: "Se borrarán también sus debates y la lista de miembros. Esta acción no se puede deshacer.", accion: "Eliminar grupo" }))) return;
     setEliminando(true);
     const res = await fetch(`/api/grupos/${grupoId}`, { method: "DELETE" });
     if (res.ok) {
@@ -73,7 +75,7 @@ export function GrupoShell({ grupoId, usuarioId }) {
         }}
       >
         <div>
-          <h1 className="heading" style={{ fontSize: 24, color: "var(--text)" }}>{grupo.nombre}</h1>
+          <h1 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>{grupo.nombre}</h1>
           <p style={{ marginTop: 4, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
             {grupo.miembros_count} miembros
           </p>
@@ -84,7 +86,7 @@ export function GrupoShell({ grupoId, usuarioId }) {
             onClick={eliminarGrupo}
             disabled={eliminando}
             className="btn-outline-gold"
-            style={{ borderColor: "rgba(154,58,58,0.5)", color: "#e07a7a", fontSize: 11, padding: "8px 14px", flexShrink: 0 }}
+            style={{ borderColor: "var(--danger-border)", color: "var(--danger)", fontSize: 12, padding: "8px 14px", flexShrink: 0 }}
           >
             {eliminando ? "Eliminando…" : "Eliminar grupo"}
           </button>

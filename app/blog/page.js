@@ -38,7 +38,7 @@ export default async function Blog() {
     <main>
       <section style={{ padding: "96px 24px 40px", maxWidth: 860, margin: "0 auto", textAlign: "center" }}>
         <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-          <span className="heading" style={{ fontSize: 20, letterSpacing: 4, color: "var(--text)" }}>
+          <span className="heading" style={{ fontSize: 22, letterSpacing: "0.04em", color: "var(--text)" }}>
             CONTACTOS
           </span>
         </Link>

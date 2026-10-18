@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { SelectorArchivo } from "../components/SelectorArchivo";
 
 // Pantalla obligatoria del gate de avatar (middleware.js la deja pasar y
 // redirige aquí a quien no tiene foto de perfil). Si la BD dice que ya la
@@ -48,24 +49,24 @@ export function SubirFotoForm({ yaTiene }) {
 
   return (
     <main style={{ maxWidth: 420, margin: "60px auto", padding: "0 16px" }}>
-      <h1 style={{ fontFamily: "var(--font-display)", fontSize: 28, marginBottom: 12 }}>
+      <h1 style={{ fontFamily: "var(--font-display)", fontSize: 30, marginBottom: 12 }}>
         Sube tu foto de perfil
       </h1>
       <p style={{ marginBottom: 20, fontSize: 14, opacity: 0.8 }}>
         La foto de perfil es obligatoria para usar la aplicación.
       </p>
       <form onSubmit={enviar}>
-        <input
-          type="file"
+        <SelectorArchivo
+          archivo={archivo}
           accept="image/jpeg,image/png,image/webp"
           onChange={(e) => setArchivo(e.target.files?.[0] ?? null)}
           required
         />
-        <label style={{ display: "flex", gap: 8, margin: "16px 0", fontSize: 13 }}>
+        <label style={{ display: "flex", gap: 8, margin: "16px 0", fontSize: 14 }}>
           <input type="checkbox" checked={certifico} onChange={(e) => setCertifico(e.target.checked)} />
           Certifico que todas las personas de la foto son mayores de edad y han consentido.
         </label>
-        {error && <p style={{ color: "#e07a7a", fontSize: 13, marginBottom: 12 }}>{error}</p>}
+        {error && <p style={{ color: "var(--danger)", fontSize: 14, marginBottom: 12 }}>{error}</p>}
         <button type="submit" disabled={!archivo || !certifico || subiendo} className="foto-overlay-btn">
           {subiendo ? "Subiendo…" : "Subir foto"}
         </button>

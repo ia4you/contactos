@@ -83,7 +83,6 @@ function FotoItem({ usuarioId, foto, esPropio, destacada, onAbrir }) {
           position: "relative",
           aspectRatio: "1 / 1",
           overflow: "hidden",
-          border: "1px solid rgba(201,161,90,0.2)",
         }}
       >
         <Image sizes="(max-width: 559px) 50vw, 33vw"
@@ -107,7 +106,7 @@ function FotoItem({ usuarioId, foto, esPropio, destacada, onAbrir }) {
               pointerEvents: "none",
             }}
           >
-            <Heart size={72} fill="#e07a7a" color="#e07a7a" className="corazon-doble-click" />
+            <Heart size={72} fill="var(--danger)" color="var(--danger)" className="corazon-doble-click" />
           </div>
         )}
 
@@ -136,7 +135,7 @@ function FotoItem({ usuarioId, foto, esPropio, destacada, onAbrir }) {
                 height: 30,
                 border: "none",
                 borderRadius: "50%",
-                background: "rgba(14,10,11,0.75)",
+                background: "var(--veil-strong)",
                 color: meGusta ? "var(--gold)" : "var(--text)",
                 cursor: "pointer",
               }}
@@ -152,9 +151,9 @@ function FotoItem({ usuarioId, foto, esPropio, destacada, onAbrir }) {
                 style={{
                   width: "auto",
                   alignSelf: "stretch",
-                  borderColor: "rgba(154,58,58,0.5)",
-                  color: "#e07a7a",
-                  background: "rgba(14,10,11,0.75)",
+                  borderColor: "var(--danger-border)",
+                  color: "var(--danger)",
+                  background: "var(--veil-strong)",
                   padding: "6px 12px",
                 }}
               />

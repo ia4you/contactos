@@ -15,7 +15,7 @@ export function DemoBanner() {
         textAlign: "center",
       }}
     >
-      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text)" }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text)" }}>
         Este es un perfil de demostración. Las respuestas están generadas por IA. ¡Regístrate
         para conectar con personas reales!
       </p>

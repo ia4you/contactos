@@ -26,9 +26,9 @@ export function GrupoMiembrosTab({ miembros }) {
             <div style={{ position: "relative", width: 64, height: 64, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
               <Image sizes="64px" src={src} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
             </div>
-            <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text)", textAlign: "center" }}>{m.nick}</span>
+            <span style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text)", textAlign: "center" }}>{m.nick}</span>
             {m.rol === "admin" && (
-              <span className="badge-gold" style={{ fontSize: 9, padding: "2px 7px" }}>Admin</span>
+              <span className="badge-gold" style={{ fontSize: 12 }}>Admin</span>
             )}
           </Link>
         );

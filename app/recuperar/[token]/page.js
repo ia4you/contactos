@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AuthLayout } from "../../components/AuthLayout";
 import { useRouter, useParams } from "next/navigation";
 
 export default function RestablecerContrasena() {
@@ -36,31 +37,21 @@ export default function RestablecerContrasena() {
 
   if (exito) {
     return (
-      <main
-        style={{
-          minHeight: "60vh",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          textAlign: "center",
-          padding: "24px",
-        }}
-      >
-        <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+      <AuthLayout>
+        <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
           Contraseña actualizada
         </h1>
         <p style={{ marginTop: 16, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
           Redirigiendo a iniciar sesión…
         </p>
-      </main>
+      </AuthLayout>
     );
   }
 
   return (
-    <main style={{ minHeight: "60vh", display: "flex", justifyContent: "center", padding: "80px 24px" }}>
-      <div style={{ width: "100%", maxWidth: 400 }}>
-        <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+    <AuthLayout>
+      <div>
+        <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
           Nueva contraseña
         </h1>
 
@@ -77,13 +68,13 @@ export default function RestablecerContrasena() {
             />
           </label>
 
-          {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
+          {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{error}</p>}
 
           <button type="submit" disabled={enviando} className="btn-gold" style={{ width: "100%" }}>
             {enviando ? "Guardando…" : "Guardar contraseña"}
           </button>
         </form>
       </div>
-    </main>
+    </AuthLayout>
   );
 }

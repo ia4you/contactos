@@ -39,7 +39,7 @@ export function GruposShell() {
       <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
         <div>
           <p className="kicker">Comunidad</p>
-          <h1 className="heading" style={{ fontSize: 32, color: "var(--text)", marginTop: 6 }}>
+          <h1 className="heading" style={{ fontSize: 30, color: "var(--text)", marginTop: 6 }}>
             Grupos
           </h1>
         </div>
@@ -47,7 +47,7 @@ export function GruposShell() {
           type="button"
           onClick={() => setModalAbierto(true)}
           className="btn-gold"
-          style={{ fontSize: 11, padding: "10px 18px", display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}
+          style={{ fontSize: 12, padding: "10px 18px", display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}
         >
           <Plus size={14} />
           Crear grupo
@@ -63,7 +63,7 @@ export function GruposShell() {
           grupos.map((g) => (
             <div
               key={g.id}
-              style={{ display: "flex", alignItems: "center", gap: 16, padding: "16px 0", borderBottom: "1px solid rgba(201,161,90,0.12)" }}
+              style={{ display: "flex", alignItems: "center", gap: 16, padding: "16px 0", borderBottom: "1px solid var(--rule)" }}
             >
               <div
                 style={{
@@ -83,8 +83,8 @@ export function GruposShell() {
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                  <span className="heading" style={{ fontSize: 17, color: "var(--text)" }}>{g.nombre}</span>
-                  {g.isla && <span className="badge-gold" style={{ fontSize: 9 }}>{ISLAND_LABEL[g.isla]}</span>}
+                  <span className="heading" style={{ fontSize: 18, color: "var(--text)" }}>{g.nombre}</span>
+                  {g.isla && <span className="badge-gold" style={{ fontSize: 12 }}>{ISLAND_LABEL[g.isla]}</span>}
                 </div>
                 <p style={{ marginTop: 3, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
                   {g.miembros_count} miembro{g.miembros_count === 1 ? "" : "s"}
@@ -92,7 +92,7 @@ export function GruposShell() {
                 </p>
               </div>
               {g.soy_miembro ? (
-                <Link href={`/grupos/${g.id}`} className="btn-outline-gold" style={{ fontSize: 11, padding: "8px 16px", flexShrink: 0 }}>
+                <Link href={`/grupos/${g.id}`} className="btn-outline-gold" style={{ fontSize: 12, padding: "8px 16px", flexShrink: 0 }}>
                   Entrar
                 </Link>
               ) : (
@@ -101,7 +101,7 @@ export function GruposShell() {
                   onClick={() => unirse(g.id)}
                   disabled={uniendose === g.id}
                   className="btn-gold"
-                  style={{ fontSize: 11, padding: "8px 16px", flexShrink: 0 }}
+                  style={{ fontSize: 12, padding: "8px 16px", flexShrink: 0 }}
                 >
                   {uniendose === g.id ? "Uniéndome…" : "Unirme"}
                 </button>

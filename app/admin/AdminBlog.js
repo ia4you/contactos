@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { slugify } from "@/lib/slug";
 import { EmptyState } from "../components/EmptyState";
+import { useConfirmar } from "../components/Confirmar";
 
 const VACIO = { id: null, titulo: "", slug: "", extracto: "", contenido: "", foto: null };
 
@@ -12,6 +13,7 @@ function formatearFecha(fecha) {
 }
 
 export function AdminBlog() {
+  const confirmar = useConfirmar();
   const [posts, setPosts] = useState(null);
   const [form, setForm] = useState(VACIO);
   const [slugTocado, setSlugTocado] = useState(false);
@@ -113,7 +115,7 @@ export function AdminBlog() {
   }
 
   async function eliminar(id) {
-    if (!window.confirm("¿Eliminar este artículo? No se puede deshacer.")) return;
+    if (!(await confirmar({ mensaje: "¿Eliminar este artículo?", detalle: "No se puede deshacer.", accion: "Eliminar" }))) return;
     setPosts((prev) => prev.filter((p) => p.id !== id));
     await fetch(`/api/admin/blog/${id}`, { method: "DELETE" });
     if (form.id === id) nuevoArticulo();
@@ -121,13 +123,13 @@ export function AdminBlog() {
 
   return (
     <div>
-      <div style={{ background: "#141414", border: "1px solid #2a2a2a", padding: 24 }}>
+      <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", padding: 24 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <h2 className="heading" style={{ fontSize: 20, color: "var(--text)" }}>
+          <h2 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
             {form.id ? "Editar artículo" : "Nuevo artículo"}
           </h2>
           {form.id && (
-            <button type="button" onClick={nuevoArticulo} className="btn-outline-gold" style={{ fontSize: 11, padding: "6px 12px" }}>
+            <button type="button" onClick={nuevoArticulo} className="btn-outline-gold" style={{ fontSize: 12, padding: "6px 12px" }}>
               Cancelar edición
             </button>
           )}
@@ -157,7 +159,7 @@ export function AdminBlog() {
               }}
               className="input-field"
             />
-            <span style={{ marginTop: 4, display: "block", fontFamily: "var(--font-body)", fontSize: 11, color: "var(--text-muted)" }}>
+            <span style={{ marginTop: 4, display: "block", fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
               /blog/{slugify(form.slug) || "…"}
             </span>
           </label>
@@ -191,12 +193,12 @@ export function AdminBlog() {
           </label>
 
           {(previewUrl || form.foto) && (
-            <div style={{ position: "relative", width: 240, aspectRatio: "16 / 9", overflow: "hidden", border: "1px solid #2a2a2a" }}>
+            <div style={{ position: "relative", width: 240, aspectRatio: "16 / 9", overflow: "hidden", border: "1px solid var(--rule)" }}>
               <Image sizes="240px" src={previewUrl || `/uploads/blog/${form.foto}`} alt="" fill unoptimized style={{ objectFit: "cover" }} />
             </div>
           )}
 
-          {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
+          {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{error}</p>}
 
           <div style={{ display: "flex", gap: 10 }}>
             <button
@@ -220,7 +222,7 @@ export function AdminBlog() {
       </div>
 
       <div style={{ marginTop: 32 }}>
-        <h2 className="heading" style={{ fontSize: 20, color: "var(--text)", marginBottom: 16 }}>
+        <h2 className="heading" style={{ fontSize: 22, color: "var(--text)", marginBottom: 16 }}>
           Artículos
         </h2>
 
@@ -234,8 +236,8 @@ export function AdminBlog() {
               <div
                 key={p.id}
                 style={{
-                  background: "#141414",
-                  border: "1px solid #2a2a2a",
+                  background: "var(--surface)",
+                  border: "1px solid var(--rule)",
                   padding: 18,
                   display: "flex",
                   justifyContent: "space-between",
@@ -250,23 +252,23 @@ export function AdminBlog() {
                     <span
                       className="badge-gold"
                       style={{
-                        fontSize: 9,
+                        fontSize: 12,
                         ...(p.publicado ? {} : { background: "transparent", border: "1px solid var(--text-muted)", color: "var(--text-muted)" }),
                       }}
                     >
                       {p.publicado ? "Publicado" : "Borrador"}
                     </span>
                   </div>
-                  <p style={{ marginTop: 4, fontFamily: "var(--font-body)", fontSize: 11, color: "var(--text-muted)" }}>
+                  <p style={{ marginTop: 4, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
                     {formatearFecha(p.publicado_at || p.created_at)}
                   </p>
                 </div>
                 <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
-                  <button type="button" onClick={() => editar(p)} className="btn-outline-gold" style={{ fontSize: 11, padding: "8px 14px" }}>
+                  <button type="button" onClick={() => editar(p)} className="btn-outline-gold" style={{ fontSize: 12, padding: "8px 14px" }}>
                     Editar
                   </button>
                   {p.publicado && (
-                    <button type="button" onClick={() => despublicar(p.id)} className="btn-outline-gold" style={{ fontSize: 11, padding: "8px 14px" }}>
+                    <button type="button" onClick={() => despublicar(p.id)} className="btn-outline-gold" style={{ fontSize: 12, padding: "8px 14px" }}>
                       Despublicar
                     </button>
                   )}
@@ -274,7 +276,7 @@ export function AdminBlog() {
                     type="button"
                     onClick={() => eliminar(p.id)}
                     className="btn-outline-gold"
-                    style={{ fontSize: 11, padding: "8px 14px", borderColor: "rgba(154,58,58,0.5)", color: "#e07a7a" }}
+                    style={{ fontSize: 12, padding: "8px 14px", borderColor: "var(--danger-border)", color: "var(--danger)" }}
                   >
                     Eliminar
                   </button>

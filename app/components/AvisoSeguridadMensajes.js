@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Lock } from "lucide-react";
+import { Dialogo } from "./Dialogo";
 
 const TEXTO_MODAL =
   "Tu privacidad y seguridad son una prioridad para nosotros. Te recomendamos no compartir datos " +
@@ -22,12 +24,13 @@ export function AvisoSeguridadBanner() {
         gap: 10,
         padding: "10px 20px",
         background: "rgba(122, 46, 63, 0.14)",
-        borderBottom: "1px solid rgba(201, 161, 90, 0.18)",
+        borderBottom: "1px solid var(--rule)",
         flexShrink: 0,
       }}
     >
+      <Lock size={14} aria-hidden="true" style={{ flexShrink: 0, color: "var(--gold)" }} />
       <p style={{ fontFamily: "var(--font-body)", fontSize: 12, lineHeight: 1.5, color: "var(--text-secondary)", margin: 0 }}>
-        🔒 Por tu seguridad: nunca compartas datos personales, bancarios ni de pago con otros miembros.
+        Por tu seguridad: nunca compartas datos personales, bancarios ni de pago con otros miembros.
         Ninguna solicitud de dinero es legítima dentro de esta comunidad.
       </p>
     </div>
@@ -63,29 +66,8 @@ export function AvisoSeguridadModal({ usuarioId }) {
   if (!visible) return null;
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 1000,
-        background: "rgba(14, 10, 11, 0.75)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 20,
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 440,
-          width: "100%",
-          background: "var(--bg-secondary)",
-          border: "1px solid rgba(201, 161, 90, 0.25)",
-          borderTop: "3px solid #7A2E3F",
-          padding: "28px 26px",
-        }}
-      >
-        <h3 className="heading" style={{ fontSize: 19, color: "var(--text)", marginBottom: 14 }}>
+    <Dialogo onCerrar={cerrar} idTitulo="aviso-seguridad-titulo" className="dialogo--aviso">
+        <h3 id="aviso-seguridad-titulo" className="heading" style={{ fontSize: 22, color: "var(--text)", marginBottom: 14 }}>
           Tu seguridad, primero
         </h3>
         <p style={{ fontFamily: "var(--font-body)", fontSize: 14, lineHeight: 1.6, color: "var(--text-secondary)" }}>
@@ -94,7 +76,6 @@ export function AvisoSeguridadModal({ usuarioId }) {
         <button type="button" onClick={cerrar} className="btn-gold" style={{ marginTop: 20, width: "100%" }}>
           Entendido
         </button>
-      </div>
-    </div>
+    </Dialogo>
   );
 }

@@ -42,10 +42,10 @@ export function VisitasShell() {
   return (
     <div style={{ maxWidth: 680, margin: "0 auto", padding: "40px 0 80px" }}>
       <div style={{ padding: "0 24px" }}>
-        <h1 className="heading" style={{ fontSize: 32, color: "var(--text)" }}>
+        <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
           Quién ha visitado mi perfil
         </h1>
-        <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>
+        <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
           Las últimas 500 visitas de los últimos 30 días
         </p>
       </div>
@@ -73,7 +73,7 @@ export function VisitasShell() {
                     alignItems: "center",
                     gap: 14,
                     padding: "14px 24px",
-                    borderBottom: "1px solid #2a2a2a",
+                    borderBottom: "1px solid var(--rule)",
                     textDecoration: "none",
                   }}
                 >
@@ -86,11 +86,11 @@ export function VisitasShell() {
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                      <span className="heading" style={{ fontSize: 15, color: "var(--text)" }}>
+                      <span className="heading" style={{ fontSize: 16, color: "var(--text)" }}>
                         {v.nick}
                       </span>
-                      <span className="badge-gold" style={{ fontSize: 9 }}>{ISLAND_LABEL[v.island]}</span>
-                      <span className="badge-gold" style={{ fontSize: 9 }}>{PROFILE_TYPE_LABEL[v.profile_type]}</span>
+                      <span className="badge-gold" style={{ fontSize: 12 }}>{ISLAND_LABEL[v.island]}</span>
+                      <span className="badge-gold" style={{ fontSize: 12 }}>{PROFILE_TYPE_LABEL[v.profile_type]}</span>
                     </div>
                   </div>
                   <span style={{ flexShrink: 0, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>

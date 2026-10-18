@@ -2,15 +2,19 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useConfirmar } from "./Confirmar";
 
 export function BlockButton({ blockedId, label, className, style }) {
+  const confirmar = useConfirmar();
   const router = useRouter();
   const [enviando, setEnviando] = useState(false);
 
   async function bloquear() {
-    const confirmado = window.confirm(
-      "¿Seguro que quieres bloquear a este usuario? No podréis veros los perfiles ni aparecer en las búsquedas del otro."
-    );
+    const confirmado = await confirmar({
+      mensaje: "¿Bloquear a este usuario?",
+      detalle: "No podréis veros los perfiles ni aparecer en las búsquedas del otro.",
+      accion: "Bloquear",
+    });
     if (!confirmado) return;
 
     setEnviando(true);

@@ -19,13 +19,13 @@ export function TabNotificaciones() {
         Notificaciones
       </h2>
 
-      <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>
+      <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
         Las notificaciones por email se activarán próximamente.
       </p>
 
-      <div style={{ marginTop: 16, borderTop: "1px solid rgba(201,161,90,0.12)" }}>
+      <div style={{ marginTop: 16, borderTop: "1px solid var(--rule)" }}>
         {OPCIONES.map((o) => (
-          <div key={o.id} style={{ borderBottom: "1px solid rgba(201,161,90,0.12)" }}>
+          <div key={o.id} style={{ borderBottom: "1px solid var(--rule)" }}>
             <Toggle
               checked={valores[o.id]}
               onChange={(v) => setValores((prev) => ({ ...prev, [o.id]: v }))}

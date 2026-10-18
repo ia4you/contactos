@@ -41,7 +41,7 @@ export function PerfilForm({ usuario, fotosIniciales, fetichesCountInicial }) {
       <div
         style={{
           background: "var(--bg-secondary)",
-          borderBottom: "1px solid rgba(201,161,90,0.18)",
+          borderBottom: "1px solid var(--rule)",
           padding: "40px 24px",
         }}
       >
@@ -71,25 +71,13 @@ export function PerfilForm({ usuario, fotosIniciales, fetichesCountInicial }) {
             </div>
 
             <div style={{ maxWidth: 480 }}>
-              <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+              <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
                 {usuario.nick}
               </h1>
 
               <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 8 }}>
                 <span className="badge-gold">{ISLAND_LABEL[usuario.island]}</span>
-                <span
-                  style={{
-                    display: "inline-block",
-                    fontFamily: "var(--font-body)",
-                    background: "var(--surface)",
-                    border: "1px solid var(--border-gold)",
-                    color: "var(--text)",
-                    fontSize: 10,
-                    textTransform: "uppercase",
-                    letterSpacing: 1.5,
-                    padding: "4px 10px",
-                  }}
-                >
+                <span className="badge-gold">
                   {PROFILE_TYPE_LABEL[usuario.profile_type]}
                 </span>
                 {usuario.verified && (
@@ -99,9 +87,8 @@ export function PerfilForm({ usuario, fotosIniciales, fetichesCountInicial }) {
                       fontFamily: "var(--font-body)",
                       background: "var(--gold)",
                       color: "var(--bg)",
-                      fontSize: 10,
-                      textTransform: "uppercase",
-                      letterSpacing: 1.5,
+                      fontSize: 12,
+                      letterSpacing: "0.04em",
                       padding: "4px 10px",
                     }}
                   >
@@ -142,7 +129,7 @@ export function PerfilForm({ usuario, fotosIniciales, fetichesCountInicial }) {
                         color: "var(--gold)",
                         cursor: "pointer",
                         fontFamily: "var(--font-body)",
-                        fontSize: 13,
+                        fontSize: 14,
                         padding: 0,
                       }}
                     >
@@ -156,18 +143,18 @@ export function PerfilForm({ usuario, fotosIniciales, fetichesCountInicial }) {
 
           <div style={{ display: "flex", gap: 32 }}>
             <div style={{ textAlign: "center" }}>
-              <p className="heading" style={{ fontSize: 32, color: "var(--gold)" }}>
+              <p className="heading" style={{ fontSize: 30, color: "var(--gold)" }}>
                 {fotos.length}
               </p>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 11, textTransform: "uppercase", letterSpacing: 1, color: "var(--text-muted)" }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: "0.04em", color: "var(--text-muted)" }}>
                 Fotos
               </p>
             </div>
             <div style={{ textAlign: "center" }}>
-              <p className="heading" style={{ fontSize: 32, color: "var(--gold)" }}>
+              <p className="heading" style={{ fontSize: 30, color: "var(--gold)" }}>
                 {fetichesCount}
               </p>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 11, textTransform: "uppercase", letterSpacing: 1, color: "var(--text-muted)" }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: "0.04em", color: "var(--text-muted)" }}>
                 Gustos
               </p>
             </div>
@@ -203,7 +190,7 @@ export function PerfilForm({ usuario, fotosIniciales, fetichesCountInicial }) {
           >
             Mis gustos
           </button>
-          <Link href="/mi-perfil/eliminar" className="tab-nav-item" style={{ color: "#9a3a3a" }}>
+          <Link href="/mi-perfil/eliminar" className="tab-nav-item" style={{ color: "var(--danger)" }}>
             Eliminar cuenta
           </Link>
         </nav>

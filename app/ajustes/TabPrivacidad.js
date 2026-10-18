@@ -35,8 +35,8 @@ export function TabPrivacidad({ usuario }) {
         Privacidad
       </h2>
 
-      <div style={{ marginTop: 16, borderTop: "1px solid rgba(201,161,90,0.12)" }}>
-        <div style={{ borderBottom: "1px solid rgba(201,161,90,0.12)" }}>
+      <div style={{ marginTop: 16, borderTop: "1px solid var(--rule)" }}>
+        <div style={{ borderBottom: "1px solid var(--rule)" }}>
           <Toggle
             checked={showInSearch}
             onChange={setShowInSearch}
@@ -44,14 +44,14 @@ export function TabPrivacidad({ usuario }) {
             descripcion="Si lo desactivas, no aparecerás en los resultados de /buscar."
           />
         </div>
-        <div style={{ borderBottom: "1px solid rgba(201,161,90,0.12)" }}>
+        <div style={{ borderBottom: "1px solid var(--rule)" }}>
           <Toggle
             checked={showLastSeen}
             onChange={setShowLastSeen}
             label="Mostrar mi última conexión"
           />
         </div>
-        <div style={{ borderBottom: "1px solid rgba(201,161,90,0.12)" }}>
+        <div style={{ borderBottom: "1px solid var(--rule)" }}>
           <Toggle
             checked={onlyVerified}
             onChange={setOnlyVerified}
@@ -64,9 +64,9 @@ export function TabPrivacidad({ usuario }) {
         <button type="button" onClick={guardar} disabled={guardando} className="btn-outline-gold">
           {guardando ? "Guardando…" : "Guardar"}
         </button>
-        {guardado && <span style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)" }}>Guardado.</span>}
+        {guardado && <span style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--gold)" }}>Guardado.</span>}
       </div>
-      {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
+      {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{error}</p>}
     </div>
   );
 }

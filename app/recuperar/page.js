@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AuthLayout } from "../components/AuthLayout";
 
 export default function Recuperar() {
   const [email, setEmail] = useState("");
@@ -21,35 +22,25 @@ export default function Recuperar() {
 
   if (enviado) {
     return (
-      <main
-        style={{
-          minHeight: "60vh",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          textAlign: "center",
-          padding: "24px",
-        }}
-      >
-        <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+      <AuthLayout>
+        <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
           Revisa tu email
         </h1>
         <p style={{ marginTop: 16, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
           Si existe una cuenta con ese email, te hemos enviado un enlace para
           restablecer tu contraseña.
         </p>
-      </main>
+      </AuthLayout>
     );
   }
 
   return (
-    <main style={{ minHeight: "60vh", display: "flex", justifyContent: "center", padding: "80px 24px" }}>
-      <div style={{ width: "100%", maxWidth: 400 }}>
-        <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+    <AuthLayout>
+      <div>
+        <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
           Recuperar contraseña
         </h1>
-        <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+        <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
           Te enviaremos un enlace a tu email para elegir una nueva contraseña.
         </p>
 
@@ -70,6 +61,6 @@ export default function Recuperar() {
           </button>
         </form>
       </div>
-    </main>
+    </AuthLayout>
   );
 }

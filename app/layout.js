@@ -17,7 +17,7 @@ const cormorant = Cormorant_Garamond({
 const jost = Jost({
   subsets: ["latin"],
   variable: "--font-jost",
-  weight: ["300", "400", "500", "600"],
+  weight: ["300", "400", "500"],
   display: "swap",
 });
 
@@ -77,7 +77,7 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: "#0e0a0b",
+  themeColor: "var(--bg)",
 };
 
 export default function RootLayout({ children }) {
@@ -87,9 +87,13 @@ export default function RootLayout({ children }) {
   // como overlay a pantalla completa (ver GateScreen/page.js) y el resto de
   // rutas protegidas ya redirigen a "/" en middleware.js si falta la cookie.
   return (
-    <html lang="es">
+    // Las variables de next/font van en <html> y no en <body>: theme.css
+    // define --font-display/--font-body en :root a partir de ellas, y una
+    // variable CSS solo puede usarse en el elemento donde existe o sus
+    // descendientes. En <body> quedaban fuera de :root y toda la web caía
+    // a la fuente del sistema.
+    <html lang="es" className={`${cormorant.variable} ${jost.variable}`}>
       <body
-        className={`${cormorant.variable} ${jost.variable} antialiased flex min-h-screen flex-col`}
         style={{ background: "var(--bg)", color: "var(--text)", fontFamily: "var(--font-body)" }}
       >
         <Providers>

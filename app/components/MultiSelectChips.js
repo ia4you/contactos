@@ -61,6 +61,7 @@ export function MultiSelectChips({
       <button
         type="button"
         onClick={() => setAbierto((v) => !v)}
+        aria-expanded={abierto}
         className="input-field"
         style={{
           display: "flex",
@@ -103,7 +104,14 @@ export function MultiSelectChips({
                   <span
                     role="button"
                     tabIndex={0}
+                    aria-label={`Quitar ${etiquetaPorValor[valor] ?? valor}`}
                     onClick={(e) => {
+                      e.stopPropagation();
+                      quitar(valor);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key !== "Enter" && e.key !== " ") return;
+                      e.preventDefault();
                       e.stopPropagation();
                       quitar(valor);
                     }}
@@ -142,14 +150,15 @@ export function MultiSelectChips({
                 type="button"
                 onClick={() => !deshabilitado && toggle(value)}
                 disabled={deshabilitado}
+                aria-pressed={marcado}
                 style={{
                   display: "block",
                   width: "100%",
                   textAlign: "left",
                   padding: "10px 14px",
                   fontFamily: "var(--font-body)",
-                  fontSize: 13,
-                  background: marcado ? "rgba(201,161,90,0.15)" : "transparent",
+                  fontSize: 14,
+                  background: marcado ? "rgba(217,178,107,0.15)" : "transparent",
                   color: deshabilitado ? "var(--text-muted)" : marcado ? "var(--gold)" : "var(--text)",
                   border: "none",
                   cursor: deshabilitado ? "not-allowed" : "pointer",

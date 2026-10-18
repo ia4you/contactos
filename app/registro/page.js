@@ -11,10 +11,10 @@ import {
   GENERO_MAX,
   ORIENTACION_OPTIONS,
   ORIENTACION_MAX,
-  FECHA_NACIMIENTO_MIN,
-  FECHA_NACIMIENTO_MAX,
 } from "@/lib/constants";
 import { AuthLayout } from "../components/AuthLayout";
+import { SelectorArchivo } from "../components/SelectorArchivo";
+import { SelectorFecha } from "../components/SelectorFecha";
 import { MultiSelectChips } from "../components/MultiSelectChips";
 
 const ESTADO_INICIAL = {
@@ -131,7 +131,7 @@ export default function Registro() {
   if (exito) {
     return (
       <AuthLayout activo="registro">
-        <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+        <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
           Revisa tu email
         </h1>
         <p style={{ marginTop: 16, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
@@ -140,7 +140,7 @@ export default function Registro() {
         </p>
         <Link
           href="/login"
-          style={{ display: "inline-block", marginTop: 24, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)" }}
+          style={{ display: "inline-block", marginTop: 24, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--gold)" }}
         >
           Ir a iniciar sesión
         </Link>
@@ -150,325 +150,297 @@ export default function Registro() {
 
   return (
     <AuthLayout activo="registro">
-      <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+      <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
         Crear cuenta
       </h1>
-      <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+      <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
         Todos los campos son necesarios. Tus datos están protegidos.
       </p>
 
-      <form onSubmit={onSubmit} style={{ marginTop: 28, display: "flex", flexDirection: "column", gap: 22 }}>
-        {/* 1. Tipo de perfil */}
-        <div>
-          <span className="label-field">Tipo de perfil</span>
-          <div style={{ display: "flex", gap: 8 }}>
-            {PROFILE_TYPES.map((p) => (
-              <button
-                type="button"
-                key={p.value}
-                onClick={() => actualizar("profileType", p.value)}
-                className={`pill-select ${form.profileType === p.value ? "active" : ""}`}
-              >
-                {p.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* 2. Apodo */}
-        <label>
-          <span className="label-field">Apodo (nick)</span>
-          <input
-            type="text"
-            required
-            minLength={3}
-            maxLength={24}
-            pattern="[a-zA-Z0-9_-]+"
-            title="Solo letras, números, guiones y guion bajo (sin espacios)"
-            value={form.nick}
-            onChange={(e) => actualizar("nick", e.target.value.replace(/[^a-zA-Z0-9_-]/g, ""))}
-            className="input-field"
-          />
-          <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>
-            Solo letras, números, guiones y guion bajo. Sin espacios.
-          </div>
-        </label>
-
-        {/* Foto de perfil (obligatoria) */}
-        <div>
-          <span className="label-field">Foto de perfil</span>
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <div
-              style={{
-                width: 72,
-                height: 72,
-                flexShrink: 0,
-                borderRadius: "50%",
-                overflow: "hidden",
-                border: "1px solid rgba(201,161,90,0.35)",
-                background: "rgba(201,161,90,0.06)",
-              }}
-            >
-              {fotoPreview && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={fotoPreview} alt="Vista previa" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              )}
+      <form onSubmit={onSubmit} style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 32 }}>
+        <section className="registro-bloque" aria-labelledby="registro-perfil">
+          <h2 id="registro-perfil" className="registro-bloque__titulo">
+            <span className="registro-bloque__num">I</span> Tu perfil
+          </h2>
+          {/* 1. Tipo de perfil */}
+          <div>
+            <span className="label-field">Tipo de perfil</span>
+            <div style={{ display: "flex", gap: 8 }}>
+              {PROFILE_TYPES.map((p) => (
+                <button
+                  type="button"
+                  key={p.value}
+                  onClick={() => actualizar("profileType", p.value)}
+                  aria-pressed={form.profileType === p.value}
+                  className={`pill-select ${form.profileType === p.value ? "active" : ""}`}
+                >
+                  {p.label}
+                </button>
+              ))}
             </div>
-            <input
-              type="file"
-              required
-              accept="image/jpeg,image/png"
-              onChange={elegirFoto}
-              style={{ fontFamily: "var(--font-body)", fontSize: 12.5, color: "var(--text-secondary)", minWidth: 0 }}
-            />
           </div>
-          <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>
-            Obligatoria. JPG o PNG, máximo {MAX_FOTO_MB} MB.
-          </div>
-          {errorFoto && <div style={{ fontSize: 12, color: "#e07a7a", marginTop: 4 }}>{errorFoto}</div>}
-          <label style={{ display: "flex", gap: 8, marginTop: 10, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
-            <input
-              type="checkbox"
-              required
-              checked={form.certificoFoto}
-              onChange={(e) => actualizar("certificoFoto", e.target.checked)}
-              className="checkbox-gold"
-              style={{ marginTop: 2 }}
-            />
-            <span>
-              Certifico que todas las personas que aparecen en la foto son
-              mayores de edad y han consentido su publicación.
-            </span>
-          </label>
-        </div>
 
-        {/* 3. Género */}
-        <MultiSelectChips
-          label="Género"
-          options={GENERO_OPTIONS}
-          selected={form.genero}
-          onChange={(v) => actualizar("genero", v)}
-          max={GENERO_MAX}
-        />
-
-        {/* 4. Orientación */}
-        <MultiSelectChips
-          label="Orientación"
-          options={ORIENTACION_OPTIONS}
-          selected={form.orientacion}
-          onChange={(v) => actualizar("orientacion", v)}
-          max={ORIENTACION_MAX}
-        />
-
-        {/* 5. Fecha de nacimiento */}
-        {form.profileType === "pareja" ? (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-            <label>
-              <span className="label-field">Nacimiento (ella)</span>
-              <input
-                type="date"
-                required
-                min={FECHA_NACIMIENTO_MIN}
-                max={FECHA_NACIMIENTO_MAX}
-                value={form.herBirthdate}
-                onChange={(e) => actualizar("herBirthdate", e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <label>
-              <span className="label-field">Nacimiento (él)</span>
-              <input
-                type="date"
-                required
-                min={FECHA_NACIMIENTO_MIN}
-                max={FECHA_NACIMIENTO_MAX}
-                value={form.hisBirthdate}
-                onChange={(e) => actualizar("hisBirthdate", e.target.value)}
-                className="input-field"
-              />
-            </label>
-          </div>
-        ) : (
+          {/* 2. Apodo */}
           <label>
-            <span className="label-field">Fecha de nacimiento</span>
+            <span className="label-field">Apodo (nick)</span>
             <input
-              type="date"
+              type="text"
               required
-              min={FECHA_NACIMIENTO_MIN}
-              max={FECHA_NACIMIENTO_MAX}
-              value={form.herBirthdate}
-              onChange={(e) => actualizar("herBirthdate", e.target.value)}
+              minLength={3}
+              maxLength={24}
+              pattern="[a-zA-Z0-9_-]+"
+              title="Solo letras, números, guiones y guion bajo (sin espacios)"
+              value={form.nick}
+              onChange={(e) => actualizar("nick", e.target.value.replace(/[^a-zA-Z0-9_-]/g, ""))}
+              className="input-field"
+            />
+            <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>
+              Solo letras, números, guiones y guion bajo. Sin espacios.
+            </div>
+          </label>
+
+          {/* 3. Género */}
+          <MultiSelectChips
+            label="Género"
+            options={GENERO_OPTIONS}
+            selected={form.genero}
+            onChange={(v) => actualizar("genero", v)}
+            max={GENERO_MAX}
+          />
+
+          {/* 4. Orientación */}
+          <MultiSelectChips
+            label="Orientación"
+            options={ORIENTACION_OPTIONS}
+            selected={form.orientacion}
+            onChange={(v) => actualizar("orientacion", v)}
+            max={ORIENTACION_MAX}
+          />
+
+          {/* 5. Fecha de nacimiento */}
+          {form.profileType === "pareja" ? (
+            <>
+              <SelectorFecha key="ella" leyenda="Nacimiento (ella)" onChange={(v) => actualizar("herBirthdate", v)} />
+              <SelectorFecha key="el" leyenda="Nacimiento (él)" onChange={(v) => actualizar("hisBirthdate", v)} />
+            </>
+          ) : (
+            <SelectorFecha key="una" leyenda="Fecha de nacimiento" onChange={(v) => actualizar("herBirthdate", v)} />
+          )}
+
+          {/* 6. Isla */}
+          <label>
+            <span className="label-field">Isla</span>
+            <select
+              value={form.island}
+              onChange={(e) => actualizar("island", e.target.value)}
+              className="input-field"
+            >
+              {ISLANDS.map((i) => (
+                <option key={i.value} value={i.value}>
+                  {i.label}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          {/* 8. Qué buscas */}
+          <div>
+            <span className="label-field">¿Qué buscas?</span>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              {LOOKING_FOR_OPTIONS.map((o) => (
+                <label
+                  key={o.value}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    fontFamily: "var(--font-body)",
+                    fontSize: 14,
+                    color: "var(--text)",
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={form.lookingFor.includes(o.value)}
+                    onChange={() => toggleLookingFor(o.value)}
+                    className="checkbox-gold"
+                  />
+                  {o.label}
+                </label>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="registro-bloque" aria-labelledby="registro-foto">
+          <h2 id="registro-foto" className="registro-bloque__titulo">
+            <span className="registro-bloque__num">II</span> Tu foto
+          </h2>
+          {/* Foto de perfil (obligatoria) */}
+          <div>
+            <span className="label-field">Foto de perfil</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <div
+                style={{
+                  width: 72,
+                  height: 72,
+                  flexShrink: 0,
+                  borderRadius: "50%",
+                  overflow: "hidden",
+                  border: "1px solid var(--rule)",
+                  background: "rgba(217,178,107,0.06)",
+                }}
+              >
+                {fotoPreview && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={fotoPreview} alt="Vista previa" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                )}
+              </div>
+              <SelectorArchivo archivo={foto} required accept="image/jpeg,image/png" onChange={elegirFoto} />
+            </div>
+            <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>
+              Obligatoria. JPG o PNG, máximo {MAX_FOTO_MB} MB.
+            </div>
+            {errorFoto && <div style={{ fontSize: 12, color: "var(--danger)", marginTop: 4 }}>{errorFoto}</div>}
+            <label style={{ display: "flex", gap: 8, marginTop: 10, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
+              <input
+                type="checkbox"
+                required
+                checked={form.certificoFoto}
+                onChange={(e) => actualizar("certificoFoto", e.target.checked)}
+                className="checkbox-gold"
+                style={{ marginTop: 2 }}
+              />
+              <span>
+                Certifico que todas las personas que aparecen en la foto son
+                mayores de edad y han consentido su publicación.
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section className="registro-bloque" aria-labelledby="registro-cuenta">
+          <h2 id="registro-cuenta" className="registro-bloque__titulo">
+            <span className="registro-bloque__num">III</span> Tu cuenta
+          </h2>
+          {/* 7. Email y contraseña */}
+          <label>
+            <span className="label-field">Email</span>
+            <input
+              type="email"
+              required
+              value={form.email}
+              onChange={(e) => actualizar("email", e.target.value)}
               className="input-field"
             />
           </label>
-        )}
 
-        {/* 6. Isla */}
-        <label>
-          <span className="label-field">Isla</span>
-          <select
-            value={form.island}
-            onChange={(e) => actualizar("island", e.target.value)}
-            className="input-field"
+          <p
+            style={{
+              margin: 0,
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              lineHeight: 1.5,
+              color: "var(--text-secondary)",
+            }}
           >
-            {ISLANDS.map((i) => (
-              <option key={i.value} value={i.value}>
-                {i.label}
-              </option>
-            ))}
-          </select>
-        </label>
+            <strong style={{ fontWeight: 500, color: "var(--gold)" }}>Aviso:</strong> actualmente hay una incidencia temporal con la entrega de emails a
+            direcciones de Hotmail/Outlook/Live. Si usas uno de estos
+            proveedores, es posible que el email de verificación no te llegue.
+            Recomendamos usar Gmail u otro proveedor mientras se resuelve, o
+            contactar con nosotros si ya te has registrado y no puedes verificar
+            tu cuenta.
+          </p>
 
-        {/* 7. Email y contraseña */}
-        <label>
-          <span className="label-field">Email</span>
-          <input
-            type="email"
-            required
-            value={form.email}
-            onChange={(e) => actualizar("email", e.target.value)}
-            className="input-field"
-          />
-        </label>
+          <label>
+            <span className="label-field">Contraseña</span>
+            <input
+              type="password"
+              required
+              minLength={8}
+              value={form.password}
+              onChange={(e) => actualizar("password", e.target.value)}
+              className="input-field"
+            />
+          </label>
 
-        <p
-          style={{
-            margin: 0,
-            padding: "10px 12px",
-            background: "rgba(201, 161, 90, 0.08)",
-            border: "1px solid rgba(201, 161, 90, 0.25)",
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            lineHeight: 1.5,
-            color: "var(--text-secondary)",
-          }}
-        >
-          ⚠️ Actualmente hay una incidencia temporal con la entrega de emails a
-          direcciones de Hotmail/Outlook/Live. Si usas uno de estos
-          proveedores, es posible que el email de verificación no te llegue.
-          Recomendamos usar Gmail u otro proveedor mientras se resuelve, o
-          contactar con nosotros si ya te has registrado y no puedes verificar
-          tu cuenta.
-        </p>
-
-        <label>
-          <span className="label-field">Contraseña</span>
-          <input
-            type="password"
-            required
-            minLength={8}
-            value={form.password}
-            onChange={(e) => actualizar("password", e.target.value)}
-            className="input-field"
-          />
-        </label>
-
-        {/* 8. Qué buscas */}
-        <div>
-          <span className="label-field">¿Qué buscas?</span>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-            {LOOKING_FOR_OPTIONS.map((o) => (
-              <label
-                key={o.value}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  fontFamily: "var(--font-body)",
-                  fontSize: 13,
-                  color: "var(--text)",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={form.lookingFor.includes(o.value)}
-                  onChange={() => toggleLookingFor(o.value)}
-                  className="checkbox-gold"
-                />
-                {o.label}
-              </label>
-            ))}
+          {/* 9. Checkboxes RGPD */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 12,
+            }}
+          >
+            <label style={{ display: "flex", gap: 8, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
+              <input
+                type="checkbox"
+                required
+                checked={form.acceptTerms}
+                onChange={(e) => actualizar("acceptTerms", e.target.checked)}
+                className="checkbox-gold"
+                style={{ marginTop: 2 }}
+              />
+              <span>
+                Acepto los{" "}
+                <Link href="/legal/aviso-legal" style={{ color: "var(--gold)" }}>
+                  términos
+                </Link>{" "}
+                y la{" "}
+                <Link href="/legal/privacidad" style={{ color: "var(--gold)" }}>
+                  política de privacidad
+                </Link>
+                .
+              </span>
+            </label>
+            <label style={{ display: "flex", gap: 8, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
+              <input
+                type="checkbox"
+                required
+                checked={form.acceptGdpr}
+                onChange={(e) => actualizar("acceptGdpr", e.target.checked)}
+                className="checkbox-gold"
+                style={{ marginTop: 2 }}
+              />
+              <span>
+                Consiento expresamente el tratamiento de mis datos relativos a la
+                vida sexual conforme al art. 9.2.a del RGPD.
+              </span>
+            </label>
+            <label style={{ display: "flex", gap: 8, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
+              <input
+                type="checkbox"
+                required
+                checked={form.acceptCapturas}
+                onChange={(e) => actualizar("acceptCapturas", e.target.checked)}
+                className="checkbox-gold"
+                style={{ marginTop: 2 }}
+              />
+              <span>
+                Me comprometo a no realizar capturas de pantalla, fotografías ni
+                cualquier otra forma de reproducción del contenido de otros
+                usuarios (fotos, mensajes, comentarios, datos de perfil) sin su
+                consentimiento expreso. Entiendo que la difusión no consentida
+                de imágenes o datos personales de terceros puede constituir una
+                infracción de la normativa de protección de datos (RGPD) y, en
+                determinados casos, un delito conforme al Código Penal español
+                (arts. 197 y siguientes), pudiendo acarrear consecuencias
+                legales para quien lo realice. Acepto que el incumplimiento de
+                esta norma puede conllevar la suspensión o cancelación
+                inmediata de mi cuenta, sin perjuicio de las acciones legales
+                que pudieran corresponder a los afectados.
+              </span>
+            </label>
           </div>
-        </div>
+        </section>
 
-        {/* 9. Checkboxes RGPD */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 12,
-            paddingTop: 16,
-            borderTop: "1px solid rgba(201,161,90,0.12)",
-          }}
-        >
-          <label style={{ display: "flex", gap: 8, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
-            <input
-              type="checkbox"
-              required
-              checked={form.acceptTerms}
-              onChange={(e) => actualizar("acceptTerms", e.target.checked)}
-              className="checkbox-gold"
-              style={{ marginTop: 2 }}
-            />
-            <span>
-              Acepto los{" "}
-              <Link href="/legal/aviso-legal" style={{ color: "var(--gold)" }}>
-                términos
-              </Link>{" "}
-              y la{" "}
-              <Link href="/legal/privacidad" style={{ color: "var(--gold)" }}>
-                política de privacidad
-              </Link>
-              .
-            </span>
-          </label>
-          <label style={{ display: "flex", gap: 8, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
-            <input
-              type="checkbox"
-              required
-              checked={form.acceptGdpr}
-              onChange={(e) => actualizar("acceptGdpr", e.target.checked)}
-              className="checkbox-gold"
-              style={{ marginTop: 2 }}
-            />
-            <span>
-              Consiento expresamente el tratamiento de mis datos relativos a la
-              vida sexual conforme al art. 9.2.a del RGPD.
-            </span>
-          </label>
-          <label style={{ display: "flex", gap: 8, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
-            <input
-              type="checkbox"
-              required
-              checked={form.acceptCapturas}
-              onChange={(e) => actualizar("acceptCapturas", e.target.checked)}
-              className="checkbox-gold"
-              style={{ marginTop: 2 }}
-            />
-            <span>
-              Me comprometo a no realizar capturas de pantalla, fotografías ni
-              cualquier otra forma de reproducción del contenido de otros
-              usuarios (fotos, mensajes, comentarios, datos de perfil) sin su
-              consentimiento expreso. Entiendo que la difusión no consentida
-              de imágenes o datos personales de terceros puede constituir una
-              infracción de la normativa de protección de datos (RGPD) y, en
-              determinados casos, un delito conforme al Código Penal español
-              (arts. 197 y siguientes), pudiendo acarrear consecuencias
-              legales para quien lo realice. Acepto que el incumplimiento de
-              esta norma puede conllevar la suspensión o cancelación
-              inmediata de mi cuenta, sin perjuicio de las acciones legales
-              que pudieran corresponder a los afectados.
-            </span>
-          </label>
-        </div>
-
-        {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>}
+        {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{error}</p>}
 
         <button type="submit" disabled={enviando} className="btn-gold" style={{ width: "100%" }}>
           {enviando ? "Creando cuenta…" : "Crear mi perfil"}
         </button>
 
-        <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: 12.5, color: "var(--text-muted)" }}>
+        <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
           Tus datos están protegidos y nunca se comparten con terceros.
         </p>
       </form>

@@ -56,7 +56,7 @@ export function LoginForm() {
 
   return (
     <AuthLayout activo="login">
-      <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+      <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
         Bienvenido de nuevo
       </h1>
 
@@ -72,7 +72,7 @@ export function LoginForm() {
             marginTop: 16,
             padding: "10px 14px",
             fontFamily: "var(--font-body)",
-            fontSize: 13,
+            fontSize: 14,
             color: "var(--gold)",
             border: "1px solid var(--border-gold)",
           }}
@@ -86,9 +86,9 @@ export function LoginForm() {
             marginTop: 16,
             padding: "10px 14px",
             fontFamily: "var(--font-body)",
-            fontSize: 13,
-            color: "#e07a7a",
-            border: "1px solid rgba(154,58,58,0.4)",
+            fontSize: 14,
+            color: "var(--danger)",
+            border: "1px solid var(--danger-border)",
           }}
         >
           El enlace de verificación no es válido o ha caducado.
@@ -118,7 +118,7 @@ export function LoginForm() {
         </label>
 
         {error && (
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{error}</p>
         )}
 
         <button type="submit" disabled={enviando} className="btn-gold" style={{ width: "100%" }}>
@@ -132,7 +132,7 @@ export function LoginForm() {
           display: "flex",
           justifyContent: "space-between",
           fontFamily: "var(--font-body)",
-          fontSize: 12.5,
+          fontSize: 14,
         }}
       >
         <a href="/recuperar" style={{ color: "var(--text-muted)", textDecoration: "none" }}>

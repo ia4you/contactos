@@ -3,116 +3,121 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { Plus, Search, Mail, Heart, Eye, Bell, UserCircle, Settings, LogOut } from "lucide-react";
+import {
+  House,
+  Search,
+  Mail,
+  Heart,
+  Eye,
+  Bell,
+  UserCircle,
+  Settings,
+  LogOut,
+  SquarePlus,
+  Menu,
+  Users,
+  CalendarDays,
+  Megaphone,
+  Martini,
+  Images,
+  UserPlus,
+  BookOpen,
+} from "lucide-react";
 import { AVATAR_PLACEHOLDER, ISLANDS } from "@/lib/constants";
 import { UsuarioBadge } from "./UsuarioBadge";
+import { RegistroCTA } from "./RegistroCTA";
+import { Dialogo } from "./Dialogo";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 
-function IconoBadge({ href, icono: Icono, contador, etiqueta, opcional }) {
+// Secciones secundarias: menú del avatar (≥768px) y hoja "Más" (móvil).
+const EXPLORAR = [
+  { href: "/grupos", texto: "Grupos", icono: Users },
+  { href: "/eventos", texto: "Eventos", icono: CalendarDays },
+  { href: "/anuncios", texto: "Anuncios", icono: Megaphone },
+  { href: "/clubs", texto: "Clubs", icono: Martini },
+  { href: "/fotos", texto: "Fotos", icono: Images },
+  { href: "/amistades", texto: "Amistades", icono: UserPlus, contador: "solicitudes_pendientes" },
+  { href: "/blog", texto: "Blog", icono: BookOpen },
+];
+
+function Contador({ valor }) {
+  if (!(valor > 0)) return null;
+  return (
+    <span className="contador" aria-hidden="true">
+      {valor > 9 ? "9+" : valor}
+    </span>
+  );
+}
+
+function etiquetaConContador(texto, valor) {
+  return valor > 0 ? `${texto} (${valor} nuevos)` : texto;
+}
+
+function IconoBadge({ href, icono: Icono, contador, etiqueta, activo, className }) {
   return (
     <Link
       href={href}
-      aria-label={etiqueta}
-      className={opcional ? "navbar-icono-opcional" : undefined}
-      style={{
-        position: "relative",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: 36,
-        height: 36,
-        flexShrink: 0,
-        color: "var(--text-secondary)",
-      }}
+      aria-label={etiquetaConContador(etiqueta, contador)}
+      aria-current={activo ? "page" : undefined}
+      className={`icono-badge ${className || ""}`}
     >
-      <Icono size={21} />
-      {contador > 0 && (
-        <span
-          style={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            minWidth: 16,
-            height: 16,
-            borderRadius: 8,
-            background: "#c94b4b",
-            color: "#fff",
-            fontSize: 10,
-            fontWeight: 600,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "0 3px",
-          }}
-        >
-          {contador > 9 ? "9+" : contador}
-        </span>
-      )}
+      <Icono size={21} strokeWidth={1.6} aria-hidden="true" />
+      <Contador valor={contador} />
     </Link>
   );
 }
 
-// Solo visible en móvil (ver .navbar-boton-movil en theme.css): en desktop
-// el sidebar izquierdo de /feed ya cubre esta navegación, así que el "+"
-// no tiene función ahí y se elimina por completo. En móvil pasa a ser un
-// menú de navegación a secciones secundarias, no de creación de contenido
-// (eso ya lo cubre el composer del feed).
-function MenuMovil({ onClose }) {
+function MenuAvatar({ id, onClose, avatarSrc, nick, island, esCeo, contadores }) {
   return (
-    <div className="dropdown-menu" style={{ background: "#1c1416", zIndex: 200, minWidth: 210, left: 0, right: "auto" }}>
-      <Link href="/grupos" onClick={onClose} className="dropdown-item">
-        👥 Grupos
-      </Link>
-      <Link href="/eventos" onClick={onClose} className="dropdown-item">
-        📅 Eventos
-      </Link>
-      <Link href="/clubs" onClick={onClose} className="dropdown-item">
-        🏛️ Clubs
-      </Link>
-      <Link href="/blog" onClick={onClose} className="dropdown-item">
-        📝 Blog
-      </Link>
-    </div>
-  );
-}
-
-function MenuAvatar({ onClose, avatarSrc, nick, island, esCeo }) {
-  return (
-    <div className="dropdown-menu" style={{ background: "#1c1416", zIndex: 200, minWidth: 220 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 16px 12px", borderBottom: "1px solid rgba(201,161,90,0.18)" }}>
-        <div style={{ position: "relative", width: 36, height: 36, flexShrink: 0 }}>
-          <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
-            <Image src={avatarSrc} alt="" width={36} height={36} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+    <div id={id} className="dropdown-menu" style={{ minWidth: 240 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 18px 14px", borderBottom: "1px solid var(--rule)" }}>
+        <div style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}>
+          <div style={{ width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
+            <Image src={avatarSrc} alt="" width={40} height={40} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
-          {esCeo && <UsuarioBadge badgeEspecial="CEO" style={{ fontSize: 7, padding: "1px 4px" }} />}
+          {esCeo && <UsuarioBadge badgeEspecial="CEO" style={{ fontSize: 12, padding: "0 3px", lineHeight: "14px" }} />}
         </div>
         <div style={{ minWidth: 0 }}>
-          <p className="heading" style={{ fontSize: 14, color: "var(--text)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          <p className="tarjeta-feed__nick" style={{ fontSize: 18, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {nick}
           </p>
-          {island && (
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "var(--text-muted)" }}>{ISLAND_LABEL[island]}</p>
-          )}
+          {island && <p className="meta">{ISLAND_LABEL[island]}</p>}
         </div>
       </div>
 
-      <Link href={`/perfil/${nick}`} onClick={onClose} className="dropdown-item" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <UserCircle size={15} /> Ver mi perfil
+      <Link href={`/perfil/${nick}`} onClick={onClose} className="dropdown-item">
+        <UserCircle size={16} aria-hidden="true" /> Ver mi perfil
       </Link>
-      <Link href="/mi-perfil" onClick={onClose} className="dropdown-item" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <UserCircle size={15} /> Editar perfil
+      <Link href="/mi-perfil" onClick={onClose} className="dropdown-item">
+        <UserCircle size={16} aria-hidden="true" /> Editar perfil
       </Link>
-      <Link href="/ajustes" onClick={onClose} className="dropdown-item" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <Settings size={15} /> Ajustes
+      <Link href="/ajustes" onClick={onClose} className="dropdown-item">
+        <Settings size={16} aria-hidden="true" /> Ajustes
       </Link>
-      <Link href="/likes" onClick={onClose} className="dropdown-item" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <Heart size={15} /> Mis likes
+      <Link href="/likes" onClick={onClose} className="dropdown-item">
+        <Heart size={16} aria-hidden="true" /> Mis likes
       </Link>
-      <Link href="/visitas" onClick={onClose} className="dropdown-item" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <Eye size={15} /> Mis visitas
+      <Link href="/visitas" onClick={onClose} className="dropdown-item">
+        <Eye size={16} aria-hidden="true" /> Mis visitas
       </Link>
+
+      <p className="kicker dropdown-titulo" style={{ borderTop: "1px solid var(--rule)", marginTop: 6 }}>
+        Explorar
+      </p>
+      {EXPLORAR.map(({ href, texto, icono: Icono, contador }) => (
+        <Link key={href} href={href} onClick={onClose} className="dropdown-item">
+          <Icono size={16} aria-hidden="true" /> {texto}
+          {contador && contadores[contador] > 0 && (
+            <span className="contador" style={{ position: "static", marginLeft: "auto" }}>
+              {contadores[contador] > 9 ? "9+" : contadores[contador]}
+            </span>
+          )}
+        </Link>
+      ))}
+
       <button
         type="button"
         onClick={() => {
@@ -120,19 +125,103 @@ function MenuAvatar({ onClose, avatarSrc, nick, island, esCeo }) {
           signOut({ callbackUrl: "/" });
         }}
         className="dropdown-item"
-        style={{ display: "flex", alignItems: "center", gap: 8, borderTop: "1px solid rgba(201,161,90,0.18)", color: "#9a3a3a" }}
+        style={{ borderTop: "1px solid var(--rule)", marginTop: 6, color: "var(--danger)" }}
       >
-        <LogOut size={15} /> Cerrar sesión
+        <LogOut size={16} aria-hidden="true" /> Cerrar sesión
       </button>
     </div>
   );
 }
 
+function HojaMas({ onClose, contadores }) {
+  const items = [
+    ...EXPLORAR.map((i) => ({ ...i, valor: i.contador ? contadores[i.contador] : 0 })),
+    { href: "/likes", texto: "Likes", icono: Heart, valor: contadores.likes_nuevos },
+    { href: "/visitas", texto: "Visitas", icono: Eye, valor: contadores.visitas_nuevas },
+    { href: "/notificaciones", texto: "Notificaciones", icono: Bell, valor: contadores.notificaciones_no_leidas },
+    { href: "/ajustes", texto: "Ajustes", icono: Settings },
+  ];
+  return (
+    <Dialogo onCerrar={onClose} idTitulo="hoja-mas-titulo" variante="hoja">
+      <h2 id="hoja-mas-titulo" className="kicker" style={{ padding: "12px 24px 10px" }}>
+        Más secciones
+      </h2>
+      <nav aria-label="Más secciones" style={{ borderTop: "1px solid var(--rule)" }}>
+        {items.map(({ href, texto, icono: Icono, valor }) => (
+          <Link key={href} href={href} onClick={onClose} className="hoja-item">
+            <Icono size={20} strokeWidth={1.6} color="var(--gold)" aria-hidden="true" />
+            {texto}
+            {valor > 0 && (
+              <span className="contador" aria-label={`${valor} nuevos`}>
+                {valor > 9 ? "9+" : valor}
+              </span>
+            )}
+          </Link>
+        ))}
+        <button
+          type="button"
+          onClick={() => {
+            onClose();
+            signOut({ callbackUrl: "/" });
+          }}
+          className="hoja-item"
+          style={{ color: "var(--danger)" }}
+        >
+          <LogOut size={20} strokeWidth={1.6} aria-hidden="true" />
+          Cerrar sesión
+        </button>
+      </nav>
+    </Dialogo>
+  );
+}
+
+// Barra inferior fija, solo en móvil (<768px, ver .nav-inferior en theme.css).
+function NavInferior({ pathname, contadores }) {
+  const [masAbierto, setMasAbierto] = useState(false);
+  const items = [
+    { href: "/feed", texto: "Inicio", icono: House, activo: pathname === "/feed" },
+    { href: "/buscar", texto: "Perfiles", icono: Search, activo: pathname.startsWith("/buscar") },
+    { href: "/feed?compose=texto", texto: "Publicar", icono: SquarePlus, activo: false },
+    { href: "/mensajes", texto: "Mensajes", icono: Mail, activo: pathname.startsWith("/mensajes"), valor: contadores.mensajes_no_leidos },
+  ];
+  return (
+    <>
+      <nav className="nav-inferior" aria-label="Navegación principal">
+        {items.map(({ href, texto, icono: Icono, activo, valor }) => (
+          <Link
+            key={texto}
+            href={href}
+            className="nav-inferior__item"
+            aria-current={activo ? "page" : undefined}
+            aria-label={valor > 0 ? etiquetaConContador(texto, valor) : undefined}
+          >
+            <Icono size={22} strokeWidth={1.6} aria-hidden="true" />
+            <span aria-hidden={valor > 0 ? "true" : undefined}>{texto}</span>
+            <Contador valor={valor} />
+          </Link>
+        ))}
+        <button
+          type="button"
+          className="nav-inferior__item"
+          aria-haspopup="dialog"
+          aria-expanded={masAbierto}
+          onClick={() => setMasAbierto(true)}
+        >
+          <Menu size={22} strokeWidth={1.6} aria-hidden="true" />
+          <span>Más</span>
+          <Contador valor={(contadores.likes_nuevos || 0) + (contadores.visitas_nuevas || 0) + (contadores.solicitudes_pendientes || 0)} />
+        </button>
+      </nav>
+      {masAbierto && <HojaMas onClose={() => setMasAbierto(false)} contadores={contadores} />}
+    </>
+  );
+}
+
 export function Navbar() {
   const { data: session, status } = useSession();
+  const pathname = usePathname() || "/";
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [island, setIsland] = useState(null);
-  const [menuCrearAbierto, setMenuCrearAbierto] = useState(false);
   const [menuAvatarAbierto, setMenuAvatarAbierto] = useState(false);
   const [contadores, setContadores] = useState({
     notificaciones_no_leidas: 0,
@@ -142,8 +231,8 @@ export function Navbar() {
     likes_nuevos: 0,
   });
   const [montado, setMontado] = useState(false);
-  const menuCrearRef = useRef(null);
   const menuAvatarRef = useRef(null);
+  const botonAvatarRef = useRef(null);
 
   // useSession() siempre arranca en "loading" tanto en servidor como en el
   // primer render del cliente, así que en teoría no debería haber
@@ -190,141 +279,93 @@ export function Navbar() {
   }, [status]);
 
   useEffect(() => {
+    if (!menuAvatarAbierto) return;
     function onClickFuera(e) {
-      if (menuCrearRef.current && !menuCrearRef.current.contains(e.target)) {
-        setMenuCrearAbierto(false);
-      }
       if (menuAvatarRef.current && !menuAvatarRef.current.contains(e.target)) {
         setMenuAvatarAbierto(false);
       }
     }
+    function onKey(e) {
+      if (e.key === "Escape") {
+        setMenuAvatarAbierto(false);
+        botonAvatarRef.current?.focus();
+      }
+    }
     document.addEventListener("mousedown", onClickFuera);
-    return () => document.removeEventListener("mousedown", onClickFuera);
-  }, []);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onClickFuera);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menuAvatarAbierto]);
 
   const imagenAvatar =
     avatarUrl || AVATAR_PLACEHOLDER[session?.user?.profileType] || AVATAR_PLACEHOLDER.chica;
   const esCeo = String(session?.user?.id) === "2";
 
   return (
-    <header
-      style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 40,
-        borderBottom: "1px solid rgba(201,161,90,0.18)",
-      }}
-    >
-      {/* El blur va en un wrapper interno, no en el <header>: backdrop-filter
-          en un ancestro crea un nuevo containing block para sus
-          descendientes position:fixed, así que un fixed dentro de un
-          elemento con blur deja de posicionarse respecto al viewport. */}
-      <div
-        className="site-header"
-        style={{
-          background: "rgba(14,10,11,0.82)",
-          backdropFilter: "blur(14px)",
-          WebkitBackdropFilter: "blur(14px)",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <Link href={autenticado ? "/feed" : "/"} style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/logo-nuevo.png"
-              alt="Contactos"
-              className="navbar-logo"
-              style={{ height: "40px", width: "auto", objectFit: "contain" }}
-              onContextMenu={(e) => e.preventDefault()}
-            />
-            <span
-              className="navbar-logo-texto"
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: 20,
-                color: "#D8B47E",
-                letterSpacing: "3px",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Contactos Liberales
-            </span>
+    <>
+      <header className="site-header">
+        <div className="site-header__inner">
+          <p className="site-header__izq">Canarias · Solo +18</p>
+
+          <Link href={autenticado ? "/feed" : "/"} className="site-header__wordmark" aria-label="Contactos, ir al inicio">
+            Contactos
           </Link>
 
           {autenticado ? (
-            <div className="navbar-acciones" style={{ display: "flex", alignItems: "center", gap: 20 }}>
-              <div className="navbar-boton-movil" style={{ position: "relative" }} ref={menuCrearRef}>
-                <button
-                  type="button"
-                  onClick={() => setMenuCrearAbierto((v) => !v)}
-                  aria-label="Menú"
-                  className="icon-btn"
-                  style={{ width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center" }}
-                >
-                  <Plus size={22} />
-                </button>
-                {menuCrearAbierto && <MenuMovil onClose={() => setMenuCrearAbierto(false)} />}
-              </div>
-
-              <IconoBadge href="/buscar" icono={Search} etiqueta="Buscar" />
-              <IconoBadge href="/mensajes" icono={Mail} contador={contadores.mensajes_no_leidos} etiqueta="Mensajes" />
-              <IconoBadge href="/likes" icono={Heart} contador={contadores.likes_nuevos} etiqueta="Likes" opcional />
-              <IconoBadge href="/visitas" icono={Eye} contador={contadores.visitas_nuevas} etiqueta="Visitas" opcional />
-              <IconoBadge href="/notificaciones" icono={Bell} contador={contadores.notificaciones_no_leidas} etiqueta="Notificaciones" />
+            <nav className="site-header__der" aria-label="Tu actividad">
+              <IconoBadge href="/buscar" icono={Search} etiqueta="Buscar perfiles" activo={pathname.startsWith("/buscar")} className="solo-escritorio" />
+              <IconoBadge href="/mensajes" icono={Mail} contador={contadores.mensajes_no_leidos} etiqueta="Mensajes" activo={pathname.startsWith("/mensajes")} className="solo-escritorio" />
+              <IconoBadge href="/likes" icono={Heart} contador={contadores.likes_nuevos} etiqueta="Likes" activo={pathname.startsWith("/likes")} className="solo-escritorio" />
+              <IconoBadge href="/visitas" icono={Eye} contador={contadores.visitas_nuevas} etiqueta="Visitas" activo={pathname.startsWith("/visitas")} className="solo-escritorio" />
+              <IconoBadge href="/notificaciones" icono={Bell} contador={contadores.notificaciones_no_leidas} etiqueta="Notificaciones" activo={pathname.startsWith("/notificaciones")} />
 
               <div style={{ position: "relative" }} ref={menuAvatarRef}>
                 <button
+                  ref={botonAvatarRef}
                   type="button"
                   onClick={() => setMenuAvatarAbierto((v) => !v)}
                   aria-label="Mi cuenta"
-                  style={{
-                    position: "relative",
-                    display: "block",
-                    width: 36,
-                    height: 36,
-                    borderRadius: "50%",
-                    overflow: "visible",
-                    border: "none",
-                    padding: 0,
-                    background: "transparent",
-                    cursor: "pointer",
-                    flexShrink: 0,
-                  }}
+                  aria-haspopup="true"
+                  aria-expanded={menuAvatarAbierto}
+                  aria-controls="menu-cuenta"
+                  className="avatar-boton"
                 >
-                  <div style={{ width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", border: "1px solid var(--border-gold)" }}>
-                    <Image
-                      src={imagenAvatar}
-                      alt=""
-                      width={36}
-                      height={36}
-                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                    />
+                  <div className="avatar-boton__img">
+                    <Image src={imagenAvatar} alt="" width={36} height={36} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   </div>
-                  {esCeo && <UsuarioBadge badgeEspecial="CEO" style={{ fontSize: 7, padding: "1px 4px" }} />}
+                  {esCeo && <UsuarioBadge badgeEspecial="CEO" style={{ fontSize: 12, padding: "0 3px", lineHeight: "14px" }} />}
                 </button>
                 {menuAvatarAbierto && (
                   <MenuAvatar
+                    id="menu-cuenta"
                     onClose={() => setMenuAvatarAbierto(false)}
                     avatarSrc={imagenAvatar}
                     nick={session?.user?.nick}
                     island={island}
                     esCeo={esCeo}
+                    contadores={contadores}
                   />
                 )}
               </div>
-            </div>
+            </nav>
           ) : (
-            <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-              <Link href="/buscar" className="nav-top-link">
-                Perfiles
+            <nav className="site-header__der" aria-label="Acceso">
+              <Link href="/blog" className="nav-top-link solo-escritorio" style={{ padding: "0 12px" }}>
+                Blog
               </Link>
-              <Link href="/login" className="btn-outline-gold">
+              <Link href="/login" className="nav-top-link" style={{ padding: "0 12px" }}>
                 Acceder
               </Link>
-            </div>
+              <RegistroCTA location="navbar" className="btn-gold">
+                Crear perfil
+              </RegistroCTA>
+            </nav>
           )}
         </div>
-      </div>
-    </header>
+      </header>
+      {autenticado && <NavInferior pathname={pathname} contadores={contadores} />}
+    </>
   );
 }

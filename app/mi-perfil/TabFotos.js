@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Upload, Star } from "lucide-react";
+import { Star } from "lucide-react";
+import { SelectorArchivo } from "../components/SelectorArchivo";
 import { EmptyState } from "../components/EmptyState";
 
 function useFotoDestacadaDesdeHash() {
@@ -23,8 +24,8 @@ function useFotoDestacadaDesdeHash() {
 }
 
 const ESTADO_BADGE = {
-  approved: { texto: "Aprobada", color: "#4a9a6a" },
-  rejected: { texto: "Rechazada", color: "#9a3a3a" },
+  approved: { texto: "Aprobada", color: "var(--online)" },
+  rejected: { texto: "Rechazada", color: "var(--danger)" },
 };
 
 export function TabFotos({ usuarioId, fotos, setFotos }) {
@@ -118,52 +119,24 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
   }
 
   const botonSubir = (
-    <label
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 8,
-        border: "1px solid var(--gold)",
-        color: "var(--gold)",
-        padding: "11px 22px",
-        fontFamily: "var(--font-body)",
-        fontSize: 12,
-        textTransform: "uppercase",
-        letterSpacing: 2,
-        cursor: "pointer",
-        transition: "background 0.2s ease, color 0.2s ease",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.background = "var(--gold)";
-        e.currentTarget.style.color = "var(--bg)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = "transparent";
-        e.currentTarget.style.color = "var(--gold)";
-      }}
-    >
-      <Upload size={15} />
-      Subir foto
-      <input
-        ref={inputFileRef}
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
-        style={{ display: "none" }}
-        onChange={seleccionarArchivo}
-      />
-    </label>
+    <SelectorArchivo
+      inputRef={inputFileRef}
+      archivo={archivoPendiente}
+      accept="image/jpeg,image/png,image/webp"
+      onChange={seleccionarArchivo}
+    />
   );
 
   return (
     <div>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
-        <h2 className="heading" style={{ fontSize: 24, color: "var(--text)" }}>
+        <h2 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
           Mis fotos
         </h2>
         {botonSubir}
       </div>
       {errorFoto && (
-        <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{errorFoto}</p>
+        <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{errorFoto}</p>
       )}
 
       {fotos.length === 0 ? (
@@ -186,7 +159,7 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
                   position: "relative",
                   aspectRatio: "1 / 1",
                   overflow: "hidden",
-                  border: "1px solid rgba(201,161,90,0.2)",
+                  border: "1px solid var(--rule)",
                 }}
               >
                 <Image sizes="(max-width: 559px) 50vw, 33vw"
@@ -209,13 +182,12 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
                       right: 6,
                       top: 6,
                       fontFamily: "var(--font-body)",
-                      fontSize: 9,
-                      textTransform: "uppercase",
-                      letterSpacing: 1,
+                      fontSize: 12,
+                      letterSpacing: "0.04em",
                       padding: "3px 7px",
                       border: `1px solid ${badge.color}`,
                       color: badge.color,
-                      background: "rgba(14,10,11,0.7)",
+                      background: "var(--veil-strong)",
                     }}
                   >
                     {badge.texto}
@@ -240,7 +212,7 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
                     alignItems: "center",
                     justifyContent: "center",
                     gap: 6,
-                    background: "rgba(14,10,11,0.75)",
+                    background: "var(--veil-strong)",
                     padding: 8,
                     transition: "opacity 0.2s ease",
                   }}
@@ -258,7 +230,7 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
                       type="button"
                       onClick={() => borrarFoto(foto.id)}
                       className="foto-overlay-btn"
-                      style={{ borderColor: "rgba(154,58,58,0.5)", color: "#e07a7a" }}
+                      style={{ borderColor: "var(--danger-border)", color: "var(--danger)" }}
                     >
                       Eliminar
                     </button>
@@ -276,7 +248,7 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
             position: "fixed",
             inset: 0,
             zIndex: 100,
-            background: "rgba(14,10,11,0.85)",
+            background: "var(--veil-strong)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -292,7 +264,7 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
               padding: 28,
             }}
           >
-            <h3 className="heading" style={{ fontSize: 20, color: "var(--text)" }}>
+            <h3 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
               Confirmar foto
             </h3>
 
@@ -303,7 +275,7 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
                   position: "relative",
                   width: "100%",
                   aspectRatio: "1 / 1",
-                  border: "1px solid rgba(201,161,90,0.2)",
+                  border: "1px solid var(--rule)",
                   overflow: "hidden",
                 }}
               >
@@ -333,7 +305,7 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
                 gap: 8,
                 marginTop: 18,
                 fontFamily: "var(--font-body)",
-                fontSize: 12.5,
+                fontSize: 14,
                 color: "var(--text-secondary)",
               }}
             >
@@ -356,7 +328,7 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
                 gap: 8,
                 marginTop: 14,
                 fontFamily: "var(--font-body)",
-                fontSize: 13,
+                fontSize: 14,
                 color: "var(--text)",
               }}
             >

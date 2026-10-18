@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { tiempoRelativo } from "@/lib/tiempo";
+import { useConfirmar } from "../components/Confirmar";
 
 export function AdminVerificacionEmail() {
+  const confirmar = useConfirmar();
   const [usuarios, setUsuarios] = useState(null);
   const [procesando, setProcesando] = useState(null);
 
@@ -19,7 +21,7 @@ export function AdminVerificacionEmail() {
   }, []);
 
   async function verificar(id, nick) {
-    if (!window.confirm(`¿Marcar el email de ${nick} como verificado manualmente?`)) return;
+    if (!(await confirmar({ mensaje: `¿Marcar el email de ${nick} como verificado manualmente?`, accion: "Verificar", peligro: false }))) return;
     setProcesando(id);
     try {
       const res = await fetch(`/api/admin/usuarios/${id}/verificar-email`, { method: "PATCH" });
@@ -39,22 +41,22 @@ export function AdminVerificacionEmail() {
 
   return (
     <div>
-      <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)", marginBottom: 18 }}>
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)", marginBottom: 18 }}>
         Usuarios con email pendiente de verificar (excluye cuentas demo). Úsalo para casos donde el
         email de verificación no llega, por ejemplo el bloqueo conocido de Hotmail/Outlook.
       </p>
 
       {usuarios.length === 0 ? (
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
           No hay ningún email pendiente de verificar.
         </p>
       ) : (
         <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "var(--font-body)", fontSize: 13 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "var(--font-body)", fontSize: 14 }}>
             <thead>
-              <tr style={{ borderBottom: "1px solid rgba(201,161,90,0.3)" }}>
+              <tr style={{ borderBottom: "1px solid var(--rule)" }}>
                 {["Nick", "Email", "Registro", ""].map((h) => (
-                  <th key={h} style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-muted)", textTransform: "uppercase", fontSize: 10, letterSpacing: 1 }}>
+                  <th key={h} style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-muted)", fontSize: 12, letterSpacing: "0.04em" }}>
                     {h}
                   </th>
                 ))}
@@ -62,7 +64,7 @@ export function AdminVerificacionEmail() {
             </thead>
             <tbody>
               {usuarios.map((u) => (
-                <tr key={u.id} style={{ borderBottom: "1px solid rgba(201,161,90,0.1)" }}>
+                <tr key={u.id} style={{ borderBottom: "1px solid var(--rule)" }}>
                   <td style={{ padding: "10px 12px", color: "var(--text)" }}>{u.nick}</td>
                   <td style={{ padding: "10px 12px", color: "var(--text-secondary)" }}>{u.email}</td>
                   <td style={{ padding: "10px 12px", color: "var(--text-secondary)" }}>{tiempoRelativo(u.created_at)}</td>
@@ -72,7 +74,7 @@ export function AdminVerificacionEmail() {
                       disabled={procesando === u.id}
                       onClick={() => verificar(u.id, u.nick)}
                       className="btn-outline-gold"
-                      style={{ fontSize: 10, padding: "5px 10px" }}
+                      style={{ fontSize: 12, padding: "5px 10px" }}
                     >
                       {procesando === u.id ? "Verificando…" : "Verificar manualmente"}
                     </button>

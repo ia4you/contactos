@@ -23,7 +23,7 @@ function FilaInfo({ icono: Icono, label, valor }) {
     <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginTop: 14 }}>
       <Icono size={16} color="var(--gold)" style={{ marginTop: 2, flexShrink: 0 }} />
       <div>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 10, textTransform: "uppercase", letterSpacing: 1.5, color: "var(--gold)" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: "0.04em", color: "var(--gold)" }}>
           {label}
         </p>
         <p style={{ marginTop: 2, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>{valor}</p>
@@ -48,20 +48,20 @@ function TarjetaEvento({ evento, clubId, onApuntado }) {
   }
 
   return (
-    <div style={{ background: "#1c1416", border: "1px solid rgba(201,161,90,0.2)", marginTop: 20, overflow: "hidden" }}>
+    <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", marginTop: 20, overflow: "hidden" }}>
       {evento.foto && (
         <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9" }}>
           <Image sizes="(max-width: 900px) 100vw, 700px" src={evento.foto} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} onContextMenu={(e) => e.preventDefault()} />
         </div>
       )}
       <div style={{ padding: 20 }}>
-        <h3 className="heading" style={{ fontSize: 20, color: "var(--text)" }}>
+        <h3 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
           {evento.titulo}
         </h3>
-        <p style={{ marginTop: 6, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--gold)" }}>
+        <p style={{ marginTop: 6, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--gold)" }}>
           {formatearFecha(evento.fecha_evento)}
         </p>
-        <p style={{ marginTop: 4, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+        <p style={{ marginTop: 4, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
           {evento.precio}
           {evento.aforo != null && ` · Aforo: ${evento.aforo}`}
         </p>
@@ -139,7 +139,7 @@ export function ClubDetalleShell({ slug }) {
     <div style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 24px 80px" }}>
       <div className="club-detalle-layout" style={{ display: "flex", gap: 40, alignItems: "flex-start" }}>
         <div className="club-detalle-galeria" style={{ width: 400, flexShrink: 0 }}>
-          <div style={{ position: "relative", width: "100%", aspectRatio: "4 / 3", border: "1px solid rgba(201,161,90,0.2)", overflow: "hidden" }}>
+          <div style={{ position: "relative", width: "100%", aspectRatio: "4 / 3", border: "1px solid var(--rule)", overflow: "hidden" }}>
             <Image sizes="(max-width: 900px) 100vw, 400px" src={principal} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} onContextMenu={preventContextMenu} />
           </div>
           {miniaturas.length > 0 && (
@@ -155,7 +155,7 @@ export function ClubDetalleShell({ slug }) {
                       position: "relative",
                       flex: 1,
                       aspectRatio: "1 / 1",
-                      border: "1px solid rgba(201,161,90,0.2)",
+                      border: "1px solid var(--rule)",
                       overflow: "hidden",
                       padding: 0,
                       cursor: "pointer",
@@ -172,25 +172,25 @@ export function ClubDetalleShell({ slug }) {
 
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10 }}>
-            <h1 className="heading" style={{ fontSize: 36, color: "var(--text)" }}>
+            <h1 className="heading" style={{ fontSize: 40, color: "var(--text)" }}>
               {club.nombre}
             </h1>
             <span className="badge-gold">{ISLAND_LABEL[club.isla]}</span>
             {club.destacado && (
-              <span style={{ display: "inline-block", fontFamily: "var(--font-body)", background: "var(--gold)", color: "var(--bg)", fontSize: 10, textTransform: "uppercase", letterSpacing: 1.5, padding: "4px 10px" }}>
+              <span style={{ display: "inline-block", fontFamily: "var(--font-body)", background: "var(--gold)", color: "var(--bg)", fontSize: 12, letterSpacing: "0.04em", padding: "4px 10px" }}>
                 Destacado
               </span>
             )}
           </div>
 
           {club.descripcion && (
-            <p style={{ marginTop: 16, fontFamily: "var(--font-body)", fontSize: 15, color: "var(--text-secondary)", whiteSpace: "pre-wrap" }}>
+            <p style={{ marginTop: 16, fontFamily: "var(--font-body)", fontSize: 16, color: "var(--text-secondary)", whiteSpace: "pre-wrap" }}>
               {club.descripcion}
             </p>
           )}
 
           <div style={{ marginTop: 28 }}>
-            <p className="kicker" style={{ letterSpacing: 3 }}>
+            <p className="kicker" style={{ letterSpacing: "0.04em" }}>
               Información
             </p>
             <FilaInfo icono={MapPin} label="Dirección" valor={club.direccion} />
@@ -202,7 +202,7 @@ export function ClubDetalleShell({ slug }) {
 
           {eventos.length > 0 && (
             <div style={{ marginTop: 40 }}>
-              <p className="kicker" style={{ letterSpacing: 3 }}>
+              <p className="kicker" style={{ letterSpacing: "0.04em" }}>
                 Próximos eventos
               </p>
               {eventos.map((evento) => (
@@ -211,7 +211,7 @@ export function ClubDetalleShell({ slug }) {
             </div>
           )}
 
-          <p style={{ marginTop: 40, fontFamily: "var(--font-body)", fontSize: 11, color: "var(--text-muted)", lineHeight: 1.6 }}>
+          <p style={{ marginTop: 40, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)", lineHeight: 1.6 }}>
             Este club es un establecimiento privado de acceso para adultos. Contactos.turel.es actúa como
             directorio informativo y no se responsabiliza de las actividades realizadas en el local.
           </p>

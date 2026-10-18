@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Image as ImageIcon } from "lucide-react";
 import { AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { SelectorArchivo } from "../components/SelectorArchivo";
 
 export function Composer({ usuario, avatarUrl, onPublicado, autoAbrir }) {
   const [expandido, setExpandido] = useState(autoAbrir === "texto" || autoAbrir === "foto");
@@ -103,7 +103,7 @@ export function Composer({ usuario, avatarUrl, onPublicado, autoAbrir }) {
   }
 
   return (
-    <div style={{ background: "var(--surface)", border: "1px solid var(--border-gold)", padding: 20 }}>
+    <div style={{ paddingBottom: 20, borderBottom: "1px solid var(--rule)" }}>
       <div style={{ display: "flex", gap: 14 }}>
         <div style={{ position: "relative", width: 32, height: 32, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
           <Image sizes="32px" src={imagenAvatar} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
@@ -133,7 +133,7 @@ export function Composer({ usuario, avatarUrl, onPublicado, autoAbrir }) {
 
           {previewUrl && (
             <div style={{ marginTop: 14, position: "relative" }}>
-              <div style={{ position: "relative", width: "100%", maxHeight: 320, aspectRatio: "16 / 10", overflow: "hidden", border: "1px solid rgba(201,161,90,0.2)" }}>
+              <div style={{ position: "relative", width: "100%", maxHeight: 320, aspectRatio: "16 / 10", overflow: "hidden", border: "1px solid var(--rule)" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={previewUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
@@ -141,7 +141,7 @@ export function Composer({ usuario, avatarUrl, onPublicado, autoAbrir }) {
                 type="button"
                 onClick={quitarArchivo}
                 className="btn-outline-gold"
-                style={{ marginTop: 8, fontSize: 11, padding: "6px 14px" }}
+                style={{ marginTop: 8, fontSize: 12, padding: "6px 14px" }}
               >
                 Quitar foto
               </button>
@@ -152,7 +152,7 @@ export function Composer({ usuario, avatarUrl, onPublicado, autoAbrir }) {
                   gap: 8,
                   marginTop: 12,
                   fontFamily: "var(--font-body)",
-                  fontSize: 12.5,
+                  fontSize: 14,
                   color: "var(--text-secondary)",
                 }}
               >
@@ -171,26 +171,18 @@ export function Composer({ usuario, avatarUrl, onPublicado, autoAbrir }) {
           )}
 
           {error && (
-            <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>
+            <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{error}</p>
           )}
 
           {expandido && (
             <div style={{ marginTop: 14, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
               <div style={{ display: "flex", gap: 10 }}>
-                <label
-                  className="btn-outline-gold"
-                  style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer" }}
-                >
-                  <ImageIcon size={15} />
-                  Subir foto
-                  <input
-                    ref={inputFileRef}
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp"
-                    style={{ display: "none" }}
-                    onChange={seleccionarArchivo}
-                  />
-                </label>
+                <SelectorArchivo
+                  inputRef={inputFileRef}
+                  archivo={archivo}
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={seleccionarArchivo}
+                />
                 <button type="button" onClick={cancelar} disabled={publicando} className="btn-outline-gold">
                   Cancelar
                 </button>

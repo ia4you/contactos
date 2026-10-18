@@ -8,7 +8,7 @@ export function PuntoOnline({ size = 10 }) {
         width: size,
         height: size,
         borderRadius: "50%",
-        background: "#4ade80",
+        background: "var(--online)",
         border: "2px solid var(--bg)",
         zIndex: 1,
       }}

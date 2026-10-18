@@ -21,7 +21,7 @@ export function FotosTopWidget() {
 
   return (
     <div style={{ marginBottom: 24 }}>
-      <p className="kicker">Fotos más valoradas hoy</p>
+      <h3 className="widget-titulo">Fotos más valoradas hoy</h3>
       <div className="scroll-sin-barra" style={{ marginTop: 14, display: "flex", gap: 12, overflowX: "auto", paddingBottom: 4 }}>
         {fotos.slice(0, 3).map((f, i) => (
           <Link
@@ -40,7 +40,7 @@ export function FotosTopWidget() {
                 right: 0,
                 bottom: 0,
                 padding: "24px 12px 12px",
-                background: "linear-gradient(180deg, transparent 0%, rgba(14,10,11,0.85) 100%)",
+                background: "linear-gradient(180deg, transparent 0%, var(--veil-strong) 100%)",
               }}
             >
               <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--gold)" }}>
@@ -57,9 +57,8 @@ export function FotosTopWidget() {
                   border: "1px solid #fff",
                   color: "#fff",
                   fontFamily: "var(--font-body)",
-                  fontSize: 10,
-                  textTransform: "uppercase",
-                  letterSpacing: 1.5,
+                  fontSize: 12,
+                  letterSpacing: "0.04em",
                 }}
               >
                 Ver perfil

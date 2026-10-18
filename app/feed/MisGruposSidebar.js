@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Users, Plus } from "lucide-react";
+import { Users } from "lucide-react";
 import { CrearGrupoModal } from "./CrearGrupoModal";
 
 export function MisGruposSidebar() {
@@ -23,18 +23,13 @@ export function MisGruposSidebar() {
 
   return (
     <div>
-      <p className="kicker" style={{ letterSpacing: 3 }}>Mis grupos</p>
+      <h3 className="widget-titulo">Mis grupos</h3>
 
       <div style={{ marginTop: 14 }}>
         {grupos === null ? (
           <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>Cargando…</p>
         ) : grupos.length === 0 ? (
-          <>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>Únete a un grupo</p>
-            <Link href="/grupos" className="btn-outline-gold" style={{ marginTop: 10, display: "inline-block", fontSize: 11, padding: "7px 14px" }}>
-              Ver grupos
-            </Link>
-          </>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>Únete a un grupo</p>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {grupos.map((g) => (
@@ -64,7 +59,7 @@ export function MisGruposSidebar() {
                     style={{
                       display: "block",
                       fontFamily: "var(--font-body)",
-                      fontSize: 12.5,
+                      fontSize: 14,
                       color: "var(--text)",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
@@ -73,7 +68,7 @@ export function MisGruposSidebar() {
                   >
                     {g.nombre}
                   </span>
-                  <span style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "var(--text-muted)" }}>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
                     {g.miembros_count} miembro{g.miembros_count === 1 ? "" : "s"}
                   </span>
                 </div>
@@ -83,17 +78,11 @@ export function MisGruposSidebar() {
         )}
       </div>
 
-      <div style={{ marginTop: 18, display: "flex", flexDirection: "column", gap: 8 }}>
-        <Link href="/grupos" className="btn-outline-gold" style={{ fontSize: 11, padding: "7px 14px", textAlign: "center" }}>
+      <div style={{ marginTop: 14, display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+        <Link href="/grupos" className="enlace-flecha">
           Ver todos
         </Link>
-        <button
-          type="button"
-          onClick={() => setModalAbierto(true)}
-          className="btn-outline-gold"
-          style={{ fontSize: 11, padding: "7px 14px", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
-        >
-          <Plus size={13} />
+        <button type="button" onClick={() => setModalAbierto(true)} className="enlace-flecha">
           Crear grupo
         </button>
       </div>

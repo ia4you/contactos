@@ -8,31 +8,31 @@ import { PuntoOnline } from "../components/PuntoOnline";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 
-export function AhoraOnlineCarrusel() {
+export function AhoraOnlineCarrusel({ onCargado }) {
   const [usuarios, setUsuarios] = useState(null);
 
   useEffect(() => {
     fetch("/api/usuarios/online")
       .then((r) => r.json())
-      .then((d) => setUsuarios(d.usuarios || []))
-      .catch(() => setUsuarios([]));
+      .then((d) => d.usuarios || [])
+      .catch(() => [])
+      .then((lista) => {
+        setUsuarios(lista);
+        onCargado?.(lista);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (usuarios === null) return null;
 
-  if (usuarios.length < 10) {
+  if (usuarios.length === 0) {
     return (
-      <div style={{ marginBottom: 24, background: "#1c1416", border: "1px solid rgba(201,161,90,0.18)", padding: 24, textAlign: "center" }}>
-        <h3 className="heading" style={{ fontSize: 20, color: "var(--gold)" }}>
-          Sé el primero en conectar hoy
-        </h3>
-        <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>
-          Completa tu perfil y aparece aquí cuando otros estén online
-        </p>
-        <Link href="/mi-perfil" className="btn-outline-gold" style={{ marginTop: 16, display: "inline-block" }}>
-          Completar perfil
+      <p style={{ marginBottom: 24, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
+        Sé el primero en conectar hoy:{" "}
+        <Link href="/mi-perfil" className="enlace">
+          completa tu perfil
         </Link>
-      </div>
+      </p>
     );
   }
 
@@ -40,7 +40,7 @@ export function AhoraOnlineCarrusel() {
     <div style={{ marginBottom: 24 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <span className="punto-pulso" />
-        <p className="kicker" style={{ letterSpacing: 3 }}>Ahora online</p>
+        <h3 className="widget-titulo">Ahora online</h3>
       </div>
 
       <div className="scroll-sin-barra" style={{ marginTop: 14, display: "flex", gap: 16, overflowX: "auto" }}>
@@ -71,7 +71,7 @@ export function AhoraOnlineCarrusel() {
               >
                 {u.nick}
               </span>
-              <span style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "var(--text-muted)" }}>
+              <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "100%" }}>
                 {ISLAND_LABEL[u.island]}
               </span>
             </Link>

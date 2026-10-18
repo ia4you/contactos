@@ -63,7 +63,7 @@ function TabLikesPerfil() {
               alignItems: "center",
               gap: 14,
               padding: "12px 0",
-              borderBottom: "1px solid rgba(201,161,90,0.12)",
+              borderBottom: "1px solid var(--rule)",
               textDecoration: "none",
             }}
           >
@@ -76,13 +76,13 @@ function TabLikesPerfil() {
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                <span className="heading" style={{ fontSize: 15, color: "var(--text)" }}>
+                <span className="heading" style={{ fontSize: 16, color: "var(--text)" }}>
                   {l.nick}
                 </span>
-                <span className="badge-gold" style={{ fontSize: 9 }}>{ISLAND_LABEL[l.island]}</span>
-                <span className="badge-gold" style={{ fontSize: 9 }}>{PROFILE_TYPE_LABEL[l.profile_type]}</span>
+                <span className="badge-gold" style={{ fontSize: 12 }}>{ISLAND_LABEL[l.island]}</span>
+                <span className="badge-gold" style={{ fontSize: 12 }}>{PROFILE_TYPE_LABEL[l.profile_type]}</span>
                 {l.match && (
-                  <span style={{ display: "inline-block", fontFamily: "var(--font-body)", background: "var(--gold)", color: "var(--bg)", fontSize: 9, textTransform: "uppercase", letterSpacing: 1, padding: "2px 8px" }}>
+                  <span style={{ display: "inline-block", fontFamily: "var(--font-body)", background: "var(--gold)", color: "var(--bg)", fontSize: 12, letterSpacing: "0.04em", padding: "2px 8px" }}>
                     Match ✓
                   </span>
                 )}
@@ -131,7 +131,7 @@ function TabLikesFotos({ usuarioId }) {
     <div className="fotos-grid-2a">
       {fotos.map((f) => (
         <Link key={f.id} href={`/mi-perfil?tab=fotos#foto-${f.id}`} style={{ display: "block" }}>
-          <div style={{ position: "relative", aspectRatio: "1 / 1", overflow: "hidden", border: "1px solid rgba(201,161,90,0.2)" }}>
+          <div style={{ position: "relative", aspectRatio: "1 / 1", overflow: "hidden", border: "1px solid var(--rule)" }}>
             <Image sizes="(max-width: 559px) 50vw, 33vw" src={`/uploads/${usuarioId}/${f.filename}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
           </div>
           <p style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 5, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
@@ -154,7 +154,7 @@ export function LikesShell({ usuarioId }) {
   return (
     <div style={{ maxWidth: 680, margin: "0 auto", padding: "40px 24px 80px" }}>
       <p className="kicker">Actividad</p>
-      <h1 className="heading" style={{ fontSize: 32, color: "var(--text)", marginTop: 6 }}>
+      <h1 className="heading" style={{ fontSize: 30, color: "var(--text)", marginTop: 6 }}>
         Mis likes
       </h1>
 

@@ -40,7 +40,7 @@ export function AjustesShell({ usuario, avatarFilename }) {
       <div
         style={{
           background: "var(--bg-secondary)",
-          borderBottom: "1px solid rgba(201,161,90,0.18)",
+          borderBottom: "1px solid var(--rule)",
           padding: "40px 24px",
         }}
       >
@@ -60,24 +60,12 @@ export function AjustesShell({ usuario, avatarFilename }) {
           </div>
 
           <div>
-            <h1 className="heading" style={{ fontSize: 28, color: "var(--text)" }}>
+            <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
               {usuario.nick}
             </h1>
             <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 8 }}>
               <span className="badge-gold">{ISLAND_LABEL[usuario.island]}</span>
-              <span
-                style={{
-                  display: "inline-block",
-                  fontFamily: "var(--font-body)",
-                  background: "var(--surface)",
-                  border: "1px solid var(--border-gold)",
-                  color: "var(--text)",
-                  fontSize: 10,
-                  textTransform: "uppercase",
-                  letterSpacing: 1.5,
-                  padding: "4px 10px",
-                }}
-              >
+              <span className="badge-gold">
                 {PROFILE_TYPE_LABEL[usuario.profile_type]}
               </span>
               {usuario.verified && (
@@ -87,9 +75,8 @@ export function AjustesShell({ usuario, avatarFilename }) {
                     fontFamily: "var(--font-body)",
                     background: "var(--gold)",
                     color: "var(--bg)",
-                    fontSize: 10,
-                    textTransform: "uppercase",
-                    letterSpacing: 1.5,
+                    fontSize: 12,
+                    letterSpacing: "0.04em",
                     padding: "4px 10px",
                   }}
                 >

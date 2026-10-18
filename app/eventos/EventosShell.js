@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { ISLANDS } from "@/lib/constants";
 import { EventoCard } from "./EventoCard";
 import { CrearEventoModal } from "./CrearEventoModal";
 import { EmptyState } from "../components/EmptyState";
+import { useConfirmar } from "../components/Confirmar";
 
 const TIPOS = [
   { value: "quedada", label: "Quedada" },
@@ -16,6 +17,7 @@ const TIPOS = [
 ];
 
 export function EventosShell({ usuario }) {
+  const confirmar = useConfirmar();
   const searchParams = useSearchParams();
   const [eventos, setEventos] = useState(null);
   const [filtroIsla, setFiltroIsla] = useState("");
@@ -25,25 +27,25 @@ export function EventosShell({ usuario }) {
   const [eventoEnEdicion, setEventoEnEdicion] = useState(null);
   const [pasadosAbierto, setPasadosAbierto] = useState(false);
   const [pasados, setPasados] = useState(null);
+  const peticionRef = useRef(0);
 
+  // Los filtros se aplican al cambiar el select; si llegan dos respuestas
+  // desordenadas, solo cuenta la de la última petición.
   function cargar() {
     const params = new URLSearchParams();
     if (filtroIsla) params.set("isla", filtroIsla);
     if (filtroTipo) params.set("tipo", filtroTipo);
+    const id = ++peticionRef.current;
     fetch(`/api/eventos?${params.toString()}`)
       .then((r) => r.json())
-      .then((d) => setEventos(d.eventos || []))
-      .catch(() => setEventos([]));
+      .then((d) => id === peticionRef.current && setEventos(d.eventos || []))
+      .catch(() => id === peticionRef.current && setEventos([]));
   }
 
   useEffect(() => {
     cargar();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  function filtrar() {
-    cargar();
-  }
+  }, [filtroIsla, filtroTipo]);
 
   function cargarPasados() {
     const nuevoEstado = !pasadosAbierto;
@@ -99,7 +101,7 @@ export function EventosShell({ usuario }) {
   }
 
   async function eliminarEvento(id) {
-    if (!window.confirm("¿Eliminar este evento?")) return;
+    if (!(await confirmar({ mensaje: "¿Eliminar este evento?", accion: "Eliminar" }))) return;
     setEventos((prev) => (prev ? prev.filter((e) => e.id !== id) : prev));
     setPasados((prev) => (prev ? prev.filter((e) => e.id !== id) : prev));
     await fetch(`/api/eventos/${id}`, { method: "DELETE" });
@@ -110,7 +112,7 @@ export function EventosShell({ usuario }) {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
         <div>
           <p className="kicker">Comunidad</p>
-          <h1 className="heading" style={{ fontSize: 32, color: "var(--text)", marginTop: 6 }}>
+          <h1 className="heading" style={{ fontSize: 30, color: "var(--text)", marginTop: 6 }}>
             Eventos
           </h1>
         </div>
@@ -119,10 +121,10 @@ export function EventosShell({ usuario }) {
         </button>
       </div>
 
-      <div style={{ marginTop: 24, display: "flex", gap: 12, flexWrap: "wrap", alignItems: "flex-end" }}>
+      <div className="filtros-fila">
         <label>
           <span className="label-field">Isla</span>
-          <select value={filtroIsla} onChange={(e) => setFiltroIsla(e.target.value)} className="input-field" style={{ width: 180 }}>
+          <select value={filtroIsla} onChange={(e) => setFiltroIsla(e.target.value)} className="input-field">
             <option value="">Todas</option>
             {ISLANDS.map((i) => (
               <option key={i.value} value={i.value}>{i.label}</option>
@@ -131,16 +133,13 @@ export function EventosShell({ usuario }) {
         </label>
         <label>
           <span className="label-field">Tipo</span>
-          <select value={filtroTipo} onChange={(e) => setFiltroTipo(e.target.value)} className="input-field" style={{ width: 160 }}>
+          <select value={filtroTipo} onChange={(e) => setFiltroTipo(e.target.value)} className="input-field">
             <option value="">Todos</option>
             {TIPOS.map((t) => (
               <option key={t.value} value={t.value}>{t.label}</option>
             ))}
           </select>
         </label>
-        <button type="button" onClick={filtrar} className="btn-outline-gold">
-          Filtrar
-        </button>
       </div>
 
       <div style={{ marginTop: 32 }}>
@@ -149,7 +148,7 @@ export function EventosShell({ usuario }) {
         ) : eventos.length === 0 ? (
           <EmptyState texto="No hay eventos próximos" />
         ) : (
-          <div className="anuncios-grid">
+          <div className="eventos-lista">
             {eventos.map((e) => (
               <EventoCard
                 key={e.id}
@@ -176,9 +175,8 @@ export function EventosShell({ usuario }) {
             border: "none",
             cursor: "pointer",
             fontFamily: "var(--font-body)",
-            fontSize: 13,
-            textTransform: "uppercase",
-            letterSpacing: 1.5,
+            fontSize: 14,
+            letterSpacing: "0.04em",
             color: "var(--text-secondary)",
             padding: 0,
           }}
@@ -192,9 +190,9 @@ export function EventosShell({ usuario }) {
             {pasados === null ? (
               <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>Cargando…</p>
             ) : pasados.length === 0 ? (
-              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>No hay eventos anteriores.</p>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>No hay eventos anteriores.</p>
             ) : (
-              <div className="anuncios-grid">
+              <div className="eventos-lista">
                 {pasados.map((e) => (
                   <EventoCard
                     key={e.id}

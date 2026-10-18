@@ -45,7 +45,7 @@ export function CookieConsent() {
             bottom: 0,
             zIndex: 2000,
             background: "var(--bg)",
-            borderTop: "1px solid rgba(201,161,90,0.3)",
+            borderTop: "1px solid var(--rule)",
             padding: "20px 24px",
             display: "flex",
             flexWrap: "wrap",
@@ -57,7 +57,7 @@ export function CookieConsent() {
           <p
             style={{
               fontFamily: "var(--font-body)",
-              fontSize: 13,
+              fontSize: 14,
               color: "var(--text-secondary)",
               maxWidth: 560,
               margin: 0,
@@ -76,7 +76,7 @@ export function CookieConsent() {
               type="button"
               onClick={() => decide("rejected")}
               className="btn-outline-gold"
-              style={{ fontSize: 13, padding: "10px 18px" }}
+              style={{ fontSize: 14, padding: "10px 18px" }}
             >
               Rechazar
             </button>
@@ -84,7 +84,7 @@ export function CookieConsent() {
               type="button"
               onClick={() => decide("accepted")}
               className="btn-gold"
-              style={{ fontSize: 13, padding: "10px 18px" }}
+              style={{ fontSize: 14, padding: "10px 18px" }}
             >
               Aceptar
             </button>

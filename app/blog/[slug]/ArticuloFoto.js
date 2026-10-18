@@ -27,7 +27,7 @@ export function ArticuloFoto({ foto, alt, titulo, fecha }) {
         style={{
           position: "absolute",
           inset: 0,
-          background: "linear-gradient(180deg, rgba(14,10,11,0) 45%, rgba(14,10,11,0.25) 100%)",
+          background: "linear-gradient(180deg, var(--veil-0) 45%, var(--veil-soft) 100%)",
         }}
       />
       {(titulo || fecha) && (
@@ -39,7 +39,7 @@ export function ArticuloFoto({ foto, alt, titulo, fecha }) {
             bottom: 0,
             padding: "40px clamp(20px, 5vw, 64px) 28px",
             background:
-              "linear-gradient(180deg, rgba(14,10,11,0) 0%, rgba(14,10,11,0.75) 40px, rgba(14,10,11,0.75) 100%)",
+              "linear-gradient(180deg, var(--veil-0) 0%, var(--veil-strong) 40px, var(--veil-strong) 100%)",
           }}
         >
           <p className="kicker">Blog</p>
@@ -58,7 +58,7 @@ export function ArticuloFoto({ foto, alt, titulo, fecha }) {
             </h1>
           )}
           {fecha && (
-            <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-muted)" }}>
+            <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
               {fecha}
             </p>
           )}

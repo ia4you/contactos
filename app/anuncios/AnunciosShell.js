@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Filter } from "lucide-react";
 import { ISLANDS, LOOKING_FOR_OPTIONS } from "@/lib/constants";
@@ -8,11 +8,13 @@ import { MultiSelectChips } from "../components/MultiSelectChips";
 import { EmptyState } from "../components/EmptyState";
 import { AnuncioCard } from "./AnuncioCard";
 import { AnuncioModal } from "./AnuncioModal";
+import { useConfirmar } from "../components/Confirmar";
 
 const LIMITE = 20;
 const ESTADO_INICIAL = { islas: [], busco: [] };
 
 export function AnunciosShell({ usuario }) {
+  const confirmar = useConfirmar();
   const searchParams = useSearchParams();
   const [filtros, setFiltros] = useState(ESTADO_INICIAL);
   const [anuncios, setAnuncios] = useState([]);
@@ -25,7 +27,11 @@ export function AnunciosShell({ usuario }) {
   const [modalAbierto, setModalAbierto] = useState(() => searchParams.get("crear") === "1");
   const [anuncioEnEdicion, setAnuncioEnEdicion] = useState(null);
 
+  const peticionRef = useRef(0);
+
+  // Si llegan dos respuestas desordenadas, solo cuenta la de la última petición.
   const cargar = useCallback(async (filtrosActuales, offsetActual, append) => {
+    const id = ++peticionRef.current;
     setCargando(true);
     const params = new URLSearchParams();
     filtrosActuales.islas.forEach((v) => params.append("islas", v));
@@ -34,6 +40,7 @@ export function AnunciosShell({ usuario }) {
 
     const res = await fetch(`/api/anuncios?${params.toString()}`);
     const data = await res.json().catch(() => null);
+    if (id !== peticionRef.current) return;
     setCargando(false);
     if (!res.ok || !data) return;
 
@@ -42,8 +49,12 @@ export function AnunciosShell({ usuario }) {
     setOffset(offsetActual + LIMITE);
   }, []);
 
+  // Los filtros se aplican en cuanto cambian (también la carga inicial).
   useEffect(() => {
-    cargar(ESTADO_INICIAL, 0, false);
+    cargar(filtros, 0, false);
+  }, [filtros, cargar]);
+
+  useEffect(() => {
     fetch("/api/anuncios/mio")
       .then((r) => r.json())
       .then((d) => setAnuncioPropio(d.anuncio))
@@ -51,14 +62,8 @@ export function AnunciosShell({ usuario }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function filtrar() {
-    setFiltrosAbiertosMovil(false);
-    cargar(filtros, 0, false);
-  }
-
   function limpiar() {
     setFiltros(ESTADO_INICIAL);
-    cargar(ESTADO_INICIAL, 0, false);
   }
 
   function cargarMas() {
@@ -86,7 +91,7 @@ export function AnunciosShell({ usuario }) {
   }
 
   async function eliminarAnuncio(id) {
-    if (!window.confirm("¿Eliminar tu anuncio?")) return;
+    if (!(await confirmar({ mensaje: "¿Eliminar tu anuncio?", accion: "Eliminar" }))) return;
     setAnuncios((prev) => prev.filter((a) => a.id !== id));
     setAnuncioPropio(null);
     await fetch(`/api/anuncios/${id}`, { method: "DELETE" });
@@ -97,7 +102,7 @@ export function AnunciosShell({ usuario }) {
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 24px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
         <div>
           <p className="kicker">Comunidad</p>
-          <h1 className="heading" style={{ fontSize: 32, color: "var(--text)", marginTop: 6 }}>
+          <h1 className="heading" style={{ fontSize: 30, color: "var(--text)", marginTop: 6 }}>
             Anuncios
           </h1>
         </div>
@@ -117,13 +122,12 @@ export function AnunciosShell({ usuario }) {
           padding: "16px 24px",
           background: "var(--bg-secondary)",
           border: "none",
-          borderTop: "1px solid rgba(201,161,90,0.18)",
-          borderBottom: "1px solid rgba(201,161,90,0.18)",
+          borderTop: "1px solid var(--rule)",
+          borderBottom: "1px solid var(--rule)",
           color: "var(--gold)",
           fontFamily: "var(--font-body)",
-          fontSize: 13,
-          textTransform: "uppercase",
-          letterSpacing: 1.5,
+          fontSize: 14,
+          letterSpacing: "0.04em",
           cursor: "pointer",
         }}
       >
@@ -160,6 +164,7 @@ export function AnunciosShell({ usuario }) {
                       busco: f.busco.includes(o.value) ? f.busco.filter((v) => v !== o.value) : [...f.busco, o.value],
                     }))
                   }
+                  aria-pressed={filtros.busco.includes(o.value)}
                   className={`fetiche-chip ${filtros.busco.includes(o.value) ? "active" : ""}`}
                 >
                   {o.label}
@@ -168,14 +173,9 @@ export function AnunciosShell({ usuario }) {
             </div>
           </div>
 
-          <div style={{ marginTop: 24, display: "flex", gap: 10 }}>
-            <button type="button" onClick={filtrar} className="btn-gold" style={{ flex: 1 }}>
-              Filtrar
-            </button>
-            <button type="button" onClick={limpiar} className="btn-outline-gold" style={{ flex: 1 }}>
-              Limpiar
-            </button>
-          </div>
+          <button type="button" onClick={limpiar} className="enlace-flecha" style={{ marginTop: 20 }}>
+            Limpiar filtros
+          </button>
         </aside>
 
         <section style={{ paddingTop: 24 }}>

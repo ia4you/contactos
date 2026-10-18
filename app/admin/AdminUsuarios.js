@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ISLANDS, PROFILE_TYPES } from "@/lib/constants";
 import { tiempoRelativo } from "@/lib/tiempo";
 import { Dialogo } from "../components/Dialogo";
+import { useConfirmar } from "../components/Confirmar";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
@@ -16,10 +17,8 @@ const FILTROS = [
   { id: "pendientes", label: "Pendientes de borrado" },
 ];
 
-const ROJO = "#e07a7a";
 const estiloCelda = { padding: "10px 12px", color: "var(--text-secondary)", verticalAlign: "top" };
-const estiloBoton = { fontSize: 11, padding: "6px 10px", whiteSpace: "nowrap" };
-const estiloBotonPeligro = { ...estiloBoton, borderColor: "rgba(154,58,58,0.6)", color: ROJO };
+const estiloBoton = { fontSize: 12, padding: "5px 10px", whiteSpace: "nowrap" };
 
 function estadoDe(u) {
   if (u.role === "admin") return "admin";
@@ -31,10 +30,10 @@ function estadoDe(u) {
 function Estado({ u }) {
   const estado = estadoDe(u);
   if (estado === "admin") return <span style={{ color: "var(--gold)" }}>Admin</span>;
-  if (estado === "activa") return <span style={{ color: "#4ade80" }}>Activa</span>;
+  if (estado === "activa") return <span style={{ color: "var(--online)" }}>Activa</span>;
   if (estado === "suspendida") {
     return (
-      <span style={{ color: ROJO }}>
+      <span style={{ color: "var(--danger)" }}>
         Suspendida {tiempoRelativo(u.suspended_at)}
         {u.suspended_reason && (
           <span style={{ display: "block", color: "var(--text-muted)", maxWidth: 260 }}>Motivo: {u.suspended_reason}</span>
@@ -42,10 +41,11 @@ function Estado({ u }) {
       </span>
     );
   }
-  return <span style={{ color: "var(--gold-light)" }}>Eliminada por su titular {tiempoRelativo(u.deleted_at)}</span>;
+  return <span style={{ color: "var(--gold)" }}>Eliminada por su titular {tiempoRelativo(u.deleted_at)}</span>;
 }
 
 export function AdminUsuarios() {
+  const confirmar = useConfirmar();
   const [filtro, setFiltro] = useState("todas");
   const [usuarios, setUsuarios] = useState(null);
   const [dialogo, setDialogo] = useState(null); // { tipo: "suspender" | "eliminar", usuario }
@@ -89,6 +89,7 @@ export function AdminUsuarios() {
     );
 
   async function reactivar(u) {
+    if (!(await confirmar({ mensaje: `¿Reactivar la cuenta de ${u.nick}?`, detalle: "Volverá a aparecer en la web y podrá iniciar sesión.", accion: "Reactivar", peligro: false }))) return;
     const error = await accion(`/api/admin/usuarios/${u.id}/reactivar`, { method: "PATCH" }, `Cuenta de ${u.nick} reactivada.`);
     if (error) setAviso(error);
   }
@@ -111,7 +112,7 @@ export function AdminUsuarios() {
       </div>
 
       {aviso && (
-        <p role="status" style={{ marginBottom: 16, fontFamily: "var(--font-body)", fontSize: 13, color: "var(--text-secondary)" }}>
+        <p role="status" style={{ marginBottom: 16, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
           {aviso}
         </p>
       )}
@@ -122,11 +123,11 @@ export function AdminUsuarios() {
         <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>No hay cuentas en este filtro.</p>
       ) : (
         <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "var(--font-body)", fontSize: 13 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "var(--font-body)", fontSize: 14 }}>
             <thead>
-              <tr style={{ borderBottom: "1px solid rgba(201,161,90,0.3)" }}>
+              <tr style={{ borderBottom: "1px solid var(--rule)" }}>
                 {["Nick", "Isla", "Tipo", "Alta", "Última act.", "Fotos", "Estado", "Acciones"].map((h) => (
-                  <th key={h} style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-muted)", fontSize: 11, fontWeight: 500 }}>
+                  <th key={h} style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-muted)", fontSize: 12, letterSpacing: "0.04em" }}>
                     {h}
                   </th>
                 ))}
@@ -136,7 +137,7 @@ export function AdminUsuarios() {
               {usuarios.map((u) => {
                 const estado = estadoDe(u);
                 return (
-                  <tr key={u.id} style={{ borderBottom: "1px solid rgba(201,161,90,0.1)" }}>
+                  <tr key={u.id} style={{ borderBottom: "1px solid var(--rule)" }}>
                     <td style={{ ...estiloCelda, color: "var(--text)" }}>{u.nick}</td>
                     <td style={estiloCelda}>{ISLAND_LABEL[u.island]}</td>
                     <td style={estiloCelda}>{PROFILE_TYPE_LABEL[u.profile_type]}</td>
@@ -152,7 +153,7 @@ export function AdminUsuarios() {
                           Ver perfil
                         </Link>
                         {estado === "activa" && (
-                          <button type="button" onClick={() => setDialogo({ tipo: "suspender", usuario: u })} className="btn-outline-gold" style={estiloBotonPeligro}>
+                          <button type="button" onClick={() => setDialogo({ tipo: "suspender", usuario: u })} className="btn-outline-gold btn-peligro" style={estiloBoton}>
                             Suspender
                           </button>
                         )}
@@ -162,7 +163,7 @@ export function AdminUsuarios() {
                           </button>
                         )}
                         {(estado === "suspendida" || estado === "pendiente") && (
-                          <button type="button" onClick={() => setDialogo({ tipo: "eliminar", usuario: u })} className="btn-outline-gold" style={estiloBotonPeligro}>
+                          <button type="button" onClick={() => setDialogo({ tipo: "eliminar", usuario: u })} className="btn-outline-gold btn-peligro" style={estiloBoton}>
                             Eliminar definitivamente
                           </button>
                         )}
@@ -195,8 +196,8 @@ function PieDialogo({ onCerrar, enviando, deshabilitado, texto, textoEnviando })
       <button
         type="submit"
         disabled={deshabilitado || enviando}
-        className="btn-outline-gold"
-        style={{ fontSize: 12, borderColor: "rgba(154,58,58,0.6)", color: ROJO, opacity: deshabilitado || enviando ? 0.45 : 1 }}
+        className="btn-outline-gold btn-peligro"
+        style={{ fontSize: 12, opacity: deshabilitado || enviando ? 0.45 : 1 }}
       >
         {enviando ? textoEnviando : texto}
       </button>
@@ -246,7 +247,7 @@ function DialogoSuspender({ usuario, onCerrar, onConfirmar }) {
             autoFocus
           />
         </label>
-        {error && <p role="alert" style={{ marginTop: 12, fontSize: 13, color: ROJO }}>{error}</p>}
+        {error && <p role="alert" style={{ marginTop: 12, fontSize: 14, color: "var(--danger)" }}>{error}</p>}
         <PieDialogo onCerrar={onCerrar} enviando={enviando} texto="Suspender" textoEnviando="Suspendiendo…" />
       </form>
     </Dialogo>
@@ -269,7 +270,7 @@ function DialogoEliminar({ usuario, onCerrar, onConfirmar }) {
           Eliminar definitivamente a {usuario.nick}
         </h2>
         <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
-          <strong style={{ color: ROJO }}>No se puede deshacer.</strong> Se borran sus fotos del disco, publicaciones,
+          <strong style={{ color: "var(--danger)" }}>No se puede deshacer.</strong> Se borran sus fotos del disco, publicaciones,
           historias, comentarios, likes, mensajes, visitas, amistades, bloqueos, anuncios y eventos. Las denuncias contra
           esta cuenta se conservan solo con su nick y la fecha.
         </p>
@@ -287,7 +288,7 @@ function DialogoEliminar({ usuario, onCerrar, onConfirmar }) {
             autoFocus
           />
         </label>
-        {error && <p role="alert" style={{ marginTop: 12, fontSize: 13, color: ROJO }}>{error}</p>}
+        {error && <p role="alert" style={{ marginTop: 12, fontSize: 14, color: "var(--danger)" }}>{error}</p>}
         <PieDialogo
           onCerrar={onCerrar}
           enviando={enviando}

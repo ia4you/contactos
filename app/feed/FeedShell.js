@@ -24,6 +24,7 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [cargando, setCargando] = useState(true);
+  const [idsOnline, setIdsOnline] = useState(null);
 
   const avatarUrl = avatarFilename ? `/uploads/${usuario.id}/${avatarFilename}` : null;
 
@@ -42,6 +43,13 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
   useEffect(() => {
     cargar(tab, 0, false);
   }, [tab, cargar]);
+
+  // "Publicar" de la barra inferior móvil enlaza a /feed?compose=texto: si ya
+  // estamos en el feed, hay que volver a "Para ti" (donde vive el composer)
+  // y remontarlo (key) para que se abra de nuevo.
+  useEffect(() => {
+    if (compose) setTab("parati");
+  }, [compose]);
 
   function cambiarTab(nuevoTab) {
     if (nuevoTab === tab) return;
@@ -71,24 +79,33 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
         <FeedNavSidebar />
       </aside>
 
-      <div style={{ maxWidth: 680, width: "100%", margin: "0 auto", background: "var(--bg)" }}>
-        <AhoraOnlineCarrusel />
+      {/* En móvil los .feed-extra bajan detrás de las publicaciones (theme.css). */}
+      <div className="feed-centro" style={{ maxWidth: 680, width: "100%", margin: "0 auto", background: "var(--bg)" }}>
+        <div className="feed-extra">
+          <AhoraOnlineCarrusel onCargado={(lista) => setIdsOnline(new Set(lista.map((u) => u.id)))} />
+        </div>
 
         <HistoriasFranja usuario={usuario} avatarUrl={avatarUrl} />
 
         {tab === "parati" && (
           <div style={{ marginBottom: 24 }}>
-            <Composer usuario={usuario} avatarUrl={avatarUrl} onPublicado={onPublicado} autoAbrir={compose} />
+            <Composer key={compose || "composer"} usuario={usuario} avatarUrl={avatarUrl} onPublicado={onPublicado} autoAbrir={compose} />
           </div>
         )}
 
-        <ActivosIslaWidget usuarios={activosIsla} isla={usuario.island} />
+        <div className="feed-extra">
+          {/* Solo la gente que no sale ya en «Ahora online»; nada hasta saberlo, para no parpadear. */}
+          {idsOnline && (
+            <ActivosIslaWidget usuarios={activosIsla.filter((u) => !idsOnline.has(u.id))} isla={usuario.island} />
+          )}
+          {tab === "parati" && <FotosTopWidget />}
+        </div>
 
-        {tab === "parati" && <FotosTopWidget />}
-
-        <div className="tab-nav" style={{ marginBottom: 24 }}>
+        <div className="tab-nav" role="tablist" aria-label="Publicaciones" style={{ marginBottom: 8 }}>
           <button
             type="button"
+            role="tab"
+            aria-selected={tab === "parati"}
             onClick={() => cambiarTab("parati")}
             className={`tab-nav-item ${tab === "parati" ? "active" : ""}`}
           >
@@ -96,6 +113,8 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
           </button>
           <button
             type="button"
+            role="tab"
+            aria-selected={tab === "siguiendo"}
             onClick={() => cambiarTab("siguiendo")}
             className={`tab-nav-item ${tab === "siguiendo" ? "active" : ""}`}
           >
@@ -103,6 +122,7 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
           </button>
         </div>
 
+        <div>
         {cargando && publicaciones.length === 0 ? (
           <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)", padding: "40px 0" }}>
             Cargando…
@@ -145,6 +165,7 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
             )}
           </>
         )}
+        </div>
       </div>
 
       <aside className="feed-sidebar-der">

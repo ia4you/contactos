@@ -5,63 +5,28 @@ import { COOKIE_SETTINGS_EVENT } from "./CookieConsent";
 
 export function Footer() {
   return (
-    <footer
-      style={{
-        padding: "56px",
-        borderTop: "1px solid rgba(201,161,90,0.18)",
-        display: "flex",
-        flexWrap: "wrap",
-        gap: 24,
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-      }}
-    >
+    <footer className="site-footer">
       <div>
-        <span className="heading" style={{ fontSize: 20, letterSpacing: 4, color: "var(--text)" }}>
-          CONTACTOS
-        </span>
-        <p
-          style={{
-            marginTop: 10,
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            color: "var(--text-muted)",
-          }}
-        >
+        <span className="site-footer__marca">Contactos</span>
+        <p className="meta" style={{ marginTop: 10, fontSize: 14 }}>
           Acceso exclusivo a mayores de 18 años.
         </p>
       </div>
 
-      <nav
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 24,
-          fontFamily: "var(--font-body)",
-          fontSize: 12,
-          color: "var(--text-muted)",
-        }}
-      >
-        <Link href="/legal/aviso-legal" style={{ color: "inherit", textDecoration: "none" }}>
+      <nav className="site-footer__nav" aria-label="Información legal">
+        <Link href="/legal/aviso-legal" className="site-footer__enlace">
           Aviso legal
         </Link>
-        <Link href="/legal/privacidad" style={{ color: "inherit", textDecoration: "none" }}>
+        <Link href="/legal/privacidad" className="site-footer__enlace">
           Privacidad
         </Link>
-        <Link href="/legal/cookies" style={{ color: "inherit", textDecoration: "none" }}>
+        <Link href="/legal/cookies" className="site-footer__enlace">
           Cookies
         </Link>
         <button
           type="button"
           onClick={() => window.dispatchEvent(new Event(COOKIE_SETTINGS_EVENT))}
-          style={{
-            color: "inherit",
-            background: "none",
-            border: "none",
-            padding: 0,
-            font: "inherit",
-            cursor: "pointer",
-          }}
+          className="site-footer__enlace"
         >
           Configurar cookies
         </button>

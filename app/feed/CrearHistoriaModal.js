@@ -1,7 +1,8 @@
 "use client";
 
+import { Dialogo } from "../components/Dialogo";
 import { useEffect, useRef, useState } from "react";
-import { Image as ImageIcon } from "lucide-react";
+import { SelectorArchivo } from "../components/SelectorArchivo";
 
 export function CrearHistoriaModal({ onClose, onCreada }) {
   const [texto, setTexto] = useState("");
@@ -58,15 +59,8 @@ export function CrearHistoriaModal({ onClose, onCreada }) {
   }
 
   return (
-    <div
-      style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(14,10,11,0.85)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}
-      onClick={onClose}
-    >
-      <div
-        style={{ width: "100%", maxWidth: 420, background: "var(--surface)", border: "1px solid var(--border-gold)", padding: 28 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h3 className="heading" style={{ fontSize: 20, color: "var(--text)" }}>
+    <Dialogo onCerrar={onClose} idTitulo="crear-historia-titulo">
+        <h3 id="crear-historia-titulo" className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
           Nueva historia
         </h3>
         <p style={{ marginTop: 4, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
@@ -74,7 +68,7 @@ export function CrearHistoriaModal({ onClose, onCreada }) {
         </p>
 
         {previewUrl ? (
-          <div style={{ marginTop: 16, position: "relative", width: "100%", aspectRatio: "9 / 12", overflow: "hidden", border: "1px solid rgba(201,161,90,0.2)" }}>
+          <div style={{ marginTop: 16, position: "relative", width: "100%", aspectRatio: "9 / 12", overflow: "hidden", border: "1px solid var(--rule)" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={previewUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
@@ -92,7 +86,7 @@ export function CrearHistoriaModal({ onClose, onCreada }) {
 
         {archivo && (
           <label
-            style={{ display: "flex", gap: 8, marginTop: 14, fontFamily: "var(--font-body)", fontSize: 12.5, color: "var(--text-secondary)" }}
+            style={{ display: "flex", gap: 8, marginTop: 14, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}
           >
             <input
               type="checkbox"
@@ -108,21 +102,16 @@ export function CrearHistoriaModal({ onClose, onCreada }) {
         )}
 
         {error && (
-          <p style={{ marginTop: 12, fontFamily: "var(--font-body)", fontSize: 13, color: "#e07a7a" }}>{error}</p>
+          <p style={{ marginTop: 12, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{error}</p>
         )}
 
         <div style={{ marginTop: 20, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <label className="btn-outline-gold" style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
-            <ImageIcon size={15} />
-            Foto
-            <input
-              ref={inputFileRef}
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              style={{ display: "none" }}
-              onChange={seleccionarArchivo}
-            />
-          </label>
+          <SelectorArchivo
+            inputRef={inputFileRef}
+            archivo={archivo}
+            accept="image/jpeg,image/png,image/webp"
+            onChange={seleccionarArchivo}
+          />
           <div style={{ display: "flex", gap: 10 }}>
             <button type="button" onClick={onClose} disabled={enviando} className="btn-outline-gold">
               Cancelar
@@ -132,7 +121,6 @@ export function CrearHistoriaModal({ onClose, onCreada }) {
             </button>
           </div>
         </div>
-      </div>
-    </div>
+    </Dialogo>
   );
 }

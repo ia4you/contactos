@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Search, X } from "lucide-react";
+import { Dialogo } from "./Dialogo";
 
 // Modal reutilizable: en /mi-perfil persiste la selección del usuario, en
 // /buscar solo alimenta el filtro de búsqueda. El propio componente decide
@@ -45,27 +46,18 @@ export function GustosModal({ seleccionInicial, onCerrar, onGuardar }) {
     .filter(([, items]) => items.length > 0);
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 1000,
-        background: "var(--bg)",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <Dialogo onCerrar={onCerrar} idTitulo="gustos-titulo" variante="completa">
       <div
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           padding: "20px 24px",
-          borderBottom: "1px solid rgba(201,161,90,0.18)",
+          borderBottom: "1px solid var(--rule)",
           flexShrink: 0,
         }}
       >
-        <h2 className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
+        <h2 id="gustos-titulo" className="heading" style={{ fontSize: 22, color: "var(--text)" }}>
           Mis gustos
         </h2>
         <button
@@ -113,7 +105,7 @@ export function GustosModal({ seleccionInicial, onCerrar, onGuardar }) {
         ) : (
           categoriasFiltradas.map(([categoria, items]) => (
             <div key={categoria} style={{ marginTop: 32 }}>
-              <p className="kicker" style={{ letterSpacing: 3 }}>
+              <p className="kicker" style={{ letterSpacing: "0.04em" }}>
                 {categoria}
               </p>
               <div style={{ marginTop: 14, display: "flex", flexWrap: "wrap", gap: 10 }}>
@@ -122,6 +114,7 @@ export function GustosModal({ seleccionInicial, onCerrar, onGuardar }) {
                     key={f.id}
                     type="button"
                     onClick={() => toggle(f.id)}
+                    aria-pressed={seleccion.has(f.id)}
                     className={`fetiche-chip ${seleccion.has(f.id) ? "active" : ""}`}
                   >
                     {f.nombre}
@@ -136,14 +129,14 @@ export function GustosModal({ seleccionInicial, onCerrar, onGuardar }) {
       <div
         style={{
           padding: "16px 24px 20px",
-          borderTop: "1px solid rgba(201,161,90,0.18)",
+          borderTop: "1px solid var(--rule)",
           flexShrink: 0,
         }}
       >
         <p
           style={{
             fontFamily: "var(--font-body)",
-            fontSize: 13,
+            fontSize: 14,
             color: "var(--text-secondary)",
             marginBottom: 12,
           }}
@@ -160,6 +153,6 @@ export function GustosModal({ seleccionInicial, onCerrar, onGuardar }) {
           {guardando ? "Guardando…" : "Guardar"}
         </button>
       </div>
-    </div>
+    </Dialogo>
   );
 }

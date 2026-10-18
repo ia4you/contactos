@@ -224,31 +224,33 @@ export function MensajesShell({ usuarioId }) {
                   <UsuarioBadge badgeEspecial={c.badge_especial} isDemo={c.is_demo} style={{ fontSize: 12, padding: "1px 3px", bottom: -1, right: -1 }} />
                 </Link>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
-                    <span style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0 }}>
-                      <span
-                        style={{
-                          fontFamily: "var(--font-body)",
-                          fontSize: 14,
-                          color: c.no_leidos > 0 ? "var(--text)" : "var(--text-muted)",
-                          fontWeight: c.no_leidos > 0 ? 700 : 500,
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {c.nick}
-                      </span>
-                      <span className="badge-gold" style={{ fontSize: 12, padding: "1px 5px", flexShrink: 0 }}>
-                        {ISLAND_LABEL[c.island]}
-                      </span>
-                    </span>
-                    {c.last_message_at && (
-                      <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)", flexShrink: 0 }}>
-                        {tiempoRelativo(c.last_message_at)}
-                      </span>
-                    )}
-                  </div>
+                  <span
+                    style={{
+                      display: "block",
+                      fontFamily: "var(--font-body)",
+                      fontSize: 14,
+                      color: c.no_leidos > 0 ? "var(--text)" : "var(--text-secondary)",
+                      fontWeight: 500,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {c.nick}
+                  </span>
+                  <span
+                    style={{
+                      display: "block",
+                      fontFamily: "var(--font-body)",
+                      fontSize: 12,
+                      color: "var(--text-muted)",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {[ISLAND_LABEL[c.island], c.last_message_at && tiempoRelativo(c.last_message_at)].filter(Boolean).join(" · ")}
+                  </span>
                   <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginTop: 3 }}>
                     <span
                       style={{

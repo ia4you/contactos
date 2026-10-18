@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Lock } from "lucide-react";
 
 const TEXTO_MODAL =
   "Tu privacidad y seguridad son una prioridad para nosotros. Te recomendamos no compartir datos " +
@@ -26,8 +27,9 @@ export function AvisoSeguridadBanner() {
         flexShrink: 0,
       }}
     >
+      <Lock size={14} aria-hidden="true" style={{ flexShrink: 0, color: "var(--gold)" }} />
       <p style={{ fontFamily: "var(--font-body)", fontSize: 12, lineHeight: 1.5, color: "var(--text-secondary)", margin: 0 }}>
-        🔒 Por tu seguridad: nunca compartas datos personales, bancarios ni de pago con otros miembros.
+        Por tu seguridad: nunca compartas datos personales, bancarios ni de pago con otros miembros.
         Ninguna solicitud de dinero es legítima dentro de esta comunidad.
       </p>
     </div>

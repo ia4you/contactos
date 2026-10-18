@@ -73,7 +73,7 @@ export default function EliminarCuenta() {
             style={{
               width: "100%",
               padding: "16px",
-              background: "#6b1524",
+              background: "var(--wine)",
               color: "var(--text)",
               border: "none",
               fontFamily: "var(--font-body)",

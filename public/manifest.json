@@ -4,8 +4,8 @@
   "description": "La comunidad liberal de Canarias",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0e0a0b",
-  "theme_color": "#0e0a0b",
+  "background_color": "#0f0c0d",
+  "theme_color": "#0f0c0d",
   "orientation": "portrait",
   "icons": [
     { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },

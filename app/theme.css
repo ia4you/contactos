@@ -1,5 +1,6 @@
 /* ==========================================================================
-   Burdeos Editorial: tokens, base y componentes compartidos.
+   Burdeos Editorial: tokens, base y componentes compartidos. Fondo negro
+   cálido; el burdeos (--wine) es solo acento.
    Los nombres antiguos (--bg-secondary, --border-gold, --gold-light,
    --burdeos) se mantienen como alias: siguen en uso en estilos inline de
    pantallas aún no rediseñadas.
@@ -7,31 +8,31 @@
 
 :root {
   /* Color */
-  --bg: #2a0b12;
-  --bg-deep: #1e070c;
-  --surface: #3a111b;
+  --bg: #0f0c0d;
+  --bg-deep: #0a0809;
+  --surface: #161112;
   --text: #f6e7e1;
   --text-secondary: #e6cfc7;
   --text-muted: #d3b3aa;
   --gold: #d9b26b;
   --gold-hover: #e3c285;
   --gold-tint: rgba(217, 178, 107, 0.1);
-  --rule: rgba(217, 178, 107, 0.35);
+  --rule: rgba(217, 178, 107, 0.16);
   --rule-strong: rgba(217, 178, 107, 0.6);
   --line-light: rgba(246, 231, 225, 0.5);
   --cream: #f6e7e1;
   --on-cream: #2a0b12;
-  --wine: #8c2a3c;
+  --wine: #8c2a3c; /* solo acento: contadores, peligro, detalles; nunca fondo de superficies */
   --danger: #f08a8a;
   --danger-border: #c25a5a;
   --online: #4ade80;
 
   /* Velos sobre imágenes (rgba de --bg) */
-  --veil-0: rgba(42, 11, 18, 0);
-  --veil-soft: rgba(42, 11, 18, 0.35);
-  --veil: rgba(42, 11, 18, 0.55);
-  --veil-strong: rgba(42, 11, 18, 0.8);
-  --veil-solid: rgba(42, 11, 18, 0.92);
+  --veil-0: rgba(15, 12, 13, 0);
+  --veil-soft: rgba(15, 12, 13, 0.35);
+  --veil: rgba(15, 12, 13, 0.55);
+  --veil-strong: rgba(15, 12, 13, 0.8);
+  --veil-solid: rgba(15, 12, 13, 0.92);
 
   /* Alias de los tokens anteriores */
   --bg-secondary: var(--bg-deep);
@@ -839,8 +840,8 @@ button.fetiche-chip {
   min-width: 18px;
   height: 18px;
   padding: 0 4px;
-  background: var(--gold);
-  color: var(--bg);
+  background: var(--wine);
+  color: var(--text);
   font-family: var(--font-body);
   font-size: var(--fs-12);
   font-weight: 500;

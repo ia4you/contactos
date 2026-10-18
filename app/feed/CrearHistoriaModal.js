@@ -2,7 +2,7 @@
 
 import { Dialogo } from "../components/Dialogo";
 import { useEffect, useRef, useState } from "react";
-import { Image as ImageIcon } from "lucide-react";
+import { SelectorArchivo } from "../components/SelectorArchivo";
 
 export function CrearHistoriaModal({ onClose, onCreada }) {
   const [texto, setTexto] = useState("");
@@ -106,17 +106,12 @@ export function CrearHistoriaModal({ onClose, onCreada }) {
         )}
 
         <div style={{ marginTop: 20, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <label className="btn-outline-gold" style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
-            <ImageIcon size={15} />
-            Foto
-            <input
-              ref={inputFileRef}
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              style={{ display: "none" }}
-              onChange={seleccionarArchivo}
-            />
-          </label>
+          <SelectorArchivo
+            inputRef={inputFileRef}
+            archivo={archivo}
+            accept="image/jpeg,image/png,image/webp"
+            onChange={seleccionarArchivo}
+          />
           <div style={{ display: "flex", gap: 10 }}>
             <button type="button" onClick={onClose} disabled={enviando} className="btn-outline-gold">
               Cancelar

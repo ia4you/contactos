@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Upload, Star } from "lucide-react";
+import { Star } from "lucide-react";
+import { SelectorArchivo } from "../components/SelectorArchivo";
 import { EmptyState } from "../components/EmptyState";
 
 function useFotoDestacadaDesdeHash() {
@@ -118,39 +119,12 @@ export function TabFotos({ usuarioId, fotos, setFotos }) {
   }
 
   const botonSubir = (
-    <label
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 8,
-        border: "1px solid var(--gold)",
-        color: "var(--gold)",
-        padding: "11px 22px",
-        fontFamily: "var(--font-body)",
-        fontSize: 12,
-        letterSpacing: "0.04em",
-        cursor: "pointer",
-        transition: "background 0.2s ease, color 0.2s ease",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.background = "var(--gold)";
-        e.currentTarget.style.color = "var(--bg)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = "transparent";
-        e.currentTarget.style.color = "var(--gold)";
-      }}
-    >
-      <Upload size={15} />
-      Subir foto
-      <input
-        ref={inputFileRef}
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
-        style={{ display: "none" }}
-        onChange={seleccionarArchivo}
-      />
-    </label>
+    <SelectorArchivo
+      inputRef={inputFileRef}
+      archivo={archivoPendiente}
+      accept="image/jpeg,image/png,image/webp"
+      onChange={seleccionarArchivo}
+    />
   );
 
   return (

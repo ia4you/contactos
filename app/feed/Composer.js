@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Image as ImageIcon } from "lucide-react";
 import { AVATAR_PLACEHOLDER } from "@/lib/constants";
+import { SelectorArchivo } from "../components/SelectorArchivo";
 
 export function Composer({ usuario, avatarUrl, onPublicado, autoAbrir }) {
   const [expandido, setExpandido] = useState(autoAbrir === "texto" || autoAbrir === "foto");
@@ -177,20 +177,12 @@ export function Composer({ usuario, avatarUrl, onPublicado, autoAbrir }) {
           {expandido && (
             <div style={{ marginTop: 14, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
               <div style={{ display: "flex", gap: 10 }}>
-                <label
-                  className="btn-outline-gold"
-                  style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer" }}
-                >
-                  <ImageIcon size={15} />
-                  Subir foto
-                  <input
-                    ref={inputFileRef}
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp"
-                    style={{ display: "none" }}
-                    onChange={seleccionarArchivo}
-                  />
-                </label>
+                <SelectorArchivo
+                  inputRef={inputFileRef}
+                  archivo={archivo}
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={seleccionarArchivo}
+                />
                 <button type="button" onClick={cancelar} disabled={publicando} className="btn-outline-gold">
                   Cancelar
                 </button>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Image as ImageIcon } from "lucide-react";
+import { SelectorArchivo } from "../components/SelectorArchivo";
 import { ISLANDS } from "@/lib/constants";
 import { LugarAutocomplete } from "./LugarAutocomplete";
 
@@ -185,20 +185,12 @@ export function CrearEventoModal({ eventoExistente, islaPorDefecto, onClose, onG
                 </button>
               </div>
             ) : (
-              <label
-                className="btn-outline-gold"
-                style={{ display: "inline-flex", alignItems: "center", gap: 8, cursor: "pointer" }}
-              >
-                <ImageIcon size={15} />
-                Subir foto
-                <input
-                  ref={inputFileRef}
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  style={{ display: "none" }}
-                  onChange={seleccionarArchivo}
-                />
-              </label>
+              <SelectorArchivo
+                inputRef={inputFileRef}
+                archivo={archivo}
+                accept="image/jpeg,image/png,image/webp"
+                onChange={seleccionarArchivo}
+              />
             )}
           </div>
         )}

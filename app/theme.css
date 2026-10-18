@@ -418,6 +418,49 @@ input[type="file"]::file-selector-button:hover {
   background: var(--gold-tint);
 }
 
+/* Selector propio (SelectorArchivo.js) */
+.selector-archivo {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  min-width: 0;
+  max-width: 100%;
+  position: relative;
+}
+.selector-archivo__input {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+.selector-archivo__boton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.selector-archivo__input:focus-visible + .selector-archivo__boton {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.selector-archivo__input:disabled + .selector-archivo__boton {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.selector-archivo__nombre {
+  font-family: var(--font-body);
+  font-size: var(--fs-14);
+  color: var(--text-muted);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* ---------- Etiquetas, pastillas, chips ---------- */
 
 .badge-gold {

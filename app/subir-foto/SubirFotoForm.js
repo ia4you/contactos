@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { SelectorArchivo } from "../components/SelectorArchivo";
 
 // Pantalla obligatoria del gate de avatar (middleware.js la deja pasar y
 // redirige aquí a quien no tiene foto de perfil). Si la BD dice que ya la
@@ -55,8 +56,8 @@ export function SubirFotoForm({ yaTiene }) {
         La foto de perfil es obligatoria para usar la aplicación.
       </p>
       <form onSubmit={enviar}>
-        <input
-          type="file"
+        <SelectorArchivo
+          archivo={archivo}
           accept="image/jpeg,image/png,image/webp"
           onChange={(e) => setArchivo(e.target.files?.[0] ?? null)}
           required

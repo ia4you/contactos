@@ -15,6 +15,7 @@ import {
   FECHA_NACIMIENTO_MAX,
 } from "@/lib/constants";
 import { AuthLayout } from "../components/AuthLayout";
+import { SelectorArchivo } from "../components/SelectorArchivo";
 import { MultiSelectChips } from "../components/MultiSelectChips";
 
 const ESTADO_INICIAL = {
@@ -214,13 +215,7 @@ export default function Registro() {
                 <img src={fotoPreview} alt="Vista previa" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               )}
             </div>
-            <input
-              type="file"
-              required
-              accept="image/jpeg,image/png"
-              onChange={elegirFoto}
-              style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)", minWidth: 0 }}
-            />
+            <SelectorArchivo archivo={foto} required accept="image/jpeg,image/png" onChange={elegirFoto} />
           </div>
           <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>
             Obligatoria. JPG o PNG, máximo {MAX_FOTO_MB} MB.

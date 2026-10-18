@@ -78,7 +78,7 @@ function MenuAvatar({ id, onClose, avatarSrc, nick, island, esCeo, contadores })
           <div style={{ width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden" }}>
             <Image src={avatarSrc} alt="" width={40} height={40} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
-          {esCeo && <UsuarioBadge badgeEspecial="CEO" style={{ fontSize: 12, padding: "0 3px", lineHeight: "14px" }} />}
+          {esCeo && <UsuarioBadge badgeEspecial="CEO" />}
         </div>
         <div style={{ minWidth: 0 }}>
           <p className="tarjeta-feed__nick" style={{ fontSize: 18, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
@@ -335,7 +335,7 @@ export function Navbar() {
                   <div className="avatar-boton__img">
                     <Image src={imagenAvatar} alt="" width={36} height={36} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   </div>
-                  {esCeo && <UsuarioBadge badgeEspecial="CEO" style={{ fontSize: 12, padding: "0 3px", lineHeight: "14px" }} />}
+                  {esCeo && <UsuarioBadge badgeEspecial="CEO" />}
                 </button>
                 {menuAvatarAbierto && (
                   <MenuAvatar

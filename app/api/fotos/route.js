@@ -20,7 +20,7 @@ export async function GET(req) {
        JOIN users u ON u.id = p.user_id
       WHERE p.status = 'approved'
         AND p.is_private = false
-        AND u.deleted_at IS NULL
+        AND u.deleted_at IS NULL AND u.suspended_at IS NULL
         AND NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))
       ORDER BY p.created_at DESC
       LIMIT $2 OFFSET $3`,

@@ -21,7 +21,7 @@ export async function GET() {
        FROM conversaciones c
        JOIN users u ON u.id = (CASE WHEN c.user1_id = $1 THEN c.user2_id ELSE c.user1_id END)
       WHERE (c.user1_id = $1 OR c.user2_id = $1)
-        AND u.deleted_at IS NULL
+        AND u.deleted_at IS NULL AND u.suspended_at IS NULL
         AND NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))
       ORDER BY c.last_message_at DESC NULLS LAST, c.created_at DESC`,
     [meId]

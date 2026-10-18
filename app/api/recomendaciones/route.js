@@ -32,7 +32,7 @@ async function obtenerCandidatos(meId, island) {
             COALESCE((SELECT array_agg(f.nombre) FROM user_fetiches uf JOIN fetiches f ON f.id = uf.fetiche_id WHERE uf.user_id = u.id), '{}') AS gustos
        FROM users u
       WHERE u.id != $1
-        AND u.deleted_at IS NULL
+        AND u.deleted_at IS NULL AND u.suspended_at IS NULL
         AND u.email_verified_at IS NOT NULL
         AND EXISTS (SELECT 1 FROM photos WHERE user_id = u.id AND status = 'approved')
         AND ${COMPLETITUD_SQL} >= ${UMBRAL_BUSQUEDA}
@@ -115,7 +115,7 @@ async function fallback(meId, island, gustosUsuario) {
             COALESCE((SELECT array_agg(f.nombre) FROM user_fetiches uf JOIN fetiches f ON f.id = uf.fetiche_id WHERE uf.user_id = u.id), '{}') AS gustos
        FROM users u
       WHERE u.id != $1
-        AND u.deleted_at IS NULL
+        AND u.deleted_at IS NULL AND u.suspended_at IS NULL
         AND u.email_verified_at IS NOT NULL
         AND u.island = $2
         AND EXISTS (SELECT 1 FROM photos WHERE user_id = u.id AND status = 'approved')

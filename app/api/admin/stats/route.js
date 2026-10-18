@@ -8,8 +8,8 @@ export async function GET() {
 
   const { rows } = await query(`
     SELECT
-      (SELECT count(*)::int FROM users WHERE deleted_at IS NULL) AS total_usuarios,
-      (SELECT count(*)::int FROM users WHERE deleted_at IS NULL AND created_at::date = now()::date) AS nuevos_hoy,
+      (SELECT count(*)::int FROM users WHERE deleted_at IS NULL AND suspended_at IS NULL) AS total_usuarios,
+      (SELECT count(*)::int FROM users WHERE deleted_at IS NULL AND suspended_at IS NULL AND created_at::date = now()::date) AS nuevos_hoy,
       (SELECT count(*)::int FROM photos WHERE status = 'pending') AS fotos_pendientes,
       (SELECT count(*)::int FROM reports WHERE status = 'open') AS denuncias_abiertas,
       (SELECT count(*)::int FROM mensajes WHERE created_at::date = now()::date AND deleted_at IS NULL) AS mensajes_hoy,

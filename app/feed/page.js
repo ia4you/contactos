@@ -26,7 +26,7 @@ export default async function Feed() {
        FROM users u
       WHERE u.island = $2
         AND u.id != $1
-        AND u.deleted_at IS NULL
+        AND u.deleted_at IS NULL AND u.suspended_at IS NULL
         AND u.last_active > now() - interval '24 hours'
         AND EXISTS (SELECT 1 FROM photos WHERE user_id = u.id AND is_avatar = true AND status = 'approved')
         AND NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))

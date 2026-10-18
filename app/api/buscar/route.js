@@ -43,7 +43,7 @@ export async function GET(req) {
   const offset = (page - 1) * LIMITE;
 
   const condiciones = [
-    "u.deleted_at IS NULL",
+    "u.deleted_at IS NULL AND u.suspended_at IS NULL",
     "u.email_verified_at IS NOT NULL",
     "u.show_in_search = true",
     "u.id != $1",

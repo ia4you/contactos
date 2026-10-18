@@ -25,7 +25,7 @@ export async function GET(req, { params }) {
   const meId = Number(session.user.id);
 
   const { rows: targetRows } = await query(
-    `SELECT id, nick, profile_type, island FROM users WHERE lower(nick) = lower($1) AND deleted_at IS NULL`,
+    `SELECT id, nick, profile_type, island FROM users WHERE lower(nick) = lower($1) AND deleted_at IS NULL AND suspended_at IS NULL`,
     [params.nick]
   );
   const target = targetRows[0];

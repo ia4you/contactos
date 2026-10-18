@@ -15,7 +15,7 @@ export async function GET() {
             (SELECT filename FROM photos WHERE user_id = u.id AND is_avatar = true AND status = 'approved' LIMIT 1) AS avatar_filename
        FROM users u
       WHERE u.id != $1
-        AND u.deleted_at IS NULL
+        AND u.deleted_at IS NULL AND u.suspended_at IS NULL
         AND u.show_last_seen = true
         AND u.last_active > now() - interval '15 minutes'
         AND EXISTS (SELECT 1 FROM photos WHERE user_id = u.id AND is_avatar = true AND status = 'approved')

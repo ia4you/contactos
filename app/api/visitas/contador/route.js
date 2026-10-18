@@ -15,7 +15,7 @@ export async function GET() {
        FROM visits v
        JOIN users u ON u.id = v.visitor_id
       WHERE v.visited_id = $1
-        AND u.deleted_at IS NULL
+        AND u.deleted_at IS NULL AND u.suspended_at IS NULL
         AND v.visited_at > COALESCE((SELECT visitas_vistas_at FROM users WHERE id = $1), 'epoch'::timestamptz)
         AND NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))`,
     [meId]

@@ -19,7 +19,7 @@ export async function GET(req) {
        FROM visits v
        JOIN users u ON u.id = v.visitor_id
       WHERE v.visited_id = $1
-        AND u.deleted_at IS NULL
+        AND u.deleted_at IS NULL AND u.suspended_at IS NULL
         AND v.visited_at > now() - interval '30 days'
         AND NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))
       ORDER BY v.visited_at DESC

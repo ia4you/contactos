@@ -37,7 +37,7 @@ export async function GET(req) {
             u.id AS from_id, u.nick, u.profile_type, u.is_demo, u.badge_especial, u.last_active, u.show_last_seen,
             (SELECT filename FROM photos WHERE user_id = u.id AND is_avatar = true AND status = 'approved' LIMIT 1) AS avatar_filename
        FROM notificaciones n
-       LEFT JOIN users u ON u.id = n.from_user_id AND u.deleted_at IS NULL
+       LEFT JOIN users u ON u.id = n.from_user_id AND u.deleted_at IS NULL AND u.suspended_at IS NULL
       WHERE ${condiciones.join(" AND ")}
       ORDER BY n.created_at DESC
       LIMIT $${params.length - 1} OFFSET $${params.length}`,

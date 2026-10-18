@@ -41,7 +41,7 @@ export async function POST(req) {
   }
 
   const { rows } = await query(
-    `SELECT id FROM users WHERE id = $1 AND deleted_at IS NULL`,
+    `SELECT id FROM users WHERE id = $1 AND deleted_at IS NULL AND suspended_at IS NULL`,
     [blockedId]
   );
   if (!rows[0]) {

@@ -29,7 +29,7 @@ export async function GET(req) {
   const condiciones = [
     "p.deleted_at IS NULL",
     "p.visible_en_feed = true",
-    "u.deleted_at IS NULL",
+    "u.deleted_at IS NULL AND u.suspended_at IS NULL",
     "NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))",
   ];
 
@@ -83,7 +83,7 @@ export async function GET(req) {
        JOIN users u ON u.id = a.user_id
       WHERE a.deleted_at IS NULL
         AND a.expires_at > now()
-        AND u.deleted_at IS NULL
+        AND u.deleted_at IS NULL AND u.suspended_at IS NULL
         AND NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))
       ORDER BY (a.island = $2) DESC, a.created_at DESC
       LIMIT 200`,
@@ -97,7 +97,7 @@ export async function GET(req) {
        JOIN users u ON u.id = e.user_id
       WHERE e.deleted_at IS NULL
         AND e.fecha_evento > now()
-        AND u.deleted_at IS NULL
+        AND u.deleted_at IS NULL AND u.suspended_at IS NULL
         AND NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))
       ORDER BY (e.isla = $2) DESC, e.created_at DESC
       LIMIT 200`,

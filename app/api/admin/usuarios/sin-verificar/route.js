@@ -12,6 +12,7 @@ export async function GET() {
       WHERE email_verified_at IS NULL
         AND is_demo = false
         AND deleted_at IS NULL
+        AND suspended_at IS NULL
       ORDER BY created_at DESC`
   );
 

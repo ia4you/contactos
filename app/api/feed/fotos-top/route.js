@@ -41,7 +41,7 @@ export async function GET() {
          LEFT JOIN publicaciones pub ON pub.photo_id = p.id AND pub.tipo = 'foto' AND pub.deleted_at IS NULL
         WHERE p.status = 'approved'
           AND p.is_private = false
-          AND u.deleted_at IS NULL
+          AND u.deleted_at IS NULL AND u.suspended_at IS NULL
           AND NOT EXISTS (SELECT 1 FROM blocks bl WHERE (bl.blocker_id = $1 AND bl.blocked_id = u.id) OR (bl.blocker_id = u.id AND bl.blocked_id = $1))
      ) sub
      WHERE likes_count > 0

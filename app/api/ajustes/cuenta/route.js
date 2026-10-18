@@ -83,7 +83,12 @@ export async function PATCH(req) {
     }
 
     const nuevoHash = await bcrypt.hash(nuevaPassword, 12);
-    await query(`UPDATE users SET password_hash = $1 WHERE id = $2`, [nuevoHash, session.user.id]);
+    // session_version + 1 cierra todas las sesiones, también esta: el cliente
+    // vuelve a /login para entrar con la contraseña nueva.
+    await query(
+      `UPDATE users SET password_hash = $1, session_version = session_version + 1 WHERE id = $2`,
+      [nuevoHash, session.user.id]
+    );
 
     return NextResponse.json({ ok: true });
   }

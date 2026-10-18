@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Filter } from "lucide-react";
+import { Filter, X } from "lucide-react";
+import { Dialogo } from "../components/Dialogo";
 import { UsuarioBadge } from "../components/UsuarioBadge";
 import {
   ISLANDS,
@@ -92,160 +93,161 @@ export default function Buscar() {
     setFiltros((f) => ({ ...f, feticheIds: seleccion }));
   }
 
+  const panelFiltros = (
+    <>
+      <Bloque titulo="Tipo de perfil">
+        <div style={{ display: "flex", gap: 8 }}>
+          {PROFILE_TYPES.map((p) => (
+            <button
+              key={p.value}
+              type="button"
+              onClick={() => actualizar("tipos", toggleEnArray(filtros.tipos, p.value))}
+              className={`pill-select ${filtros.tipos.includes(p.value) ? "active" : ""}`}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      </Bloque>
+
+      <div className="filtro-bloque">
+        <MultiSelectChips
+          label="Isla"
+          options={ISLANDS}
+          selected={filtros.islas}
+          onChange={(v) => actualizar("islas", v)}
+          modo="resumen"
+          textoVacio="Todas las islas"
+          textoResumen={(n) => `${n} isla${n === 1 ? "" : "s"} seleccionada${n === 1 ? "" : "s"}`}
+        />
+      </div>
+
+      <Bloque titulo="Edad">
+        <div style={{ display: "flex", gap: 10 }}>
+          <label style={{ flex: 1 }}>
+            <span className="label-field">De</span>
+            <input
+              type="number"
+              min={18}
+              max={99}
+              value={filtros.edadMin}
+              onChange={(e) => actualizar("edadMin", e.target.value)}
+              className="input-field"
+              placeholder="18"
+            />
+          </label>
+          <label style={{ flex: 1 }}>
+            <span className="label-field">Hasta</span>
+            <input
+              type="number"
+              min={18}
+              max={99}
+              value={filtros.edadMax}
+              onChange={(e) => actualizar("edadMax", e.target.value)}
+              className="input-field"
+              placeholder="99"
+            />
+          </label>
+        </div>
+      </Bloque>
+
+      <Bloque titulo="Orientación">
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          {ORIENTACION_OPTIONS.map((o) => (
+            <button
+              key={o}
+              type="button"
+              onClick={() => actualizar("orientaciones", toggleEnArray(filtros.orientaciones, o))}
+              className={`fetiche-chip ${filtros.orientaciones.includes(o) ? "active" : ""}`}
+            >
+              {o}
+            </button>
+          ))}
+        </div>
+      </Bloque>
+
+      <Bloque titulo="Qué buscan">
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          {LOOKING_FOR_OPTIONS.map((o) => (
+            <button
+              key={o.value}
+              type="button"
+              onClick={() => actualizar("lookingFor", toggleEnArray(filtros.lookingFor, o.value))}
+              className={`fetiche-chip ${filtros.lookingFor.includes(o.value) ? "active" : ""}`}
+            >
+              {o.label}
+            </button>
+          ))}
+        </div>
+      </Bloque>
+
+      <Bloque titulo="Gustos en común">
+        <button type="button" onClick={() => setGustosModalAbierto(true)} className="btn-outline-gold" style={{ width: "100%" }}>
+          Seleccionar gustos
+        </button>
+        {filtros.feticheIds.size > 0 && (
+          <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--gold)" }}>
+            {filtros.feticheIds.size} gustos seleccionados
+          </p>
+        )}
+      </Bloque>
+
+      <button type="button" onClick={buscar} className="btn-gold" style={{ width: "100%", marginTop: 28 }}>
+        Buscar
+      </button>
+      <button
+        type="button"
+        onClick={limpiarFiltros}
+        style={{
+          display: "block",
+          width: "100%",
+          textAlign: "center",
+          marginTop: 14,
+          background: "none",
+          border: "none",
+          fontFamily: "var(--font-body)",
+          fontSize: 14,
+          color: "var(--text-muted)",
+          cursor: "pointer",
+        }}
+      >
+        Limpiar filtros
+      </button>
+    </>
+  );
+
   return (
     <main>
       <button
         type="button"
         className="buscar-filtros-toggle"
-        onClick={() => setFiltrosAbiertosMovil((v) => !v)}
-        style={{
-          alignItems: "center",
-          gap: 8,
-          width: "100%",
-          padding: "16px 24px",
-          background: "var(--bg-secondary)",
-          border: "none",
-          borderBottom: "1px solid var(--rule)",
-          color: "var(--gold)",
-          fontFamily: "var(--font-body)",
-          fontSize: 14,
-          letterSpacing: "0.04em",
-          cursor: "pointer",
-        }}
+        onClick={() => setFiltrosAbiertosMovil(true)}
+        aria-haspopup="dialog"
       >
-        <Filter size={16} />
+        <Filter size={16} aria-hidden="true" />
         Filtros
       </button>
 
-      <div className="buscar-layout">
-        <aside
-          className={`buscar-sidebar ${filtrosAbiertosMovil ? "" : "buscar-sidebar--cerrado"}`}
-          style={{
-            background: "var(--bg-secondary)",
-            borderRight: "1px solid var(--rule)",
-            padding: "24px",
-          }}
-        >
-          <p className="kicker">Buscar perfiles</p>
-
-          <Bloque titulo="Tipo de perfil">
-            <div style={{ display: "flex", gap: 8 }}>
-              {PROFILE_TYPES.map((p) => (
-                <button
-                  key={p.value}
-                  type="button"
-                  onClick={() => actualizar("tipos", toggleEnArray(filtros.tipos, p.value))}
-                  className={`pill-select ${filtros.tipos.includes(p.value) ? "active" : ""}`}
-                >
-                  {p.label}
-                </button>
-              ))}
+      {filtrosAbiertosMovil && (
+        <Dialogo onCerrar={() => setFiltrosAbiertosMovil(false)} idTitulo="filtros-titulo" variante="hoja">
+          <div className="buscar-hoja">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <h2 id="filtros-titulo" className="widget-titulo">
+                Filtros
+              </h2>
+              <button type="button" onClick={() => setFiltrosAbiertosMovil(false)} aria-label="Cerrar filtros" className="icon-btn">
+                <X size={20} aria-hidden="true" />
+              </button>
             </div>
-          </Bloque>
-
-          <div style={{ marginTop: 28 }}>
-            <MultiSelectChips
-              label="Isla"
-              options={ISLANDS}
-              selected={filtros.islas}
-              onChange={(v) => actualizar("islas", v)}
-              modo="resumen"
-              textoVacio="Todas las islas"
-              textoResumen={(n) => `${n} isla${n === 1 ? "" : "s"} seleccionada${n === 1 ? "" : "s"}`}
-            />
+            {panelFiltros}
           </div>
+        </Dialogo>
+      )}
 
-          <Bloque titulo="Edad">
-            <div style={{ display: "flex", gap: 10 }}>
-              <label style={{ flex: 1 }}>
-                <span className="label-field">De</span>
-                <input
-                  type="number"
-                  min={18}
-                  max={99}
-                  value={filtros.edadMin}
-                  onChange={(e) => actualizar("edadMin", e.target.value)}
-                  className="input-field"
-                  placeholder="18"
-                />
-              </label>
-              <label style={{ flex: 1 }}>
-                <span className="label-field">Hasta</span>
-                <input
-                  type="number"
-                  min={18}
-                  max={99}
-                  value={filtros.edadMax}
-                  onChange={(e) => actualizar("edadMax", e.target.value)}
-                  className="input-field"
-                  placeholder="99"
-                />
-              </label>
-            </div>
-          </Bloque>
-
-          <Bloque titulo="Orientación">
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {ORIENTACION_OPTIONS.map((o) => (
-                <button
-                  key={o}
-                  type="button"
-                  onClick={() => actualizar("orientaciones", toggleEnArray(filtros.orientaciones, o))}
-                  className={`fetiche-chip ${filtros.orientaciones.includes(o) ? "active" : ""}`}
-                >
-                  {o}
-                </button>
-              ))}
-            </div>
-          </Bloque>
-
-          <Bloque titulo="Qué buscan">
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {LOOKING_FOR_OPTIONS.map((o) => (
-                <button
-                  key={o.value}
-                  type="button"
-                  onClick={() => actualizar("lookingFor", toggleEnArray(filtros.lookingFor, o.value))}
-                  className={`fetiche-chip ${filtros.lookingFor.includes(o.value) ? "active" : ""}`}
-                >
-                  {o.label}
-                </button>
-              ))}
-            </div>
-          </Bloque>
-
-          <Bloque titulo="Gustos en común">
-            <button type="button" onClick={() => setGustosModalAbierto(true)} className="btn-outline-gold" style={{ width: "100%" }}>
-              Seleccionar gustos
-            </button>
-            {filtros.feticheIds.size > 0 && (
-              <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--gold)" }}>
-                {filtros.feticheIds.size} gustos seleccionados
-              </p>
-            )}
-          </Bloque>
-
-          <button type="button" onClick={buscar} className="btn-gold" style={{ width: "100%", marginTop: 32 }}>
-            Buscar
-          </button>
-          <button
-            type="button"
-            onClick={limpiarFiltros}
-            style={{
-              display: "block",
-              width: "100%",
-              textAlign: "center",
-              marginTop: 14,
-              background: "none",
-              border: "none",
-              fontFamily: "var(--font-body)",
-              fontSize: 14,
-              color: "var(--text-muted)",
-              cursor: "pointer",
-            }}
-          >
-            Limpiar filtros
-          </button>
+      <div className="buscar-layout">
+        <aside className="buscar-sidebar" aria-label="Filtros">
+          <h2 className="widget-titulo">Buscar perfiles</h2>
+          {panelFiltros}
         </aside>
 
         <section style={{ padding: "24px" }}>
@@ -290,18 +292,8 @@ export default function Buscar() {
 
 function Bloque({ titulo, children }) {
   return (
-    <div style={{ marginTop: 28 }}>
-      <p
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: 12,
-          letterSpacing: "0.04em",
-          color: "var(--text-secondary)",
-          marginBottom: 12,
-        }}
-      >
-        {titulo}
-      </p>
+    <div className="filtro-bloque">
+      <p className="filtro-bloque__titulo">{titulo}</p>
       {children}
     </div>
   );

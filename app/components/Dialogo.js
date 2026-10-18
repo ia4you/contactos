@@ -25,6 +25,10 @@ export function Dialogo({ onCerrar, etiqueta, idTitulo, variante, className = ""
     document.body.style.overflow = "hidden";
 
     function onKey(e) {
+      // Con diálogos anidados (p. ej. gustos sobre la hoja de filtros) solo
+      // responde el de encima, que es el último portal añadido a <body>.
+      const fondos = document.querySelectorAll(".dialogo-fondo");
+      if (fondos[fondos.length - 1] !== nodo.parentElement) return;
       if (e.key === "Escape") {
         e.stopPropagation();
         onCerrarRef.current();

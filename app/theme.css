@@ -1557,6 +1557,17 @@ button.fetiche-chip {
   .feed-layout {
     grid-template-columns: 1fr;
   }
+  .feed-centro {
+    display: flex;
+    flex-direction: column;
+  }
+  .feed-extra {
+    order: 1;
+    margin-top: 32px;
+  }
+  .feed-extra:empty {
+    display: none;
+  }
   .feed-sidebar-izq,
   .feed-sidebar-der {
     display: none;

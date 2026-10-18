@@ -20,19 +20,14 @@ export function AhoraOnlineCarrusel() {
 
   if (usuarios === null) return null;
 
-  if (usuarios.length < 10) {
+  if (usuarios.length === 0) {
     return (
-      <div style={{ marginBottom: 24, background: "var(--surface)", border: "1px solid var(--rule)", padding: 24, textAlign: "center" }}>
-        <h3 className="heading" style={{ fontSize: 22, color: "var(--gold)" }}>
-          Sé el primero en conectar hoy
-        </h3>
-        <p style={{ marginTop: 8, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
-          Completa tu perfil y aparece aquí cuando otros estén online
-        </p>
-        <Link href="/mi-perfil" className="btn-outline-gold" style={{ marginTop: 16, display: "inline-block" }}>
-          Completar perfil
+      <p style={{ marginBottom: 24, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
+        Sé el primero en conectar hoy:{" "}
+        <Link href="/mi-perfil" className="enlace">
+          completa tu perfil
         </Link>
-      </div>
+      </p>
     );
   }
 

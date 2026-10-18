@@ -78,8 +78,11 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
         <FeedNavSidebar />
       </aside>
 
-      <div style={{ maxWidth: 680, width: "100%", margin: "0 auto", background: "var(--bg)" }}>
-        <AhoraOnlineCarrusel />
+      {/* En móvil los .feed-extra bajan detrás de las publicaciones (theme.css). */}
+      <div className="feed-centro" style={{ maxWidth: 680, width: "100%", margin: "0 auto", background: "var(--bg)" }}>
+        <div className="feed-extra">
+          <AhoraOnlineCarrusel />
+        </div>
 
         <HistoriasFranja usuario={usuario} avatarUrl={avatarUrl} />
 
@@ -89,9 +92,10 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
           </div>
         )}
 
-        <ActivosIslaWidget usuarios={activosIsla} isla={usuario.island} />
-
-        {tab === "parati" && <FotosTopWidget />}
+        <div className="feed-extra">
+          <ActivosIslaWidget usuarios={activosIsla} isla={usuario.island} />
+          {tab === "parati" && <FotosTopWidget />}
+        </div>
 
         <div className="tab-nav" role="tablist" aria-label="Publicaciones" style={{ marginBottom: 8 }}>
           <button
@@ -114,6 +118,7 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
           </button>
         </div>
 
+        <div>
         {cargando && publicaciones.length === 0 ? (
           <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)", padding: "40px 0" }}>
             Cargando…
@@ -156,6 +161,7 @@ export function FeedShell({ usuario, avatarFilename, activosIsla }) {
             )}
           </>
         )}
+        </div>
       </div>
 
       <aside className="feed-sidebar-der">

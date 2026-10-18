@@ -14,14 +14,14 @@ export function ActivosIslaWidget({ usuarios, isla }) {
       <h3 className="widget-titulo">
         Activos en {ISLAND_LABEL[isla]} hoy
       </h3>
-      <div style={{ marginTop: 14, display: "flex", gap: 18, flexWrap: "wrap" }}>
+      <div className="scroll-sin-barra" style={{ marginTop: 14, display: "flex", gap: 16, overflowX: "auto" }}>
         {usuarios.map((u) => {
           const src = avatarSrc(u.id, u.avatar_filename, u.profile_type);
           return (
             <Link
               key={u.id}
               href={`/perfil/${u.nick}`}
-              style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 68, textDecoration: "none" }}
+              style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 68, flexShrink: 0, textDecoration: "none" }}
             >
               <div style={{ position: "relative", width: 52, height: 52 }}>
                 <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", border: "1px solid var(--border-gold)" }}>

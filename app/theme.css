@@ -1046,6 +1046,23 @@ button.fetiche-chip {
 .evento-fecha__dia {
   font-size: var(--fs-52);
 }
+.eventos-lista > * + * {
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid var(--rule);
+}
+@media (max-width: 480px) {
+  .evento-fila {
+    grid-template-columns: 64px 1fr;
+    gap: 16px;
+  }
+  .evento-fila .evento-fecha {
+    padding-right: 14px;
+  }
+  .evento-fila .evento-fecha__dia {
+    font-size: var(--fs-30);
+  }
+}
 .evento-fecha__mes {
   margin-top: 6px;
   font-family: var(--font-body);

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ISLANDS, avatarSrc } from "@/lib/constants";
 import { notFound } from "next/navigation";
+import { FechaEvento } from "../../components/FechaEvento";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const TIPO_LABEL = { quedada: "Quedada", fiesta: "Fiesta", club: "Club", otro: "Otro" };
@@ -70,30 +71,30 @@ export function EventoDetalleShell({ eventoId }) {
         ← Volver a eventos
       </Link>
 
+      <header className="evento-fila" style={{ marginTop: 28 }}>
+        <FechaEvento iso={evento.fecha_evento} />
+        <div style={{ minWidth: 0 }}>
+          <p className="meta">{[TIPO_LABEL[evento.tipo], ISLAND_LABEL[evento.isla]].filter(Boolean).join(" · ")}</p>
+          <h1 className="heading" style={{ marginTop: 8, fontSize: 30, color: "var(--text)" }}>
+            {evento.titulo}
+          </h1>
+          <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 16, color: "var(--gold)" }}>
+            {formatearFecha(evento.fecha_evento)}
+          </p>
+          {evento.lugar && (
+            <p style={{ marginTop: 4, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>{evento.lugar}</p>
+          )}
+          <p style={{ marginTop: 4, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
+            Organiza {evento.organizador_nick}
+          </p>
+        </div>
+      </header>
+
       {evento.foto && (
-        <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden", marginTop: 20, border: "1px solid var(--rule)" }}>
+        <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", overflow: "hidden", marginTop: 28 }}>
           <Image sizes="(max-width: 700px) 100vw, 700px" src={`/uploads/eventos/${evento.foto}`} alt="" fill unoptimized={false} style={{ objectFit: "cover" }} />
         </div>
       )}
-
-      <div style={{ marginTop: 20, display: "flex", gap: 8, flexWrap: "wrap" }}>
-        <span className="badge-gold">{TIPO_LABEL[evento.tipo]}</span>
-        <span className="badge-gold">{ISLAND_LABEL[evento.isla]}</span>
-      </div>
-
-      <h1 className="heading" style={{ marginTop: 14, fontSize: 30, color: "var(--text)" }}>
-        {evento.titulo}
-      </h1>
-
-      <p style={{ marginTop: 10, fontFamily: "var(--font-body)", fontSize: 16, color: "var(--gold)" }}>
-        {formatearFecha(evento.fecha_evento)}
-      </p>
-      {evento.lugar && (
-        <p style={{ marginTop: 4, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>{evento.lugar}</p>
-      )}
-      <p style={{ marginTop: 4, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>
-        Organiza {evento.organizador_nick}
-      </p>
 
       {evento.descripcion && (
         <p style={{ marginTop: 24, fontFamily: "var(--font-body)", fontSize: 16, color: "var(--text)", whiteSpace: "pre-wrap" }}>

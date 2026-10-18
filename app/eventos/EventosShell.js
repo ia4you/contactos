@@ -149,7 +149,7 @@ export function EventosShell({ usuario }) {
         ) : eventos.length === 0 ? (
           <EmptyState texto="No hay eventos próximos" />
         ) : (
-          <div className="anuncios-grid">
+          <div className="eventos-lista">
             {eventos.map((e) => (
               <EventoCard
                 key={e.id}
@@ -193,7 +193,7 @@ export function EventosShell({ usuario }) {
             ) : pasados.length === 0 ? (
               <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-muted)" }}>No hay eventos anteriores.</p>
             ) : (
-              <div className="anuncios-grid">
+              <div className="eventos-lista">
                 {pasados.map((e) => (
                   <EventoCard
                     key={e.id}

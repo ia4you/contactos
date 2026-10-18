@@ -9,6 +9,7 @@ import { tiempoRelativo } from "@/lib/tiempo";
 import { mostrarPuntoOnline } from "@/lib/online";
 import { PuntoOnline } from "../components/PuntoOnline";
 import { useConfirmar } from "../components/Confirmar";
+import { FechaEvento } from "../components/FechaEvento";
 
 const ISLAND_LABEL = Object.fromEntries(ISLANDS.map((i) => [i.value, i.label]));
 const PROFILE_TYPE_LABEL = Object.fromEntries(PROFILE_TYPES.map((p) => [p.value, p.label]));
@@ -84,21 +85,6 @@ function CabeceraUsuario({ userId, nick, profileType, island, avatarFilename, ti
 
 // Fecha grande en Cormorant itálica dorada + día de la semana y mes cortos
 // (SÁB · OCT), separada del contenido por una regla vertical.
-function FechaEvento({ iso }) {
-  const d = new Date(iso);
-  const dia = d.toLocaleDateString("es-ES", { day: "numeric" });
-  const mes = d.toLocaleDateString("es-ES", { month: "short" }).replace(".", "");
-  const semana = d.toLocaleDateString("es-ES", { weekday: "short" }).replace(".", "");
-  return (
-    <time dateTime={iso} className="evento-fecha">
-      <span className="numeral evento-fecha__dia">{dia}</span>
-      <span className="evento-fecha__mes">
-        {semana} · {mes}
-      </span>
-    </time>
-  );
-}
-
 function horaEvento(iso) {
   return new Date(iso).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
 }

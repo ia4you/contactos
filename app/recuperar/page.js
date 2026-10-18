@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AuthLayout } from "../components/AuthLayout";
 
 export default function Recuperar() {
   const [email, setEmail] = useState("");
@@ -21,17 +22,7 @@ export default function Recuperar() {
 
   if (enviado) {
     return (
-      <main
-        style={{
-          minHeight: "60vh",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          textAlign: "center",
-          padding: "24px",
-        }}
-      >
+      <AuthLayout>
         <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
           Revisa tu email
         </h1>
@@ -39,13 +30,13 @@ export default function Recuperar() {
           Si existe una cuenta con ese email, te hemos enviado un enlace para
           restablecer tu contraseña.
         </p>
-      </main>
+      </AuthLayout>
     );
   }
 
   return (
-    <main style={{ minHeight: "60vh", display: "flex", justifyContent: "center", padding: "80px 24px" }}>
-      <div style={{ width: "100%", maxWidth: 400 }}>
+    <AuthLayout>
+      <div>
         <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
           Recuperar contraseña
         </h1>
@@ -70,6 +61,6 @@ export default function Recuperar() {
           </button>
         </form>
       </div>
-    </main>
+    </AuthLayout>
   );
 }

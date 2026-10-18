@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AuthLayout } from "../../components/AuthLayout";
 import { useRouter, useParams } from "next/navigation";
 
 export default function RestablecerContrasena() {
@@ -36,30 +37,20 @@ export default function RestablecerContrasena() {
 
   if (exito) {
     return (
-      <main
-        style={{
-          minHeight: "60vh",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          textAlign: "center",
-          padding: "24px",
-        }}
-      >
+      <AuthLayout>
         <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
           Contraseña actualizada
         </h1>
         <p style={{ marginTop: 16, fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
           Redirigiendo a iniciar sesión…
         </p>
-      </main>
+      </AuthLayout>
     );
   }
 
   return (
-    <main style={{ minHeight: "60vh", display: "flex", justifyContent: "center", padding: "80px 24px" }}>
-      <div style={{ width: "100%", maxWidth: 400 }}>
+    <AuthLayout>
+      <div>
         <h1 className="heading" style={{ fontSize: 30, color: "var(--text)" }}>
           Nueva contraseña
         </h1>
@@ -84,6 +75,6 @@ export default function RestablecerContrasena() {
           </button>
         </form>
       </div>
-    </main>
+    </AuthLayout>
   );
 }

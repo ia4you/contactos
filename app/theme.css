@@ -1074,18 +1074,93 @@ button.fetiche-chip {
    Layouts y clases funcionales existentes (colores ya en tokens)
    ========================================================================== */
 
-/* Sin esto el input de archivo fija el min-content de la columna y desborda en móvil. */
+/* Login / registro / recuperar: cita sobre crema a la izquierda, formulario
+   a la derecha; en móvil la cita va arriba y corta. */
+.auth-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: calc(100dvh - var(--header-h));
+}
+/* Sin esto el selector de archivo fija el min-content de la columna y desborda en móvil. */
 .auth-layout > * {
   min-width: 0;
 }
-
+.auth-layout__cita {
+  background: var(--cream);
+  color: var(--on-cream);
+  padding: 72px 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.auth-layout__texto {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(40px, 4.2vw, 64px);
+  line-height: 1.1;
+  color: var(--on-cream);
+  max-width: 14ch;
+}
+.auth-layout__regla {
+  width: 96px;
+  height: 1px;
+  border: none;
+  background: var(--wine);
+  margin: 32px 0 0;
+}
+.auth-layout__form {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 64px 24px;
+}
 @media (max-width: 860px) {
   .auth-layout {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
   }
-  .auth-layout__imagen {
-    display: none;
+  .auth-layout__cita {
+    padding: 24px 16px;
   }
+  .auth-layout__texto {
+    font-size: var(--fs-22);
+    max-width: none;
+  }
+  .auth-layout__regla {
+    width: 56px;
+    margin-top: 14px;
+  }
+  .auth-layout__form {
+    padding: 32px 16px 48px;
+  }
+}
+
+/* Registro en bloques numerados I · II · III */
+.registro-bloque {
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.registro-bloque:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+.registro-bloque__titulo {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--fs-22);
+  color: var(--text);
+}
+.registro-bloque__num {
+  font-style: italic;
+  color: var(--gold);
 }
 
 @media (max-width: 768px) {

@@ -158,108 +158,96 @@ export default function Registro() {
         Todos los campos son necesarios. Tus datos están protegidos.
       </p>
 
-      <form onSubmit={onSubmit} style={{ marginTop: 28, display: "flex", flexDirection: "column", gap: 22 }}>
-        {/* 1. Tipo de perfil */}
-        <div>
-          <span className="label-field">Tipo de perfil</span>
-          <div style={{ display: "flex", gap: 8 }}>
-            {PROFILE_TYPES.map((p) => (
-              <button
-                type="button"
-                key={p.value}
-                onClick={() => actualizar("profileType", p.value)}
-                className={`pill-select ${form.profileType === p.value ? "active" : ""}`}
-              >
-                {p.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* 2. Apodo */}
-        <label>
-          <span className="label-field">Apodo (nick)</span>
-          <input
-            type="text"
-            required
-            minLength={3}
-            maxLength={24}
-            pattern="[a-zA-Z0-9_-]+"
-            title="Solo letras, números, guiones y guion bajo (sin espacios)"
-            value={form.nick}
-            onChange={(e) => actualizar("nick", e.target.value.replace(/[^a-zA-Z0-9_-]/g, ""))}
-            className="input-field"
-          />
-          <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>
-            Solo letras, números, guiones y guion bajo. Sin espacios.
-          </div>
-        </label>
-
-        {/* Foto de perfil (obligatoria) */}
-        <div>
-          <span className="label-field">Foto de perfil</span>
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <div
-              style={{
-                width: 72,
-                height: 72,
-                flexShrink: 0,
-                borderRadius: "50%",
-                overflow: "hidden",
-                border: "1px solid var(--rule)",
-                background: "rgba(217,178,107,0.06)",
-              }}
-            >
-              {fotoPreview && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={fotoPreview} alt="Vista previa" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              )}
+      <form onSubmit={onSubmit} style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 32 }}>
+        <section className="registro-bloque" aria-labelledby="registro-perfil">
+          <h2 id="registro-perfil" className="registro-bloque__titulo">
+            <span className="registro-bloque__num">I</span> Tu perfil
+          </h2>
+          {/* 1. Tipo de perfil */}
+          <div>
+            <span className="label-field">Tipo de perfil</span>
+            <div style={{ display: "flex", gap: 8 }}>
+              {PROFILE_TYPES.map((p) => (
+                <button
+                  type="button"
+                  key={p.value}
+                  onClick={() => actualizar("profileType", p.value)}
+                  className={`pill-select ${form.profileType === p.value ? "active" : ""}`}
+                >
+                  {p.label}
+                </button>
+              ))}
             </div>
-            <SelectorArchivo archivo={foto} required accept="image/jpeg,image/png" onChange={elegirFoto} />
           </div>
-          <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>
-            Obligatoria. JPG o PNG, máximo {MAX_FOTO_MB} MB.
-          </div>
-          {errorFoto && <div style={{ fontSize: 12, color: "var(--danger)", marginTop: 4 }}>{errorFoto}</div>}
-          <label style={{ display: "flex", gap: 8, marginTop: 10, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
+
+          {/* 2. Apodo */}
+          <label>
+            <span className="label-field">Apodo (nick)</span>
             <input
-              type="checkbox"
+              type="text"
               required
-              checked={form.certificoFoto}
-              onChange={(e) => actualizar("certificoFoto", e.target.checked)}
-              className="checkbox-gold"
-              style={{ marginTop: 2 }}
+              minLength={3}
+              maxLength={24}
+              pattern="[a-zA-Z0-9_-]+"
+              title="Solo letras, números, guiones y guion bajo (sin espacios)"
+              value={form.nick}
+              onChange={(e) => actualizar("nick", e.target.value.replace(/[^a-zA-Z0-9_-]/g, ""))}
+              className="input-field"
             />
-            <span>
-              Certifico que todas las personas que aparecen en la foto son
-              mayores de edad y han consentido su publicación.
-            </span>
+            <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>
+              Solo letras, números, guiones y guion bajo. Sin espacios.
+            </div>
           </label>
-        </div>
 
-        {/* 3. Género */}
-        <MultiSelectChips
-          label="Género"
-          options={GENERO_OPTIONS}
-          selected={form.genero}
-          onChange={(v) => actualizar("genero", v)}
-          max={GENERO_MAX}
-        />
+          {/* 3. Género */}
+          <MultiSelectChips
+            label="Género"
+            options={GENERO_OPTIONS}
+            selected={form.genero}
+            onChange={(v) => actualizar("genero", v)}
+            max={GENERO_MAX}
+          />
 
-        {/* 4. Orientación */}
-        <MultiSelectChips
-          label="Orientación"
-          options={ORIENTACION_OPTIONS}
-          selected={form.orientacion}
-          onChange={(v) => actualizar("orientacion", v)}
-          max={ORIENTACION_MAX}
-        />
+          {/* 4. Orientación */}
+          <MultiSelectChips
+            label="Orientación"
+            options={ORIENTACION_OPTIONS}
+            selected={form.orientacion}
+            onChange={(v) => actualizar("orientacion", v)}
+            max={ORIENTACION_MAX}
+          />
 
-        {/* 5. Fecha de nacimiento */}
-        {form.profileType === "pareja" ? (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+          {/* 5. Fecha de nacimiento */}
+          {form.profileType === "pareja" ? (
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+              <label>
+                <span className="label-field">Nacimiento (ella)</span>
+                <input
+                  type="date"
+                  required
+                  min={FECHA_NACIMIENTO_MIN}
+                  max={FECHA_NACIMIENTO_MAX}
+                  value={form.herBirthdate}
+                  onChange={(e) => actualizar("herBirthdate", e.target.value)}
+                  className="input-field"
+                />
+              </label>
+              <label>
+                <span className="label-field">Nacimiento (él)</span>
+                <input
+                  type="date"
+                  required
+                  min={FECHA_NACIMIENTO_MIN}
+                  max={FECHA_NACIMIENTO_MAX}
+                  value={form.hisBirthdate}
+                  onChange={(e) => actualizar("hisBirthdate", e.target.value)}
+                  className="input-field"
+                />
+              </label>
+            </div>
+          ) : (
             <label>
-              <span className="label-field">Nacimiento (ella)</span>
+              <span className="label-field">Fecha de nacimiento</span>
               <input
                 type="date"
                 required
@@ -270,192 +258,214 @@ export default function Registro() {
                 className="input-field"
               />
             </label>
-            <label>
-              <span className="label-field">Nacimiento (él)</span>
+          )}
+
+          {/* 6. Isla */}
+          <label>
+            <span className="label-field">Isla</span>
+            <select
+              value={form.island}
+              onChange={(e) => actualizar("island", e.target.value)}
+              className="input-field"
+            >
+              {ISLANDS.map((i) => (
+                <option key={i.value} value={i.value}>
+                  {i.label}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          {/* 8. Qué buscas */}
+          <div>
+            <span className="label-field">¿Qué buscas?</span>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              {LOOKING_FOR_OPTIONS.map((o) => (
+                <label
+                  key={o.value}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    fontFamily: "var(--font-body)",
+                    fontSize: 14,
+                    color: "var(--text)",
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={form.lookingFor.includes(o.value)}
+                    onChange={() => toggleLookingFor(o.value)}
+                    className="checkbox-gold"
+                  />
+                  {o.label}
+                </label>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="registro-bloque" aria-labelledby="registro-foto">
+          <h2 id="registro-foto" className="registro-bloque__titulo">
+            <span className="registro-bloque__num">II</span> Tu foto
+          </h2>
+          {/* Foto de perfil (obligatoria) */}
+          <div>
+            <span className="label-field">Foto de perfil</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <div
+                style={{
+                  width: 72,
+                  height: 72,
+                  flexShrink: 0,
+                  borderRadius: "50%",
+                  overflow: "hidden",
+                  border: "1px solid var(--rule)",
+                  background: "rgba(217,178,107,0.06)",
+                }}
+              >
+                {fotoPreview && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={fotoPreview} alt="Vista previa" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                )}
+              </div>
+              <SelectorArchivo archivo={foto} required accept="image/jpeg,image/png" onChange={elegirFoto} />
+            </div>
+            <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>
+              Obligatoria. JPG o PNG, máximo {MAX_FOTO_MB} MB.
+            </div>
+            {errorFoto && <div style={{ fontSize: 12, color: "var(--danger)", marginTop: 4 }}>{errorFoto}</div>}
+            <label style={{ display: "flex", gap: 8, marginTop: 10, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
               <input
-                type="date"
+                type="checkbox"
                 required
-                min={FECHA_NACIMIENTO_MIN}
-                max={FECHA_NACIMIENTO_MAX}
-                value={form.hisBirthdate}
-                onChange={(e) => actualizar("hisBirthdate", e.target.value)}
-                className="input-field"
+                checked={form.certificoFoto}
+                onChange={(e) => actualizar("certificoFoto", e.target.checked)}
+                className="checkbox-gold"
+                style={{ marginTop: 2 }}
               />
+              <span>
+                Certifico que todas las personas que aparecen en la foto son
+                mayores de edad y han consentido su publicación.
+              </span>
             </label>
           </div>
-        ) : (
+        </section>
+
+        <section className="registro-bloque" aria-labelledby="registro-cuenta">
+          <h2 id="registro-cuenta" className="registro-bloque__titulo">
+            <span className="registro-bloque__num">III</span> Tu cuenta
+          </h2>
+          {/* 7. Email y contraseña */}
           <label>
-            <span className="label-field">Fecha de nacimiento</span>
+            <span className="label-field">Email</span>
             <input
-              type="date"
+              type="email"
               required
-              min={FECHA_NACIMIENTO_MIN}
-              max={FECHA_NACIMIENTO_MAX}
-              value={form.herBirthdate}
-              onChange={(e) => actualizar("herBirthdate", e.target.value)}
+              value={form.email}
+              onChange={(e) => actualizar("email", e.target.value)}
               className="input-field"
             />
           </label>
-        )}
 
-        {/* 6. Isla */}
-        <label>
-          <span className="label-field">Isla</span>
-          <select
-            value={form.island}
-            onChange={(e) => actualizar("island", e.target.value)}
-            className="input-field"
+          <p
+            style={{
+              margin: 0,
+              fontFamily: "var(--font-body)",
+              fontSize: 12,
+              lineHeight: 1.5,
+              color: "var(--text-secondary)",
+            }}
           >
-            {ISLANDS.map((i) => (
-              <option key={i.value} value={i.value}>
-                {i.label}
-              </option>
-            ))}
-          </select>
-        </label>
+            <strong style={{ fontWeight: 500, color: "var(--gold)" }}>Aviso:</strong> actualmente hay una incidencia temporal con la entrega de emails a
+            direcciones de Hotmail/Outlook/Live. Si usas uno de estos
+            proveedores, es posible que el email de verificación no te llegue.
+            Recomendamos usar Gmail u otro proveedor mientras se resuelve, o
+            contactar con nosotros si ya te has registrado y no puedes verificar
+            tu cuenta.
+          </p>
 
-        {/* 7. Email y contraseña */}
-        <label>
-          <span className="label-field">Email</span>
-          <input
-            type="email"
-            required
-            value={form.email}
-            onChange={(e) => actualizar("email", e.target.value)}
-            className="input-field"
-          />
-        </label>
+          <label>
+            <span className="label-field">Contraseña</span>
+            <input
+              type="password"
+              required
+              minLength={8}
+              value={form.password}
+              onChange={(e) => actualizar("password", e.target.value)}
+              className="input-field"
+            />
+          </label>
 
-        <p
-          style={{
-            margin: 0,
-            padding: "10px 12px",
-            background: "rgba(217,178,107,0.08)",
-            border: "1px solid var(--rule)",
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            lineHeight: 1.5,
-            color: "var(--text-secondary)",
-          }}
-        >
-          ⚠️ Actualmente hay una incidencia temporal con la entrega de emails a
-          direcciones de Hotmail/Outlook/Live. Si usas uno de estos
-          proveedores, es posible que el email de verificación no te llegue.
-          Recomendamos usar Gmail u otro proveedor mientras se resuelve, o
-          contactar con nosotros si ya te has registrado y no puedes verificar
-          tu cuenta.
-        </p>
-
-        <label>
-          <span className="label-field">Contraseña</span>
-          <input
-            type="password"
-            required
-            minLength={8}
-            value={form.password}
-            onChange={(e) => actualizar("password", e.target.value)}
-            className="input-field"
-          />
-        </label>
-
-        {/* 8. Qué buscas */}
-        <div>
-          <span className="label-field">¿Qué buscas?</span>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-            {LOOKING_FOR_OPTIONS.map((o) => (
-              <label
-                key={o.value}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  fontFamily: "var(--font-body)",
-                  fontSize: 14,
-                  color: "var(--text)",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={form.lookingFor.includes(o.value)}
-                  onChange={() => toggleLookingFor(o.value)}
-                  className="checkbox-gold"
-                />
-                {o.label}
-              </label>
-            ))}
+          {/* 9. Checkboxes RGPD */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 12,
+            }}
+          >
+            <label style={{ display: "flex", gap: 8, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
+              <input
+                type="checkbox"
+                required
+                checked={form.acceptTerms}
+                onChange={(e) => actualizar("acceptTerms", e.target.checked)}
+                className="checkbox-gold"
+                style={{ marginTop: 2 }}
+              />
+              <span>
+                Acepto los{" "}
+                <Link href="/legal/aviso-legal" style={{ color: "var(--gold)" }}>
+                  términos
+                </Link>{" "}
+                y la{" "}
+                <Link href="/legal/privacidad" style={{ color: "var(--gold)" }}>
+                  política de privacidad
+                </Link>
+                .
+              </span>
+            </label>
+            <label style={{ display: "flex", gap: 8, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
+              <input
+                type="checkbox"
+                required
+                checked={form.acceptGdpr}
+                onChange={(e) => actualizar("acceptGdpr", e.target.checked)}
+                className="checkbox-gold"
+                style={{ marginTop: 2 }}
+              />
+              <span>
+                Consiento expresamente el tratamiento de mis datos relativos a la
+                vida sexual conforme al art. 9.2.a del RGPD.
+              </span>
+            </label>
+            <label style={{ display: "flex", gap: 8, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
+              <input
+                type="checkbox"
+                required
+                checked={form.acceptCapturas}
+                onChange={(e) => actualizar("acceptCapturas", e.target.checked)}
+                className="checkbox-gold"
+                style={{ marginTop: 2 }}
+              />
+              <span>
+                Me comprometo a no realizar capturas de pantalla, fotografías ni
+                cualquier otra forma de reproducción del contenido de otros
+                usuarios (fotos, mensajes, comentarios, datos de perfil) sin su
+                consentimiento expreso. Entiendo que la difusión no consentida
+                de imágenes o datos personales de terceros puede constituir una
+                infracción de la normativa de protección de datos (RGPD) y, en
+                determinados casos, un delito conforme al Código Penal español
+                (arts. 197 y siguientes), pudiendo acarrear consecuencias
+                legales para quien lo realice. Acepto que el incumplimiento de
+                esta norma puede conllevar la suspensión o cancelación
+                inmediata de mi cuenta, sin perjuicio de las acciones legales
+                que pudieran corresponder a los afectados.
+              </span>
+            </label>
           </div>
-        </div>
-
-        {/* 9. Checkboxes RGPD */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 12,
-            paddingTop: 16,
-            borderTop: "1px solid var(--rule)",
-          }}
-        >
-          <label style={{ display: "flex", gap: 8, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
-            <input
-              type="checkbox"
-              required
-              checked={form.acceptTerms}
-              onChange={(e) => actualizar("acceptTerms", e.target.checked)}
-              className="checkbox-gold"
-              style={{ marginTop: 2 }}
-            />
-            <span>
-              Acepto los{" "}
-              <Link href="/legal/aviso-legal" style={{ color: "var(--gold)" }}>
-                términos
-              </Link>{" "}
-              y la{" "}
-              <Link href="/legal/privacidad" style={{ color: "var(--gold)" }}>
-                política de privacidad
-              </Link>
-              .
-            </span>
-          </label>
-          <label style={{ display: "flex", gap: 8, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
-            <input
-              type="checkbox"
-              required
-              checked={form.acceptGdpr}
-              onChange={(e) => actualizar("acceptGdpr", e.target.checked)}
-              className="checkbox-gold"
-              style={{ marginTop: 2 }}
-            />
-            <span>
-              Consiento expresamente el tratamiento de mis datos relativos a la
-              vida sexual conforme al art. 9.2.a del RGPD.
-            </span>
-          </label>
-          <label style={{ display: "flex", gap: 8, fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-muted)" }}>
-            <input
-              type="checkbox"
-              required
-              checked={form.acceptCapturas}
-              onChange={(e) => actualizar("acceptCapturas", e.target.checked)}
-              className="checkbox-gold"
-              style={{ marginTop: 2 }}
-            />
-            <span>
-              Me comprometo a no realizar capturas de pantalla, fotografías ni
-              cualquier otra forma de reproducción del contenido de otros
-              usuarios (fotos, mensajes, comentarios, datos de perfil) sin su
-              consentimiento expreso. Entiendo que la difusión no consentida
-              de imágenes o datos personales de terceros puede constituir una
-              infracción de la normativa de protección de datos (RGPD) y, en
-              determinados casos, un delito conforme al Código Penal español
-              (arts. 197 y siguientes), pudiendo acarrear consecuencias
-              legales para quien lo realice. Acepto que el incumplimiento de
-              esta norma puede conllevar la suspensión o cancelación
-              inmediata de mi cuenta, sin perjuicio de las acciones legales
-              que pudieran corresponder a los afectados.
-            </span>
-          </label>
-        </div>
+        </section>
 
         {error && <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--danger)" }}>{error}</p>}
 

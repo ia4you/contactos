@@ -1,97 +1,48 @@
-import Image from "next/image";
 import Link from "next/link";
 import { RegistroCTA } from "./RegistroCTA";
 
+function estiloPestana(activa) {
+  return {
+    flex: 1,
+    textAlign: "center",
+    padding: "0 0 16px",
+    fontFamily: "var(--font-body)",
+    fontSize: 14,
+    letterSpacing: "0.04em",
+    textDecoration: "none",
+    color: activa ? "var(--gold)" : "var(--text-secondary)",
+    borderBottom: activa ? "2px solid var(--gold)" : "2px solid transparent",
+    marginBottom: -1,
+  };
+}
+
+// Sin `activo` (recuperar contraseña) no se muestran las pestañas.
 export function AuthLayout({ activo, children }) {
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        minHeight: "calc(100dvh - var(--header-h))",
-      }}
-      className="auth-layout"
-    >
-      <div style={{ position: "relative", overflow: "hidden" }} className="auth-layout__imagen">
-        <Image sizes="50vw"
-          src="/images/salon-lujo.png"
-          alt=""
-          fill
-          unoptimized={false}
-          style={{ objectFit: "cover" }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(180deg, var(--veil-soft) 0%, var(--veil) 60%, var(--veil-solid) 100%)",
-          }}
-        />
-        <p
-          className="heading"
-          style={{
-            position: "absolute",
-            left: 48,
-            right: 48,
-            bottom: 48,
-            fontStyle: "italic",
-            fontSize: 22,
-            color: "var(--text)",
-          }}
-        >
+    <main className="auth-layout">
+      <aside className="auth-layout__cita">
+        <p className="auth-layout__texto">
           &ldquo;Lo que sucede entre nosotros, permanece entre nosotros.&rdquo;
         </p>
-      </div>
+        <hr className="auth-layout__regla" />
+      </aside>
 
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "60px 24px" }}>
-        <div style={{ width: "100%", maxWidth: 400 }}>
-          <div
-            style={{
-              display: "flex",
-              borderBottom: "1px solid var(--rule)",
-              marginBottom: 40,
-            }}
-          >
-            <Link
-              href="/login"
-              style={{
-                flex: 1,
-                textAlign: "center",
-                padding: "0 0 16px",
-                fontFamily: "var(--font-body)",
-                fontSize: 14,
-                letterSpacing: "0.04em",
-                textDecoration: "none",
-                color: activo === "login" ? "var(--gold)" : "var(--text-secondary)",
-                borderBottom: activo === "login" ? "2px solid var(--gold)" : "2px solid transparent",
-                marginBottom: -1,
-              }}
-            >
-              Acceder
-            </Link>
-            <RegistroCTA
-              location="auth_tab"
-              style={{
-                flex: 1,
-                textAlign: "center",
-                padding: "0 0 16px",
-                fontFamily: "var(--font-body)",
-                fontSize: 14,
-                letterSpacing: "0.04em",
-                textDecoration: "none",
-                color: activo === "registro" ? "var(--gold)" : "var(--text-secondary)",
-                borderBottom: activo === "registro" ? "2px solid var(--gold)" : "2px solid transparent",
-                marginBottom: -1,
-              }}
-            >
-              Crear perfil
-            </RegistroCTA>
-          </div>
+      <div className="auth-layout__form">
+        <div style={{ width: "100%", maxWidth: 420 }}>
+          {activo && (
+            <div style={{ display: "flex", borderBottom: "1px solid var(--rule)", marginBottom: 40 }}>
+              <Link href="/login" style={estiloPestana(activo === "login")}>
+                Acceder
+              </Link>
+              <RegistroCTA location="auth_tab" style={estiloPestana(activo === "registro")}>
+                Crear perfil
+              </RegistroCTA>
+            </div>
+          )}
 
           {children}
         </div>
       </div>
-    </div>
+    </main>
   );
 }

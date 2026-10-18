@@ -1157,10 +1157,18 @@ button.fetiche-chip {
 .auth-layout > * {
   min-width: 0;
 }
+/* El panel crema ocupa toda la columna (el grid lo estira con el formulario)
+   y la cita se queda fija y centrada en la ventana al hacer scroll. */
 .auth-layout__cita {
   background: var(--cream);
   color: var(--on-cream);
-  padding: 72px 64px;
+  padding: 0 64px;
+}
+.auth-layout__cita-fija {
+  position: sticky;
+  top: var(--header-h);
+  height: calc(100vh - var(--header-h));
+  height: calc(100dvh - var(--header-h));
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1194,6 +1202,10 @@ button.fetiche-chip {
   }
   .auth-layout__cita {
     padding: 24px 16px;
+  }
+  .auth-layout__cita-fija {
+    position: static;
+    height: auto;
   }
   .auth-layout__texto {
     font-size: var(--fs-22);

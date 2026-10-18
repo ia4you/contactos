@@ -21,10 +21,12 @@ export function AuthLayout({ activo, children }) {
   return (
     <main className="auth-layout">
       <aside className="auth-layout__cita">
-        <p className="auth-layout__texto">
-          &ldquo;Lo que sucede entre nosotros, permanece entre nosotros.&rdquo;
-        </p>
-        <hr className="auth-layout__regla" />
+        <div className="auth-layout__cita-fija">
+          <p className="auth-layout__texto">
+            &ldquo;Lo que sucede entre nosotros, permanece entre nosotros.&rdquo;
+          </p>
+          <hr className="auth-layout__regla" />
+        </div>
       </aside>
 
       <div className="auth-layout__form">

@@ -1088,7 +1088,7 @@ button.fetiche-chip {
 }
 @media (max-width: 480px) {
   .evento-fila {
-    grid-template-columns: 64px 1fr;
+    grid-template-columns: 76px 1fr;
     gap: 16px;
   }
   .evento-fila .evento-fecha {
@@ -1098,13 +1098,18 @@ button.fetiche-chip {
     font-size: var(--fs-30);
   }
 }
+.evento-fecha__semana,
 .evento-fecha__mes {
-  margin-top: 6px;
   font-family: var(--font-body);
   font-size: var(--fs-12);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--text-muted);
+  white-space: nowrap;
+}
+.evento-fecha__semana {
+  margin-bottom: 4px;
+}
+.evento-fecha__mes {
+  margin-top: 4px;
 }
 
 /* ---------- Estados vacíos ---------- */

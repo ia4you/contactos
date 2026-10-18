@@ -322,7 +322,7 @@ textarea::placeholder {
 .input-field {
   width: 100%;
   min-height: var(--tap);
-  background: var(--surface);
+  background: transparent;
   border: 1px solid var(--rule);
   border-radius: 0;
   color: var(--text);
@@ -335,6 +335,10 @@ textarea::placeholder {
 }
 .input-field:hover {
   border-color: var(--rule-strong);
+}
+.input-field:focus,
+.input-field:focus-visible {
+  border-color: var(--gold);
 }
 .input-field:focus-visible {
   outline: 2px solid var(--gold);
@@ -597,15 +601,14 @@ input[type="file"]::file-selector-button:hover {
   padding: 12px;
   border: 1px solid var(--rule);
   color: var(--text-secondary);
-  background: var(--surface);
+  background: transparent;
   cursor: pointer;
   transition: border-color 0.2s ease, color 0.2s ease;
 }
 .pill-select.active,
 .pill-select[aria-pressed="true"] {
   border-color: var(--gold);
-  color: var(--bg);
-  background: var(--gold);
+  color: var(--gold);
 }
 
 .fetiche-chip {
@@ -627,8 +630,7 @@ button.fetiche-chip {
 .fetiche-chip.active,
 .fetiche-chip[aria-pressed="true"] {
   border-color: var(--gold);
-  color: var(--bg);
-  background: var(--gold);
+  color: var(--gold);
 }
 
 .etiqueta-tarjeta {

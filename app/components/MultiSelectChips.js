@@ -94,8 +94,8 @@ export function MultiSelectChips({
                     display: "inline-flex",
                     alignItems: "center",
                     gap: 6,
-                    background: "var(--gold)",
-                    color: "var(--bg)",
+                    border: "1px solid var(--gold)",
+                    color: "var(--gold)",
                     fontSize: 12,
                     padding: "4px 8px",
                   }}

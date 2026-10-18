@@ -2160,6 +2160,19 @@ button.fetiche-chip {
   line-height: 1.65;
   color: var(--text-secondary);
 }
+/* Fecha de nacimiento del registro: mismos tres selects que la puerta */
+.fecha-selects {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  gap: 8px;
+  border: none;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.fecha-selects legend {
+  padding: 0;
+}
 .gate__fecha {
   margin-top: 36px;
   display: grid;

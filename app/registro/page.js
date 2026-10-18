@@ -11,11 +11,10 @@ import {
   GENERO_MAX,
   ORIENTACION_OPTIONS,
   ORIENTACION_MAX,
-  FECHA_NACIMIENTO_MIN,
-  FECHA_NACIMIENTO_MAX,
 } from "@/lib/constants";
 import { AuthLayout } from "../components/AuthLayout";
 import { SelectorArchivo } from "../components/SelectorArchivo";
+import { SelectorFecha } from "../components/SelectorFecha";
 import { MultiSelectChips } from "../components/MultiSelectChips";
 
 const ESTADO_INICIAL = {
@@ -220,45 +219,12 @@ export default function Registro() {
 
           {/* 5. Fecha de nacimiento */}
           {form.profileType === "pareja" ? (
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-              <label>
-                <span className="label-field">Nacimiento (ella)</span>
-                <input
-                  type="date"
-                  required
-                  min={FECHA_NACIMIENTO_MIN}
-                  max={FECHA_NACIMIENTO_MAX}
-                  value={form.herBirthdate}
-                  onChange={(e) => actualizar("herBirthdate", e.target.value)}
-                  className="input-field"
-                />
-              </label>
-              <label>
-                <span className="label-field">Nacimiento (él)</span>
-                <input
-                  type="date"
-                  required
-                  min={FECHA_NACIMIENTO_MIN}
-                  max={FECHA_NACIMIENTO_MAX}
-                  value={form.hisBirthdate}
-                  onChange={(e) => actualizar("hisBirthdate", e.target.value)}
-                  className="input-field"
-                />
-              </label>
-            </div>
+            <>
+              <SelectorFecha key="ella" leyenda="Nacimiento (ella)" onChange={(v) => actualizar("herBirthdate", v)} />
+              <SelectorFecha key="el" leyenda="Nacimiento (él)" onChange={(v) => actualizar("hisBirthdate", v)} />
+            </>
           ) : (
-            <label>
-              <span className="label-field">Fecha de nacimiento</span>
-              <input
-                type="date"
-                required
-                min={FECHA_NACIMIENTO_MIN}
-                max={FECHA_NACIMIENTO_MAX}
-                value={form.herBirthdate}
-                onChange={(e) => actualizar("herBirthdate", e.target.value)}
-                className="input-field"
-              />
-            </label>
+            <SelectorFecha key="una" leyenda="Fecha de nacimiento" onChange={(v) => actualizar("herBirthdate", v)} />
           )}
 
           {/* 6. Isla */}
